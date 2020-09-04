@@ -1,8 +1,5 @@
-// import ProtvistaTrack from "protvista-track";
 import ProtvistaPdbTrack from "./pdb-track";
-import { render } from "lit-html";
 import { scaleLinear } from "d3";
-import { throws } from "assert";
 
 class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
 
@@ -25,8 +22,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
     }
 
     set data(data) {
-        this._seqid = data[this._accession]['seqId'];
-        this._data = data[this._accession]['data'];
+        this._seqid = (this._accession && this._accession !== 'null') ? data[this._accession]['seqId'] : undefined;
+        this._data = (this._accession && this._accession !== 'null') ? data[this._accession]['data'] : data;
         this.add_download_link();
         this._createTrack();
     }

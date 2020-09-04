@@ -36,18 +36,28 @@ class LayoutHelper {
 
         // lazyload variants
         if(this.ctx.viewerData.displayVariants){
-            this.ctx.dataHelper.getPDBeApiDataByName('variation').then(resultData => {
+            if(this.ctx.viewerData.variants) {
                 const hideSectionOptions = { key: 'variationOption', index: this.ctx.viewerData.tracks.length + 1, label: 'Variation' };
-                this.addDynamicTrackSection(resultData, '.pvVariantGraphRow', '.pvVariantGraphSection', '.pvVariantPlotSection', hideSectionOptions);
-            });
+                this.addDynamicTrackSection(this.ctx.viewerData.variants, '.pvVariantGraphRow', '.pvVariantGraphSection', '.pvVariantPlotSection', hideSectionOptions);
+            } else { 
+                this.ctx.dataHelper.getPDBeApiDataByName('variation').then(resultData => {
+                    const hideSectionOptions = { key: 'variationOption', index: this.ctx.viewerData.tracks.length + 1, label: 'Variation' };
+                    this.addDynamicTrackSection(resultData, '.pvVariantGraphRow', '.pvVariantGraphSection', '.pvVariantPlotSection', hideSectionOptions);
+                });
+            }
         }
 
         // lazyload sequence conservation
         if(this.ctx.viewerData.displayConservation){
-            this.ctx.dataHelper.getPDBeApiDataByName('sequence_conservation').then(resultData => {
+            if(this.ctx.viewerData.sequenceConservation) {
                 const hideSectionOptions = { key: 'scOption', index: this.ctx.viewerData.tracks.length, label: 'Sequence conservation' };
-                this.addDynamicTrackSection(resultData, '.pvConsHistoRow', '.pvConservationHistoSection', '.pvConservationPlotSection', hideSectionOptions, true);
-            });
+                this.addDynamicTrackSection(this.ctx.viewerData.sequenceConservation, '.pvConsHistoRow', '.pvConservationHistoSection', '.pvConservationPlotSection', hideSectionOptions, true);
+            } else {
+                this.ctx.dataHelper.getPDBeApiDataByName('sequence_conservation').then(resultData => {
+                    const hideSectionOptions = { key: 'scOption', index: this.ctx.viewerData.tracks.length, label: 'Sequence conservation' };
+                    this.addDynamicTrackSection(resultData, '.pvConsHistoRow', '.pvConservationHistoSection', '.pvConservationPlotSection', hideSectionOptions, true);
+                });
+            }
         }
 
         // subscribe to other PDBe web-component events

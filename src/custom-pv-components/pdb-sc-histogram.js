@@ -22,7 +22,7 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
     set data(data) {
         // const seqData = data[this._accession]['residues']
         // this._data = processConservation(seqData);
-        this._data = data[this._accession]['data'];
+        this._data = (this._accession && this._accession !== 'null') ? data[this._accession]['data'] : data;
         this._createTrack();
     }
 

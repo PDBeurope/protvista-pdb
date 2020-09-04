@@ -45,6 +45,9 @@ class ProtvistaPDB extends HTMLElement {
         this.viewerData = data;
         this.viewerData.displayNavigation = (typeof data.displayNavigation !== 'undefined') ? data.displayNavigation : true;
         this.viewerData.displaySequence = (typeof data.displaySequence !== 'undefined') ? data.displaySequence : true;
+
+        if(typeof this.viewerData.sequenceConservation !== 'undefined') this.viewerData.displayConservation = true;
+        if(typeof this.viewerData.variants !== 'undefined') this.viewerData.displayVariants = true;
         
         this._render();
     }
