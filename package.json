@@ -1,0 +1,47 @@
+{
+  "name": "protvista-pdb",
+  "version": "2.0.0",
+  "description": "PDB ProtVista Viewer",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/protvista-pdb.js",
+  "module": "src/index.js",
+  "jsnext:main": "src/index.js",
+  "author": "Mandar Deshpande <mandar@ebi.ac.uk>",
+  "contributors": [
+    "Typhaine Paysan-Lafosse <typhaine@ebi.ac.uk>"
+  ],
+  "license": "Apache 2.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production",
+    "watch": "webpack -w --mode development --display minimal",
+    "serve": "http-server -p 1338"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.11",
+    "protvista-filter": "2.0.0",
+    "protvista-manager": "2.0.0",
+    "protvista-navigation": "2.0.0",
+    "protvista-sequence": "2.0.0",
+    "protvista-track": "2.0.0",
+    "protvista-zoomable": "2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/runtime": "^7.3.1",
+    "babel-loader": "^8.0.5",
+    "camelcase": "^5.0.0",
+    "clean-webpack-plugin": "^1.0.1",
+    "css-loader": "^2.1.0",
+    "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "http-server": "^0.12.3"
+  }
+}

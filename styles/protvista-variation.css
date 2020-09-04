@@ -1,0 +1,29 @@
+protvista-variation {
+  display: flex;
+  width: 100%;
+}
+
+protvista-variation svg {
+  background-color: #fff;
+}
+
+protvista-variation circle {
+  opacity: 0.6;
+}
+protvista-variation circle:hover {
+  opacity: 0.9;
+}
+protvista-variation .tick line,
+protvista-variation .axis path {
+  opacity: 0.1;
+}
+
+protvista-variation .protvista-highlight {
+  fill: #ffe999;
+}
+
+protvista-variation .variation-y-right line,
+protvista-variation .axis path {
+  fill: none;
+  stroke: none;
+}

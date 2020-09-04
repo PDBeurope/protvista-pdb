@@ -1,0 +1,675 @@
+.protvista-pdb {
+    font-family: Helvetica,Arial,FreeSans,"Liberation Sans",sans-serif !important;
+    position: relative;
+    /* width: 100%; */
+    border: 1px solid lightgray;
+    margin-bottom: 20px;
+    padding: 20px 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+.protvistaRow {
+    display: table;
+    width: 100%;
+    clear: both;
+}
+
+.protvistaCol1 {
+    display: table-cell;
+    vertical-align: middle;
+    width: 15%;
+    font-size:90%;
+}
+
+.protvistaCol2 {
+    display: table-cell;
+    width: 85%;
+    overflow: hidden;
+    padding-left: 10px;
+}
+
+@media (max-width: 1800px) {
+    .protvistaCol1 {
+        width: 20%;
+        font-size:90%;
+    }
+    .protvistaCol2 {
+        width: 80%;
+    }
+}
+
+@media (max-width: 1400px) {
+    .protvistaCol1 {
+        width: 22%;
+        font-size:90%;
+    }
+    .protvistaCol2 {
+        width: 78%;
+    }
+}
+
+@media (max-width: 1100px) {
+    .protvistaCol1 {
+        width: 25%;
+        font-size:75%;
+    }
+    .protvistaCol2 {
+        width: 75%;
+    }
+}
+
+@media (max-width: 1000px) {
+    .protvistaCol1 {
+        width: 27%;
+        font-size:70%;
+    }
+    .protvistaCol2 {
+        width: 73%;
+    }
+}
+
+@media (max-width: 767px) {
+    .protvistaCol1 {
+        width: 30%;
+        font-size:70%;
+    }
+    .protvistaCol2 {
+        width: 70%;
+    }
+}
+
+.category-label {
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    background-color: #b2f5ff;
+    cursor: pointer;
+    padding: .8em 1.3em .8em .8em;
+    position: relative;
+}
+
+.category-label:hover {
+    background-color: #80EEFF;
+}
+
+.category-label::before {
+    content: ' ';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #333;
+    margin-right: 5px;
+    -webkit-transition: all .1s;
+    /* Safari */
+    transition: all .1s;
+}
+
+.protvistaRow.expanded > .category-label {
+    background-color: #80EEFF;
+}
+
+.protvistaRow.expanded > .category-label::before {
+    content: ' ';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+    margin-right: 5px;
+}
+
+.track-label {
+    background-color: #d9faff;
+    padding: 0.5em 1.2em 0.5em 1.8em;
+    cursor:pointer;
+    position: relative;
+}
+
+.category-label.pdbIconsLabel, .track-label.pdbIconsLabel {
+    border-left: 1px solid #b2f5ff;
+    border-right: 1px solid #b2f5ff;
+    background-color: #fff;
+}
+
+.aggregate-track-content, .track-content-single {
+    opacity: 1;
+    -webkit-transition: opacity .1s;
+    /* Safari */
+    transition: opacity .1s;
+    border-bottom: 1px solid #b2f5ff;
+}
+
+.aggregate-track-content{
+    padding-bottom: 5px;
+}
+
+.track-label, .track-content {
+    border-bottom: 1px solid #b2f5ff;
+}
+
+.top-border {
+    border-top: 1px solid #b2f5ff;
+}
+
+.is-hidden{
+    display: none!important;
+}
+
+.pdbIcon {
+    display: inline-block;
+    padding: 5px 4px;
+}
+
+.pdbIcon i {
+    color: #fff;
+    font-size: 21px;
+}
+
+.pdbIcon.rotate i {
+    filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=1);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+    display: inline-block;
+}
+
+.legendRow{
+    min-height: 30px;
+    line-height: 30px;
+}
+
+.legendColor {
+    display: inline-block;
+    height:10px;
+    width:26px;
+}
+
+.legendText{
+    /* min-width: 135px; */
+    display: inline-block;
+    font-size: 90%;
+    text-align: left;
+    color:#333;
+    margin-left: 2px;
+}
+
+.protvistaRowGroup{
+    max-height: 210px;
+    overflow-y: auto;
+    clear: both;
+    display: none;
+}
+
+.protvistaRowGroup.noPaddingRight > .protvistaRow > .protvistaCol2 {
+    padding-right: 0 !important;
+}
+
+.labelZoomIcon{
+    position: absolute;
+    left: 5px;
+    cursor: zoom-in;
+    color: #848a86;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+}
+
+.labelZoomIcon.active{
+    cursor: zoom-out!important;
+    color: #009e38!important;
+}
+
+.hideLabelIcon{
+    position: absolute;
+    right: 5px;
+    cursor: pointer;
+    color: #848a86;
+    top: 10%;
+    transform: translateY(-10%);
+    font-size: 10px;
+}
+
+.protvistaResetSectionIcon{
+    position: absolute;
+    border: 1px solid #828181;
+    background-color: #828181;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    line-height: 19px;
+    right: 10px;
+    display: none;
+}
+
+.protvistaResetSectionIcon i{
+    color: #fff;
+    cursor: pointer;
+    font-size:80%;
+}
+
+.protvistaToolbar{
+    text-align: right;
+}
+
+.protvistaToolbarIcon{
+    display: inline-block;
+    border: 1px solid #828181;
+    background-color: #828181;
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+}
+
+.protvistaToolbar i{
+    color: #fff;
+    cursor: pointer;
+    margin:2px;
+}
+
+.protvistaRangeMenuTitle{
+    position: relative;
+    color: #1b1919;
+}
+
+.protvistaRangeMenuTitle > div{
+    padding: 10px 10px 0 10px;
+}
+
+.protvistaRangeMenuTitle > div:first-child{
+    font-weight: bold;
+    text-align: left;
+}
+
+.protvistaMenuClose{
+    position: absolute;
+    right: 10px;
+    top: 14px;
+    color: #6d6d6d;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.protvistaForm{
+    padding: 10px;
+    font-size: 12px;
+    max-height: 300px;
+    overflow: auto;
+    text-align: left;
+    font-weight: 600;
+    color: #444;
+}
+
+.divWithScroll {
+    position: relative;
+    clear: both;
+    overflow-y: scroll;
+    height:40px;
+}
+
+.label-tooltip .label-tooltip-text {
+    visibility: hidden;
+    /*white-space: nowrap;*/
+    width: 400px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 5px;
+    left: 100%;
+}
+  
+.label-tooltip .label-tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+  
+.label-tooltip:hover .label-tooltip-text {
+    visibility: visible;
+}
+
+.protvista-pdb protvista-pdb-navigation .handle, 
+.protvista-pdb protvista-navigation .handle {
+    fill: darkgray;
+    height: 19px !important;
+    stroke: black;
+}
+
+protvista-tooltip {
+    z-index: 50000;
+    position: absolute;
+    min-width: 220px;
+    max-width: 350px;
+    margin-top: 20px;
+    margin-left: -20px;
+    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    /*opacity: .9;*/
+}
+
+protvista-tooltip[mirror="H"] {
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+protvista-tooltip .tooltip-header .tooltip-header-title{
+    color: #ffffff;
+}
+
+/* protvista-tooltip a,
+protvista-tooltip a:link,
+protvista-tooltip a:hover,
+protvista-tooltip a:active,
+protvista-tooltip a:visited {
+    color: #ffffff;
+} */
+
+protvista-tooltip .tooltip-body {
+    /* color: #ffffff; */
+    color: #555;
+}
+
+protvista-tooltip .tooltip-header {
+    background-color: #595959;
+    line-height: 3em;
+}
+
+/* protvista-tooltip .tooltip-header::before {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+} */
+
+protvista-tooltip[mirror="H"] .tooltip-header::before {
+    left: initial;
+    right: 20px;
+}
+
+protvista-tooltip .tooltip-header .tooltip-header-title {
+    /* background-color: #000000;
+    font-weight: 700;
+    line-height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: .4em; */
+    font-weight: 400;
+    white-space: nowrap;
+    letter-spacing: .05em;
+    font-size: 1.1em;
+    background-color: #595959;
+    line-height: 2em;
+    padding: 0 .7em;
+    color: #FFF;
+}
+
+protvista-tooltip .tooltip-body {
+    padding: 1em;
+    background: #FFF;
+    font-weight: normal;
+    max-height: 160px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+protvista-tooltip .tooltip-close {
+    height: 3em;
+    width: 3em;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("close-icon.svg");
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+protvista-tooltip .tooltip-close:hover {
+    background-color: #1a1a1a;
+}
+
+protvista-tooltip table td {
+    padding: .5em .5em;
+    vertical-align: top;
+}
+
+protvista-tooltip table td:first-child {
+    font-weight: 600;
+    text-align: right
+}
+
+protvista-tooltip table td p {
+    margin-top: 0;
+}
+
+protvista-tooltip table thead, table tbody, table tfoot {
+    /* border: 0px solid #f1f1f1;
+    background-color: #616161; */
+    background-color: #FFF;
+}
+
+protvista-tooltip .tooltip-body table tbody{
+    font-size: 12px;
+}
+
+protvista-tooltip table tbody tr:nth-child(even) {
+    border-bottom: 0;
+    /* background-color: #616161; */
+    background-color: #FFF;
+}
+
+protvista-tooltip .tooltip-body table tbody h4, protvista-tooltip .tooltip-body table tbody h5{
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+protvista-tooltip h4, protvista-tooltip h5 {
+    margin: 0;
+}
+
+protvista-tooltip table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    background-color: #FFF;
+    /* -webkit-box-shadow: 5px 5px 2px 0 rgba(0,0,0,.1);
+    -moz-box-shadow: 5px 5px 2px 0 rgba(0,0,0,.1);
+    box-shadow: 5px 5px 2px 0 rgba(0,0,0,.1); */
+    width: 100%;
+    font-family:Verdana,Arial,sans-serif;
+    font-size: 93%;
+}
+
+protvista-tooltip  table td {
+    /* border: 1px solid #CCC; */
+    color: #555;
+}
+
+protvista-tooltip  table tr td:first-child {
+    font-weight: 700;
+}
+
+/* filter */
+ul.filter-list {
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+ul.filter-list a {
+    cursor:pointer;
+}
+.filter-list li {
+    margin: .4em 0;
+}
+.filter-select-trigger {
+    text-decoration:none;
+}
+.filter-select-wrapper {
+    box-sizing: border-box;
+    display:inline-block;
+    border-radius:.2em;
+    margin-right: .2em;
+    margin-left: .3em;
+    line-height: .2em;
+    padding: .2em;
+    border: .1em solid rgba(255, 0, 0, 0);
+}
+.filter-select {
+    margin:0;
+    box-sizing:border-box;
+    border-radius:.2em;
+    width:1.2em;
+    height:1.2em;
+    display:inline-block;
+    background-color: #333333;
+}
+.filter-select-trigger:hover .filter-select-wrapper {
+    border: .1em solid rgba(255, 0, 0, .5);
+}
+.filter-select-trigger.active .filter-select-wrapper {
+    border: .1em solid rgba(255, 0, 0, .9);
+}
+
+.pdbIconsId {
+    color: #0000EE !important;
+    border-bottom: none !important;
+    min-width: 43px;
+    display: inline-block;
+}
+
+.pdbIconsId:visited {
+    color: #551A8B !important;
+    border-bottom: none !important;
+}
+
+.pdbIconslogoA {
+    border-bottom: none !important;
+}
+
+.pdbIconslogo {
+    display: inline-block;
+    padding: 0px 4px;
+    height: 18px;
+    line-height: 18px;
+}
+@media (max-width: 1000px) {
+    .pdbIconsId{
+        min-width: 25px;
+    }
+    .pdbIconsWrapper{
+        display: block;
+    }
+}
+
+.protvista-pdb a, .protvista-pdb a:visited {
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+    border-bottom-color: inherit;
+    text-decoration: none;
+    color: #222;
+}
+
+.protvista-pdb a:hover, .protvista-pdb a:focus, .protvista-pdb a:active {
+    color: rgb(116,179,96);
+}
+
+.labelTooltipBox {
+    max-width: 400px;
+    background-color: #e4e2e2;
+    color: #222;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: fixed;
+    z-index: 1;
+    font-size: 80%;
+}
+  
+.labelTooltipBox::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 100%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #e4e2e2 transparent transparent;
+}
+
+.viewMenuBox {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    background: #fff;
+    left: 70%;
+    top: 47px;
+    min-width: 150px;
+    max-width: 280px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100vh - 48px);
+    border-radius: 4px;
+    outline: 0;
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+}
+
+#filter-disease .protvista_checkbox_input + .protvista_checkbox_label::before {
+background: #990000;
+opacity: 0.4;
+}
+
+#filter-disease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+opacity: 1;
+}
+
+#filter-predicted .protvista_checkbox_input + .protvista_checkbox_label::before {
+background: linear-gradient(#002594, #8FE3FF);
+opacity: 0.4;
+}
+
+#filter-predicted .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+opacity: 1;
+}
+
+#filter-nonDisease .protvista_checkbox_input + .protvista_checkbox_label::before {
+background: #99cc00;
+opacity: 0.4;
+}
+
+#filter-nonDisease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+opacity: 1;
+}
+
+#filter-uncertain .protvista_checkbox_input + .protvista_checkbox_label::before {
+background: #FFCC00;
+opacity: 0.4;
+}
+
+#filter-uncertain .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+opacity: 1;
+}
