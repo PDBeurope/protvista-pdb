@@ -1,7 +1,7 @@
-const { html } = require("lit-html");
+const {html} = require("lit-html");
 
 function PDBePvScSection(ctx) {
-    return html `<div class="protvistaRow pvConsHistoRow" style="display:none">
+    return html`<div class="protvistaRow pvConsHistoRow" style="display:none">
                     
                     <div class="protvistaCol1 category-label" @click=${e => ctx.layoutHelper.showConservationPlot()} style="background-color:rgb(128,128,128); borderBottom:1px solid lightgrey">Sequence conservation</div>
 
@@ -12,19 +12,52 @@ function PDBePvScSection(ctx) {
                 <div class="pvConservationPlotRow" style="display:none">
                     <div class="protvistaRow">
                         <div class="protvistaCol1 track-label" style="background-color:rgb(211,211,211); borderBottom:1px solid lightgrey">
-                            <div style="height:30px;"><b>Amino acid probabilities</b></div>
+                            <div style="height:30px;">
+                                <b>Amino acid probabilities</b>
+                                <span style="float: right" @mouseover=${e => {
+                                    e.stopPropagation();
+                                    ctx.layoutHelper.showLabelTooltip(e)
+                                    }} @mouseout=${e => {
+                                    e.stopPropagation();
+                                    ctx.layoutHelper.hideLabelTooltip()
+                                }}>
+                                    <a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Sequence-conservation-scores" target="_blank"
+                                    style="border-bottom: none">
+                                        <i class="icon icon-generic" data-icon="?"></i>
+                                    </a>
+                                    <span class="labelTooltipContent" style="display:none;">
+                                        The amino acid probabilities are calculated using HMM profiles based on multiple sequence alignments. Click to see more details...
+                                    </span>
+                                </span>
+                            </div>
                             <div class="control" style="height:90px;">
                                 <p>Data displayed by</p>
                                 <div>
                                     <label class="legendText">
-                                        <input type="radio" class="sc_radio" name="sc_display_radio" value="probability" checked @change=${e => ctx.layoutHelper.filterSc('probability')}>Probability
+                                        <input type="radio" class="sc_radio" name="sc_display_radio" value="property" checked @change=${e => ctx.layoutHelper.filterSc('property')}>Property
                                     </label>
                                 </div>
                                 <div>
                                     <label class="legendText">
-                                        <input type="radio" class="sc_radio" name="sc_display_radio" value="property" @change=${e => ctx.layoutHelper.filterSc('property')}>Property
+                                        <input type="radio" class="sc_radio" name="sc_display_radio" value="probability" @change=${e => ctx.layoutHelper.filterSc('probability')}>Probability
                                     </label>
                                 </div>
+                            </div>
+
+                            <div @mouseover=${e => {
+                                e.stopPropagation();
+                                ctx.layoutHelper.showLabelTooltip(e)
+                                }} @mouseout=${e => {
+                                e.stopPropagation();
+                                ctx.layoutHelper.hideLabelTooltip()
+                            }}>
+                                <a class="button" style="padding: 2px 4px 2px 4px; background-color: #ececec; border: solid 1px dimgrey; border-radius: 3px"
+                                    href="https://wwwdev.ebi.ac.uk/pdbe/static/alignments/${ctx._accession}.sto.gz">
+                                    Download MSA <i class="icon icon-functional" data-icon="="></i>
+                                </a>
+                                <span class="labelTooltipContent" style="display:none;">
+                                    Click to download the multiple sequence alignment (MSA) file
+                                </span>
                             </div>
 
                             <div class="legend" style="height:200px;">
@@ -74,7 +107,7 @@ function PDBePvScSection(ctx) {
                         </div>
                     </div>
                 </div>`
-        
+
 }
 
 export default PDBePvScSection;
