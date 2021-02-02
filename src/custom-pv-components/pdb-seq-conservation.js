@@ -22,19 +22,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
     }
 
     set data(data) {
-        this._seqid = (this._accession && this._accession !== 'null') ? data[this._accession]['seqId'] : undefined;
         this._data = (this._accession && this._accession !== 'null') ? data[this._accession]['data'] : data;
-        this.add_download_link();
         this._createTrack();
-    }
-
-    add_download_link() {
-        if (this._seqid) {
-            const filelocation = "/nfs/msd/release/data/conserved_residues/all/sto";
-            const filename = filelocation + '/' + this._seqid + ".sto";
-        } else {
-            return false;
-        }
     }
 
     _createTrack() {
@@ -58,6 +47,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
 
         this.seq_g = this.svg.append("g").attr("class", "sequence-features").attr("transform", "translate(0,-5)");
 
+        // Set the "property" view as default
+        this.filterData("property");
         this._createFeatures();
         this.refresh();
     }
@@ -178,7 +169,7 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                                 cancelable: true
                             })
                         );
-                    })
+                    });
 
 
                 // add tooltip
