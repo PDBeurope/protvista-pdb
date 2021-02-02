@@ -44,15 +44,18 @@ function PDBePvScSection(ctx) {
                                 </div>
                             </div>
 
+                            <!-- Note: Display is set to none until we expose MSA files per PDB entity -->
                             <div @mouseover=${e => {
                                 e.stopPropagation();
                                 ctx.layoutHelper.showLabelTooltip(e)
                                 }} @mouseout=${e => {
                                 e.stopPropagation();
                                 ctx.layoutHelper.hideLabelTooltip()
-                            }}>
+                            }}
+                            style = "${ctx._entryId ? "display: none" : ""}"
+                            >
                                 <a class="button" style="padding: 2px 4px 2px 4px; background-color: #ececec; border: solid 1px dimgrey; border-radius: 3px"
-                                    href="https://wwwdev.ebi.ac.uk/pdbe/static/alignments/${ctx._accession}.sto.gz">
+                                    href="${ctx.layoutHelper.getMSADownloadUrl()}">
                                     Download MSA <i class="icon icon-functional" data-icon="="></i>
                                 </a>
                                 <span class="labelTooltipContent" style="display:none;">

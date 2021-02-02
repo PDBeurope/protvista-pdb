@@ -623,6 +623,17 @@ class LayoutHelper {
         }));
     }
 
+    getMSADownloadUrl() {
+        let baseUrl = "https://www.ebi.ac.uk/pdbe/static/alignments/";
+        if (this.ctx._accession) {
+            return baseUrl + this.ctx._accession + ".sto.gz";
+        } else if (this.ctx._entryId) {
+            return baseUrl + this.ctx._entryId + ".sto.gz";
+        } else {
+            return "";
+        }
+    }
+
     addEventSubscription() {
         document.addEventListener("PDB.topologyViewer.click", e => {
             this.handleExtEvents(e);
