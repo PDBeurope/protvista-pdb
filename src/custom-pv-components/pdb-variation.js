@@ -89,6 +89,35 @@ class ProtvistaPdbVariation extends ProtvistaPdbTrack {
     this._createTrack();
   }
 
+  _createTrack() {
+    this._layoutObj.init(this._data);
+
+    d3.select(this)
+    .selectAll("svg")
+      .remove();
+    
+    this.svg = d3.select(this)
+      .append("div")
+      .style("line-height", 0)
+      .append("svg")
+      .style('width', '100%')
+      .attr("height", this._height);
+
+    this.highlighted = this.svg
+      .append("rect")
+      .attr("class", "highlighted")
+      .attr("fill", "rgba(255, 235, 59, 0.8)")
+      .attr('stroke', 'black')
+      .attr("height", this._height).attr("transform", "translate(1.5,0)");
+
+    // this.trackHighlighter.appendHighlightTo(this.svg);
+
+    this.seq_g = this.svg.append("g").attr("class", "sequence-features").attr("transform", "translate(1.5,30)");
+
+    this._createFeatures();
+    this.refresh();
+  }
+
   _createFeatures() {
     this._variationPlot = new VariationPlot();
     // Group for the main chart

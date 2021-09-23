@@ -1,29 +1,33 @@
-protvista-variation {
+protvista-pdb-variation {
   display: flex;
   width: 100%;
 }
 
-protvista-variation svg {
+protvista-pdb-variation svg {
   background-color: #fff;
 }
 
-protvista-variation circle {
+protvista-pdb-variation circle {
   opacity: 0.6;
 }
-protvista-variation circle:hover {
+protvista-pdb-variation circle:hover {
   opacity: 0.9;
 }
-protvista-variation .tick line,
-protvista-variation .axis path {
+protvista-pdb-variation .tick line,
+protvista-pdb-variation .axis path {
   opacity: 0.1;
 }
 
-protvista-variation .protvista-highlight {
+protvista-pdb-variation .protvista-highlight {
   fill: #ffe999;
 }
 
-protvista-variation .variation-y-right line,
-protvista-variation .axis path {
+protvista-pdb-variation .variation-y-right line,
+protvista-pdb-variation .axis path {
   fill: none;
   stroke: none;
+}
+
+.pvVariantPlotSection {
+  padding-left: 9px !important;
 }

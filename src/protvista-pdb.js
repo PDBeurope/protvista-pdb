@@ -74,10 +74,12 @@ class ProtvistaPDB extends HTMLElement {
         
         this.displayLoadingMessage();
 
+        // Create data helper instance
+        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection);
+
         if(typeof this.customData !== 'undefined' && this.customData !== null) return;
 
-        // Create data helper instance and get data from PDBe PV APIs
-        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection);
+        // Get data from PDBe PV APIs
         this.viewerData = await this.dataHelper.processMutlplePDBeApiData();
         this.viewerData.displayConservation = (this.pageSection && this.pageSection == '2') ? false : true;
         this.viewerData.displayVariants = (this.pageSection && this.pageSection == '2') ? false : true;
