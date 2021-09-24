@@ -105,6 +105,17 @@ const filterData = [
     }
   },
   {
+    name: "missense3d",
+    type: {
+      name: "provenance",
+      text: "Filter Provenance"
+    },
+    options: {
+      labels: ["Missense3D"],
+      colors: ["#e5e5e5"]
+    }
+  },
+  {
     name: "PDB",
     type: {
       name: "provenance",
@@ -126,7 +137,8 @@ const keywordMap = {
   ClinVar: 'clinvar_reviewed',
   LSS: 'large_scale_studies',
   FoldX: 'foldx',
-  PDB: 'pdb'
+  PDB: 'pdb',
+  missense3d: 'missense3d'
 }
 
 const applyFilter = (filterName, variants = []) => {
