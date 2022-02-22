@@ -20,9 +20,7 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
     }
 
     set data(data) {
-        // const seqData = data[this._accession]['residues']
-        // this._data = processConservation(seqData);
-        this._data = (this._accession && this._accession !== 'null') ? data[this._accession]['data'] : data;
+        this._data = data;
         this._createTrack();
     }
 
@@ -41,13 +39,11 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
             .domain([0, 10])
             .range([0, 30]);
 
-        const singleBasedwidth = this.getSingleBaseWidth();
-
-        this.featuresG = this.seq_g.selectAll("g.location-group").data(this._data);
+        this.featuresG = this.seq_g.selectAll("g.location-group").data(this._data.data.index);
 
         this.locations = this.featuresG
             .enter()
-            .filter(d => d.conservation_score > 0)
+            .filter(d => this._data.data.conservation_score[d- 1] > 0)
             .append("g")
             .attr("class", "location-group");
 
@@ -56,7 +52,7 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
             .append("path")
             .attr("class", "feature")
             .attr("tooltip-trigger", "true")
-            .attr("id", d => "hsc_" + d.start)
+            .attr("id", d => "hsc_" + d)
             .attr("fill", "rgb(128, 128, 128)")
             .on("mouseover", d => {
                 const self = this;
@@ -68,10 +64,11 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
                 } else {
                     window.setTimeout(function() {
                         const tooltipData = {
-                            start: d.start,
-                            end: d.end,
+                            start: d,
+                            end: d,
                             feature: {
-                                ...d,
+                                tooltipContent: `Conservation score: ${self._data.data.conservation_score[d- 1]}`,
+                                labelColor: 'rgb(211,211,211)',
                                 type: "Sequence conservation"
                             }
                         };
@@ -83,8 +80,8 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
                 this.dispatchEvent(
                     new CustomEvent("change", {
                         detail: {
-                            highlightend: d.end,
-                            highlightstart: d.start
+                            highlightend: d,
+                            highlightstart: d
                         },
                         bubbles: true,
                         cancelable: true
@@ -124,10 +121,11 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
             .on("click", d => {
                 const self = this;
                 const tooltipData = {
-                    start: d.start,
-                    end: d.end,
+                    start: d,
+                    end: d,
                     feature: {
-                        ...d,
+                        tooltipContent: `Conservation score: ${self._data.data.conservation_score[d- 1]}`,
+                        labelColor: 'rgb(211,211,211)',
                         type: "Sequence conservation"
                     }
                 };
@@ -147,23 +145,19 @@ class ProtvistaPdbScHistogram extends ProtvistaPdbTrack {
             let singleBasedwidth = this.getSingleBaseWidth();
 
             this.features = this.seq_g.selectAll("path.feature").data(
-                this._data.filter(d => d.conservation_score > 0));
+                this._data.data.index.filter(d => this._data.data.conservation_score[d- 1] > 0));
 
             this.features
                 .attr("d", d => {
                     return this.getFeatureShape(
                         this._height,
                         singleBasedwidth,
-                        this._yScale(d.conservation_score)
+                        this._yScale(this._data.data.conservation_score[d- 1])
                     )
                 })
-                .attr(
-                    "transform",
-                    d =>
-                    "translate(" +
-                    this.getXFromSeqPosition(d.start) +
-                    "," + 0 + ")"
-                )
+                .attr("transform", (d, i) => {
+                    return `translate(${this.getXFromSeqPosition(d)}, 0)`
+                })
                 .attr("fill", "rgb(128, 128, 128)");
 
             this._updateHighlight();
