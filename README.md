@@ -2,7 +2,7 @@
 
 ### Publication
 
-**PDB ProtVista: A reusable and open-source sequence feature viewer**, [Mandar Deshpande](https://github.com/mandarsd),  [Mihaly Varadi](https://github.com/mvaradi),  [Typhaine Paysan-Lafosse](https://github.com/typhainepl),  [Sreenath Nair](https://github.com/sreenathnair),  Damiano Piovesan,  Saqib Mir,  Aleksandras Gutmanas,  Silvio C. E. Tosatto,  Sameer Velankar<br>doi: https://doi.org/10.1101/2022.07.22.500790
+**PDB ProtVista: A reusable and open-source sequence feature viewer**, [Mandar Deshpande](https://github.com/mandarsd),  [Mihaly Varadi](https://github.com/mvaradi),  [Typhaine Paysan-Lafosse](https://github.com/typhainepl),  [Sreenath Nair](https://github.com/sreenathnair),  Damiano Piovesan,  Saqib Mir,  Aleksandras Gutmanas,  Silvio C. E. Tosatto,  Sameer Velankar<br>22 July 2022; BioRxiv; https://doi.org/10.1101/2022.07.22.500790
 
 ### Summary
 
