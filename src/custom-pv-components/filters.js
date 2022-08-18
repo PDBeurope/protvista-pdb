@@ -125,6 +125,28 @@ const filterData = [
       labels: ["Observed in PDB"],
       colors: ["#e5e5e5"]
     }
+  },
+  {
+    name: "SKEMPI",
+    type: {
+      name: "provenance",
+      text: "Filter Provenance"
+    },
+    options: {
+      labels: ["SKEMPI"],
+      colors: ["#e5e5e5"]
+    }
+  },
+  {
+    name: "fireprotdb",
+    type: {
+      name: "provenance",
+      text: "Filter Provenance"
+    },
+    options: {
+      labels: ["FireProtDB"],
+      colors: ["#e5e5e5"]
+    }
   }
 ];
 
@@ -138,7 +160,9 @@ const keywordMap = {
   LSS: 'large_scale_studies',
   FoldX: 'foldx',
   PDB: 'pdb',
-  missense3d: 'missense3d'
+  missense3d: 'missense3d',
+  SKEMPI: "skempi",
+  fireprotdb: "fireprotdb"
 }
 
 const applyFilter = (filterName, variants = []) => {

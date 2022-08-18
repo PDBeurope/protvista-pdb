@@ -60,6 +60,7 @@ class ProtvistaPDB extends HTMLElement {
         this._entryId = this.getAttribute("entry-id");
         this.customData = this.getAttribute("custom-data");
         this.pageSection = this.getAttribute("page-section");
+        this.hideError = this.getAttribute("hide-error");
         let envAttrValue = this.getAttribute("env");
         this.subscribeEvents = (this.getAttribute("subscribe-events") === 'false') ? false : true;
         this.showLegends = (this.getAttribute("legends") === 'false') ? false : true;
@@ -88,7 +89,6 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     _render() {
-
         if(!this.viewerData.length || this.viewerData.tracks.length == 0){
             this.displayErrorMessage();
             return;
@@ -139,7 +139,8 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     displayErrorMessage() {
-        render(html`<div class="protvista-pdb" style="text-align:center;">Invalid data!</div>`, this);
+        const err = this.hideError ? '' : html`<div class="protvista-pdb" style="text-align:center;">Invalid data!</div>`;
+        render(err, this);
     }
 
     disconnectedCallback() {
