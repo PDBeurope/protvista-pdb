@@ -614,13 +614,9 @@ class LayoutHelper {
         }
     }
 
-    filterSc(filtervalue) {
-        this.ctx.querySelector('.sc_radio').dispatchEvent(new CustomEvent('sc-change', {
-            detail: {
-                type: filtervalue
-            },
-            bubbles: true, cancelable: true
-        }));
+    filterSc(orderValue) {
+        const scContainerEle = this.ctx.querySelector(".pvConservationPlotSection");
+        scContainerEle.firstElementChild.setAttribute('sc-display-order', orderValue);
     }
 
     getMSADownloadUrl() {
