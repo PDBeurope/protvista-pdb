@@ -559,8 +559,8 @@ ul.filter-list a {
 
 .pdbIconsId {
     color: #0000EE !important;
-    border-bottom: none !important;
-    min-width: 43px;
+    /* border-bottom: none !important;
+    min-width: 43px; */
     display: inline-block;
 }
 

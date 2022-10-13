@@ -35,7 +35,7 @@ class DataHelper {
             uniport: [
                 `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/protvista/unipdb/${this.accession}`,
                 `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/protvista/domains/${this.accession}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/protvista/secondary_structures/${this.accession}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/uniprot/secondary_structures/protvista/variation/${this.accession}`,
                 `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/protvista/ligand_sites/${this.accession}`,
                 `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/protvista/interface_residues/${this.accession}`,
                 `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/protvista/annotations/${this.accession}`

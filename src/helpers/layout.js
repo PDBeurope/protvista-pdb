@@ -161,6 +161,11 @@ class LayoutHelper {
             //Add label
             let labelDetails = this.getLabel(trackModel.labelType, trackModel.label);
             let labelEle = this.ctx.querySelectorAll(labelSelector)[0];
+            if(labelDetails === 'Secondary structure variation') {
+                labelDetails += `<a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Secondary-structure-variance" target="_blank" style="border-bottom: none;margin-left:5px;box-shadow:none;" title="Documentation link">
+                <i class="icon icon-generic" data-icon="x"></i>
+              </a>`;
+            }
             labelEle.innerHTML = labelDetails;
 
             let transform = '';
@@ -206,7 +211,7 @@ class LayoutHelper {
             'literature': {class: 'icon icon-generic', dataIcon: 'P'}
           };
           let labelElements = [];
-          labelElements.push('<strong><a class="pdbIconsId" href="' + value.url + '" target="_blank">' + value.id + '</a></strong><span class="pdbIconsWrapper">');
+          labelElements.push('<span style="display:inline-block;min-width:38px;"><strong><a class="pdbIconsId" href="' + value.url + '" target="_blank">' + value.id + '</a></strong></span><span class="pdbIconsWrapper">');
           value.icons.forEach(iconData => {
     
             let rotateClass = '';
