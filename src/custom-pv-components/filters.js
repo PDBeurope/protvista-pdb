@@ -158,6 +158,17 @@ const filterData = [
       labels: ["Frustratometer"],
       colors: ["#e5e5e5"]
     }
+  },
+  {
+    name: "nextprot",
+    type: {
+      name: "provenance",
+      text: "Filter Provenance"
+    },
+    options: {
+      labels: ["neXtProt"],
+      colors: ["#e5e5e5"]
+    }
   }
 ];
 
@@ -174,7 +185,8 @@ const keywordMap = {
   missense3d: 'missense3d',
   SKEMPI: "skempi",
   fireprotdb: "fireprotdb",
-  frustratometer: "frustratometer"
+  frustratometer: "frustratometer",
+  nextprot: "nextprot"
 }
 
 const applyFilter = (filterName, variants = []) => {
