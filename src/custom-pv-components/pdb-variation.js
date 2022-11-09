@@ -101,14 +101,14 @@ class ProtvistaPdbVariation extends ProtvistaPdbTrack {
       .style("line-height", 0)
       .append("svg")
       .style('width', '100%')
-      .attr("height", this._height);
+      .attr("height", this._height + 40);
 
     this.highlighted = this.svg
       .append("rect")
       .attr("class", "highlighted")
       .attr("fill", "rgba(255, 235, 59, 0.8)")
       .attr('stroke', 'black')
-      .attr("height", this._height).attr("transform", "translate(1.5,0)");
+      .attr("height", this._height + 40).attr("transform", "translate(1.5,0)");
 
     // this.trackHighlighter.appendHighlightTo(this.svg);
 
