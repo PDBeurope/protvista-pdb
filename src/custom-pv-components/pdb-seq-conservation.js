@@ -136,7 +136,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                     .enter()
                     .filter((d, i, ele) => {
                         const residueNumber = ele[i]._parent.__data__;
-                        return this._data.data[`probability_${d}`][residueNumber - 1] > 0;
+                        const dataIndex = this._data.data.index.indexOf(residueNumber);
+                        return this._data.data[`probability_${d}`][dataIndex] > 0;
                     })
                     .append("g")
                         .attr("class", "aminogroup")
@@ -145,11 +146,13 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                             .style("fill", d => this.aaDetails[d].color)
                             .attr("y", (d, i, ele) => {
                                 const residueNumber = ele[i].parentElement.parentElement.__data__;
-                                return this._aaYPosition(i, this._data.data[`probability_${d}`][residueNumber - 1]);
+                                const dataIndex = this._data.data.index.indexOf(residueNumber);
+                                return this._aaYPosition(i, this._data.data[`probability_${d}`][dataIndex]);
                             })
                             .attr("height", (d, i, ele) => {
                                 const residueNumber = ele[i].parentElement.parentElement.__data__;
-                                return this._yScale(this._data.data[`probability_${d}`][residueNumber - 1]);
+                                const dataIndex = this._data.data.index.indexOf(residueNumber);
+                                return this._yScale(this._data.data[`probability_${d}`][dataIndex]);
                             })
                             .attr("width", singleBaseWidth)
                             .style("stroke-width", "0.5")
@@ -160,7 +163,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                             })
                             .attr("data-res-details", (d, i, ele) => {
                                 const residueNumber = ele[i].parentElement.parentElement.__data__;
-                                return `${residueNumber}-${d}-${this._data.data[`probability_${d}`][residueNumber - 1]}`;
+                                const dataIndex = this._data.data.index.indexOf(residueNumber);
+                                return `${residueNumber}-${d}-${this._data.data[`probability_${d}`][dataIndex]}`;
                             });
 
                 // add text with AA letter to rectangle
@@ -170,7 +174,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                         .style("cursor", "default")
                         .attr("y", (d, i, ele) => {
                             const residueNumber = ele[i].parentElement.parentElement.__data__;
-                            const resProb = this._data.data[`probability_${d}`][residueNumber - 1];
+                            const dataIndex = this._data.data.index.indexOf(residueNumber);
+                            const resProb = this._data.data[`probability_${d}`][dataIndex];
                             const yPos = this._aaYPosition(i, resProb);
                             return yPos + (this._yScale(resProb) / 2 + 5);
                         })
@@ -183,7 +188,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                         })
                         .attr("font-size", (d, i, ele) => {
                             const residueNumber = ele[i].parentElement.parentElement.__data__;
-                            const resProb = this._data.data[`probability_${d}`][residueNumber - 1];
+                            const dataIndex = this._data.data.index.indexOf(residueNumber);
+                            const resProb = this._data.data[`probability_${d}`][dataIndex];
                             return this.adaptLabelFontSize(singleBaseWidth, this._yScale(resProb))
                         });
 
@@ -195,7 +201,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                     const targetEle = e.target;
                     const aaValue = targetEle.__data__;
                     const residueNumber = targetEle.parentElement.parentElement.__data__;
-                    const resProb = this._data.data[`probability_${aaValue}`][residueNumber - 1];
+                    const dataIndex = this._data.data.index.indexOf(residueNumber);
+                    const resProb = this._data.data[`probability_${aaValue}`][dataIndex];
 
                     const tooltipData = {
                         start: residueNumber,
@@ -222,7 +229,8 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
                     const targetEle = e.target;
                     const aaValue = targetEle.__data__;
                     const residueNumber = targetEle.parentElement.parentElement.__data__;
-                    const resProb = this._data.data[`probability_${aaValue}`][residueNumber - 1];
+                    const dataIndex = this._data.data.index.indexOf(residueNumber);
+                    const resProb = this._data.data[`probability_${aaValue}`][dataIndex];
 
                     const tooltipData = {
                         start: residueNumber,
@@ -308,14 +316,16 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
     getAaList(residueNumber) {
 
         // check in cache
-        if(this[`${this.displayOrder}SortedData`][residueNumber - 1]) {
-            return this[`${this.displayOrder}SortedData`][residueNumber - 1].split(',');
+        const dataIndex = this._data.data.index.indexOf(residueNumber);
+        const residueSequenceNumber = this._data.data.index[dataIndex];
+        if(this[`${this.displayOrder}SortedData`][residueSequenceNumber]) {
+            return this[`${this.displayOrder}SortedData`][residueSequenceNumber].split(',');
         }
 
         // generate sorted array
         let aaValuesList = [];
         this.aaList.forEach(aa => {
-            aaValuesList.push({ aa: aa, value: this._data.data[`probability_${aa}`][residueNumber - 1], color: this.aaDetails[aa].color })
+            aaValuesList.push({ aa: aa, value: this._data.data[`probability_${aa}`][dataIndex], color: this.aaDetails[aa].color })
         });
 
         let sortedAAList = [];
@@ -330,7 +340,7 @@ class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
         sortedAAList = aaValuesList.map(aaVal => aaVal.aa);
 
         // add to cache
-        this[`${this.displayOrder}SortedData`][residueNumber - 1] = sortedAAList.join(',');
+        this[`${this.displayOrder}SortedData`][residueSequenceNumber] = sortedAAList.join(',');
         
         return sortedAAList;
 
