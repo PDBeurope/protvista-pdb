@@ -41,14 +41,14 @@ class DataHelper {
                 `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/protvista/annotations/${this.accession}`
             ],
             entry: [
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/uniprot_mapping/${this.entryId}/${this.entityId}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/chains/${this.entryId}/${this.entityId}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/domains/${this.entryId}/${this.entityId}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/rfam/${this.entryId}/${this.entityId}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/secondary_structure/${this.entryId}/${this.entityId}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/binding_sites/${this.entryId}/${this.entityId}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/interfaces/${this.entryId}/${this.entityId}`,
-                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/pdbe_pages/protvista/annotations/${this.entryId}/${this.entityId}`
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/uniprot_mapping/${this.entryId}/${this.entityId}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/chains/${this.entryId}/${this.entityId}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/domains/${this.entryId}/${this.entityId}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/rfam/${this.entryId}/${this.entityId}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/secondary_structure/${this.entryId}/${this.entityId}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/binding_sites/${this.entryId}/${this.entityId}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/interfaces/${this.entryId}/${this.entityId}`,
+                `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/pdb/entry/protvista/annotations/${this.entryId}/${this.entityId}`
             ]
         }
 
@@ -72,9 +72,9 @@ class DataHelper {
         .then(results => {
             results.forEach((result, resultIndex) => {
                 if(typeof result == 'undefined' || result == null || Object.keys(result).length === 0){
-                    //skip result    
+                    //skip result
                 }else{
-                 
+
                     let resultKey = this.entryId ? this.entryId : this.accession;
                     if(pdbeApiUrls[resultIndex].split('/').indexOf('uniprot_mapping') > -1){
                         if(result[resultKey].tracks && result[resultKey].tracks.length == 1){
@@ -90,19 +90,19 @@ class DataHelper {
                     if (result[resultKey].tracks) this.viewerData.tracks = this.viewerData.tracks.concat(result[resultKey].tracks);
                     if (result[resultKey].legends){
                         if (result[resultKey].legends.alignment) this.viewerData.legends.alignment = result[resultKey].legends.alignment;
-                        
-                        if (result[resultKey].legends.data){ 
+
+                        if (result[resultKey].legends.data){
                             for(let legendKey in result[resultKey].legends.data){
                                 this.viewerData.legends.data[legendKey] = result[resultKey].legends.data[legendKey];
                             }
                         }
 
                     }
-                    
+
                 }
 
             });
-        
+
         }, err => {
             console.log(`API unavailable!`, e);
         });
@@ -114,11 +114,12 @@ class DataHelper {
         try {
             let apiUrl = `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/uniprot/${(apiName === 'sequence_conservation') ? '' : 'protvista/'}${apiName}/${this.accession}`;
             if(this.entryId && this.entityId){
-                apiUrl = `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/${(apiName === 'sequence_conservation') ? 'pdb' : 'pdbe_pages/protvista'}/${apiName}/${this.entryId}/${this.entityId}`;
+                // apiUrl = `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/graph-api/${(apiName === 'sequence_conservation') ? 'pdb' : 'pdbe_pages/protvista'}/${apiName}/${this.entryId}/${this.entityId}`;
+                apiUrl = `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/aggregated-api/${(apiName === 'sequence_conservation') ? 'pdb' : 'pdb/entry/protvista'}/${apiName}/${this.entryId}/${this.entityId}`;
             }
-            
+
             return await (await fetch(apiUrl)).json();
-  
+
           } catch (e) {
             console.log(`API ${apiName} unavailable!`, e);
           }
