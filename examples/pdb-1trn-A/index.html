@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Protvista PDB - Minimal Example</title>
+
+    <link rel="stylesheet" href="../../styles/protvista-pdb.css" />
+
+    <style>
+      body {
+        font-family: "IBM Plex Sans", Arial, sans-serif;
+        margin: 2rem;
+      }
+      .viewer-container {
+        height: 700px;
+        width: 80%;
+        box-sizing: border-box;
+      }
+      .viewer-container * {
+        box-sizing: border-box;
+      }
+      #viewer {
+        width: 100%;
+        max-width: 100%;
+        border: 1px solid #ddd;
+        min-height: 480px;
+        height: auto;
+        overflow-y: clip;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Protvista PDB</h1>
+
+    <div class="viewer-container">
+      <div class="relative-container" id="viewer"></div>
+    </div>
+
+    <script type="module">
+      import {
+        ProtvistaWrapper,
+        NewProtvistaVisualisation,
+      } from "../../src/index.js";
+
+      import { example } from "./pdb-1trn-A-data.js";
+
+      const wrapper = new ProtvistaWrapper({
+        ...example,
+        NewProtvistaVisualisation,
+      });
+
+      await wrapper.init();
+    </script>
+  </body>
+</html>

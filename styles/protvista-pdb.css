@@ -1,675 +1,522 @@
-.protvista-pdb {
-    font-family: Helvetica,Arial,FreeSans,"Liberation Sans",sans-serif !important;
-    position: relative;
-    /* width: 100%; */
-    border: 1px solid lightgray;
-    margin-bottom: 20px;
-    padding: 20px 10px;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-
-.protvistaRow {
-    display: table;
-    width: 100%;
-    clear: both;
-}
-
-.protvistaCol1 {
-    display: table-cell;
-    vertical-align: middle;
-    width: 15%;
-    font-size:90%;
-}
-
-.protvistaCol2 {
-    display: table-cell;
-    width: 85%;
-    overflow: hidden;
-    padding-left: 10px;
-}
-
-@media (max-width: 1800px) {
-    .protvistaCol1 {
-        width: 20%;
-        font-size:90%;
-    }
-    .protvistaCol2 {
-        width: 80%;
-    }
-}
-
-@media (max-width: 1400px) {
-    .protvistaCol1 {
-        width: 22%;
-        font-size:90%;
-    }
-    .protvistaCol2 {
-        width: 78%;
-    }
-}
-
-@media (max-width: 1100px) {
-    .protvistaCol1 {
-        width: 25%;
-        font-size:75%;
-    }
-    .protvistaCol2 {
-        width: 75%;
-    }
-}
-
-@media (max-width: 1000px) {
-    .protvistaCol1 {
-        width: 27%;
-        font-size:70%;
-    }
-    .protvistaCol2 {
-        width: 73%;
-    }
-}
-
-@media (max-width: 767px) {
-    .protvistaCol1 {
-        width: 30%;
-        font-size:70%;
-    }
-    .protvistaCol2 {
-        width: 70%;
-    }
-}
-
-.category-label {
-    border-top: 1px solid #fff;
-    border-bottom: 1px solid #fff;
-    background-color: #b2f5ff;
-    cursor: pointer;
-    padding: .8em 1.3em .8em .8em;
-    position: relative;
-}
-
-.category-label:hover {
-    background-color: #80EEFF;
-}
-
-.category-label::before {
-    content: ' ';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-left: 5px solid #333;
-    margin-right: 5px;
-    -webkit-transition: all .1s;
-    /* Safari */
-    transition: all .1s;
-}
-
-.protvistaRow.expanded > .category-label {
-    background-color: #80EEFF;
-}
-
-.protvistaRow.expanded > .category-label::before {
-    content: ' ';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid #333;
-    margin-right: 5px;
-}
-
-.track-label {
-    background-color: #d9faff;
-    padding: 0.5em 1.2em 0.5em 1.8em;
-    cursor:pointer;
-    position: relative;
-}
-
-.category-label.pdbIconsLabel, .track-label.pdbIconsLabel {
-    border-left: 1px solid #b2f5ff;
-    border-right: 1px solid #b2f5ff;
-    background-color: #fff;
-}
-
-.aggregate-track-content, .track-content-single {
-    opacity: 1;
-    -webkit-transition: opacity .1s;
-    /* Safari */
-    transition: opacity .1s;
-    border-bottom: 1px solid #b2f5ff;
-}
-
-.aggregate-track-content{
-    padding-bottom: 5px;
-}
-
-.track-label, .track-content {
-    border-bottom: 1px solid #b2f5ff;
-}
-
-.top-border {
-    border-top: 1px solid #b2f5ff;
-}
-
-.is-hidden{
-    display: none!important;
-}
-
-.pdbIcon {
-    display: inline-block;
-    padding: 5px 4px;
-}
-
-.pdbIcon i {
-    color: #fff;
-    font-size: 21px;
-}
-
-.pdbIcon.rotate i {
-    filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=1);
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    transform: rotate(90deg);
-    display: inline-block;
-}
-
-.legendRow{
-    min-height: 30px;
-    line-height: 30px;
-}
-
-.legendColor {
-    display: inline-block;
-    height:10px;
-    width:26px;
-}
-
-.legendText{
-    /* min-width: 135px; */
-    display: inline-block;
-    font-size: 90%;
-    text-align: left;
-    color:#333;
-    margin-left: 2px;
-}
-
-.protvistaRowGroup{
-    max-height: 210px;
-    overflow-y: auto;
-    clear: both;
-    display: none;
-}
-
-.protvistaRowGroup.noPaddingRight > .protvistaRow > .protvistaCol2 {
-    padding-right: 0 !important;
-}
-
-.labelZoomIcon{
-    position: absolute;
-    left: 5px;
-    cursor: zoom-in;
-    color: #848a86;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-}
-
-.labelZoomIcon.active{
-    cursor: zoom-out!important;
-    color: #009e38!important;
-}
-
-.hideLabelIcon{
-    position: absolute;
-    right: 5px;
-    cursor: pointer;
-    color: #848a86;
-    top: 10%;
-    transform: translateY(-10%);
-    font-size: 10px;
-}
-
-.protvistaResetSectionIcon{
-    position: absolute;
-    border: 1px solid #828181;
-    background-color: #828181;
-    border-radius: 50%;
-    cursor: pointer;
-    text-align: center;
-    text-align: center;
-    width: 20px;
-    height: 20px;
-    line-height: 19px;
-    right: 10px;
-    display: none;
-}
-
-.protvistaResetSectionIcon i{
-    color: #fff;
-    cursor: pointer;
-    font-size:80%;
-}
-
-.protvistaToolbar{
-    text-align: right;
-}
-
-.protvistaToolbarIcon{
-    display: inline-block;
-    border: 1px solid #828181;
-    background-color: #828181;
-    border-radius: 50%;
-    margin-right: 10px;
-    cursor: pointer;
-    text-align: center;
-    text-align: center;
-    width: 30px;
-    height: 30px;
-    line-height: 28px;
-}
-
-.protvistaToolbar i{
-    color: #fff;
-    cursor: pointer;
-    margin:2px;
-}
-
-.protvistaRangeMenuTitle{
-    position: relative;
-    color: #1b1919;
-}
-
-.protvistaRangeMenuTitle > div{
-    padding: 10px 10px 0 10px;
-}
-
-.protvistaRangeMenuTitle > div:first-child{
-    font-weight: bold;
-    text-align: left;
-}
-
-.protvistaMenuClose{
-    position: absolute;
-    right: 10px;
-    top: 14px;
-    color: #6d6d6d;
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.protvistaForm{
-    padding: 10px;
-    font-size: 12px;
-    max-height: 300px;
-    overflow: auto;
-    text-align: left;
-    font-weight: 600;
-    color: #444;
-}
-
-.divWithScroll {
-    position: relative;
-    clear: both;
-    overflow-y: scroll;
-    height:40px;
-}
-
-.label-tooltip .label-tooltip-text {
-    visibility: hidden;
-    /*white-space: nowrap;*/
-    width: 400px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    top: 5px;
-    left: 100%;
-}
-  
-.label-tooltip .label-tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent black transparent transparent;
-}
-  
-.label-tooltip:hover .label-tooltip-text {
-    visibility: visible;
-}
-
-.protvista-pdb protvista-pdb-navigation .handle, 
-.protvista-pdb protvista-navigation .handle {
-    fill: darkgray;
-    height: 19px !important;
-    stroke: black;
-}
-
-protvista-tooltip {
-    z-index: 50000;
-    position: absolute;
-    min-width: 220px;
-    max-width: 350px;
-    margin-top: 20px;
-    margin-left: -20px;
-    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-    /*opacity: .9;*/
-}
-
-protvista-tooltip[mirror="H"] {
-    margin-left: 0;
-    margin-right: 20px;
-}
-
-protvista-tooltip .tooltip-header .tooltip-header-title{
-    color: #ffffff;
-}
-
-/* protvista-tooltip a,
-protvista-tooltip a:link,
-protvista-tooltip a:hover,
-protvista-tooltip a:active,
-protvista-tooltip a:visited {
-    color: #ffffff;
-} */
-
-protvista-tooltip .tooltip-body {
-    /* color: #ffffff; */
-    color: #555;
-}
-
-protvista-tooltip .tooltip-header {
-    background-color: #595959;
-    line-height: 3em;
-}
-
-/* protvista-tooltip .tooltip-header::before {
-    content: " ";
-    position: absolute;
-    bottom: 100%;
-    left: 20px;
-    margin-left: -10px;
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent transparent black transparent;
-} */
-
-protvista-tooltip[mirror="H"] .tooltip-header::before {
-    left: initial;
-    right: 20px;
-}
-
-protvista-tooltip .tooltip-header .tooltip-header-title {
-    /* background-color: #000000;
-    font-weight: 700;
-    line-height: 1em;
-    display: inline-block;
-    vertical-align: middle;
-    padding-left: .4em; */
-    font-weight: 400;
-    white-space: nowrap;
-    letter-spacing: .05em;
-    font-size: 1.1em;
-    background-color: #595959;
-    line-height: 2em;
-    padding: 0 .7em;
-    color: #FFF;
-}
-
-protvista-tooltip .tooltip-body {
-    padding: 1em;
-    background: #FFF;
-    font-weight: normal;
-    max-height: 160px;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-protvista-tooltip .tooltip-close {
-    height: 3em;
-    width: 3em;
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url("close-icon.svg");
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-protvista-tooltip .tooltip-close:hover {
-    background-color: #1a1a1a;
-}
-
-protvista-tooltip table td {
-    padding: .5em .5em;
-    vertical-align: top;
-}
-
-protvista-tooltip table td:first-child {
-    font-weight: 600;
-    text-align: right
-}
-
-protvista-tooltip table td p {
-    margin-top: 0;
-}
-
-protvista-tooltip table thead, table tbody, table tfoot {
-    /* border: 0px solid #f1f1f1;
-    background-color: #616161; */
-    background-color: #FFF;
-}
-
-protvista-tooltip .tooltip-body table tbody{
-    font-size: 12px;
-}
-
-protvista-tooltip table tbody tr:nth-child(even) {
-    border-bottom: 0;
-    /* background-color: #616161; */
-    background-color: #FFF;
-}
-
-protvista-tooltip .tooltip-body table tbody h4, protvista-tooltip .tooltip-body table tbody h5{
-    text-align: left;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-}
-
-protvista-tooltip h4, protvista-tooltip h5 {
-    margin: 0;
-}
-
-protvista-tooltip table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    background-color: #FFF;
-    /* -webkit-box-shadow: 5px 5px 2px 0 rgba(0,0,0,.1);
-    -moz-box-shadow: 5px 5px 2px 0 rgba(0,0,0,.1);
-    box-shadow: 5px 5px 2px 0 rgba(0,0,0,.1); */
-    width: 100%;
-    font-family:Verdana,Arial,sans-serif;
-    font-size: 93%;
-}
-
-protvista-tooltip  table td {
-    /* border: 1px solid #CCC; */
-    color: #555;
-}
-
-protvista-tooltip  table tr td:first-child {
-    font-weight: 700;
-}
-
-/* filter */
-ul.filter-list {
-    list-style:none;
-    margin:0;
-    padding:0;
-}
-ul.filter-list a {
-    cursor:pointer;
-}
-.filter-list li {
-    margin: .4em 0;
-}
-.filter-select-trigger {
-    text-decoration:none;
-}
-.filter-select-wrapper {
-    box-sizing: border-box;
-    display:inline-block;
-    border-radius:.2em;
-    margin-right: .2em;
-    margin-left: .3em;
-    line-height: .2em;
-    padding: .2em;
-    border: .1em solid rgba(255, 0, 0, 0);
-}
-.filter-select {
-    margin:0;
-    box-sizing:border-box;
-    border-radius:.2em;
-    width:1.2em;
-    height:1.2em;
-    display:inline-block;
-    background-color: #333333;
-}
-.filter-select-trigger:hover .filter-select-wrapper {
-    border: .1em solid rgba(255, 0, 0, .5);
-}
-.filter-select-trigger.active .filter-select-wrapper {
-    border: .1em solid rgba(255, 0, 0, .9);
-}
-
-.pdbIconsId {
-    color: #0000EE !important;
-    /* border-bottom: none !important;
-    min-width: 43px; */
-    display: inline-block;
-}
-
-.pdbIconsId:visited {
-    color: #551A8B !important;
-    border-bottom: none !important;
-}
-
-.pdbIconslogoA {
-    border-bottom: none !important;
-}
-
-.pdbIconslogo {
-    display: inline-block;
-    padding: 0px 4px;
-    height: 18px;
-    line-height: 18px;
-}
-@media (max-width: 1000px) {
-    .pdbIconsId{
-        min-width: 25px;
-    }
-    .pdbIconsWrapper{
-        display: block;
-    }
-}
-
-.protvista-pdb a, .protvista-pdb a:visited {
-    border-bottom-width: 1px;
-    border-bottom-style: dotted;
-    border-bottom-color: inherit;
-    text-decoration: none;
-    color: #222;
-}
-
-.protvista-pdb a:hover, .protvista-pdb a:focus, .protvista-pdb a:active {
-    color: rgb(116,179,96);
-}
-
-.labelTooltipBox {
-    max-width: 400px;
-    background-color: #e4e2e2;
-    color: #222;
-    border-radius: 6px;
-    padding: 5px 10px;
-    position: fixed;
-    z-index: 1;
-    font-size: 80%;
-}
-  
-.labelTooltipBox::after {
-    content: "";
-    position: absolute;
-    top: 10px;
-    right: 100%;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent #e4e2e2 transparent transparent;
-}
-
-.viewMenuBox {
-    display: block;
-    position: absolute;
-    z-index: 1;
-    background: #fff;
-    left: 70%;
-    top: 47px;
-    min-width: 150px;
-    max-width: 280px;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    max-height: calc(100vh - 48px);
-    border-radius: 4px;
-    outline: 0;
-    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
-}
-
-#filter-disease .protvista_checkbox_input + .protvista_checkbox_label::before {
-background: #990000;
-opacity: 0.4;
-}
-
-#filter-disease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
-opacity: 1;
-}
-
-#filter-predicted .protvista_checkbox_input + .protvista_checkbox_label::before {
-background: linear-gradient(#002594, #8FE3FF);
-opacity: 0.4;
-}
-
-#filter-predicted .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
-opacity: 1;
-}
-
-#filter-nonDisease .protvista_checkbox_input + .protvista_checkbox_label::before {
-background: #99cc00;
-opacity: 0.4;
-}
-
-#filter-nonDisease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
-opacity: 1;
-}
-
-#filter-uncertain .protvista_checkbox_input + .protvista_checkbox_label::before {
-background: #FFCC00;
-opacity: 0.4;
-}
-
-#filter-uncertain .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
-opacity: 1;
+.relative-container {
+  position: relative; /* Required for absolute children to position against it */
+  display: block;
+  overflow: clip;
+}
+
+.pv-protvista .container {
+	 width: initial;
+	 padding: initial;
+	 margin-right: initial;
+	 margin-left: initial;
+	 max-width: initial;
+}
+/* ========================================================================== TOP CONTAINERS ========================================================================== */
+ .pv-protvista.elements-container {
+	 width: 100%;
+	/* min-height: 480px;
+	 */
+	 height: auto;
+	 overflow-y: clip;
+}
+ .pv-protvista .always-on-top {
+	 position: relative;
+	 top: 0;
+}
+ .pv-protvista .scrollable {
+	 overflow-y: auto;
+}
+ .pv-protvista .scrollable > .pv-track-row:last-child {
+	 margin-bottom: 20px;
+}
+/* ========================================================================== THEME VARIABLES & COLORS FOR ANGULAR MATERIALS ========================================================================== */
+ .pv-protvista {
+	 --mat-checkbox-label-text-line-height: 18px;
+	 --mat-checkbox-label-text-size: 14px;
+	 --mdc-checkbox-state-layer-size: 26px;
+	 --mdc-checkbox-selected-focus-icon-color: #0275ff;
+	 --mdc-checkbox-selected-hover-icon-color: #0275ff;
+	 --mdc-checkbox-selected-icon-color: #0275ff;
+	 --mdc-checkbox-selected-pressed-icon-color: #0275ff;
+	 --mdc-checkbox-selected-focus-state-layer-color: #0275ff;
+	 --mdc-checkbox-selected-hover-state-layer-color: #0275ff;
+	 --mdc-checkbox-selected-pressed-state-layer-color: #0275ff;
+}
+ .pv-protvista .mat-mdc-radio-button.mat-accent {
+	 --mdc-radio-selected-focus-icon-color: #0275ff;
+	 --mdc-radio-selected-hover-icon-color: #0275ff;
+	 --mdc-radio-selected-icon-color: #0275ff;
+	 --mdc-radio-selected-pressed-icon-color: #0275ff;
+	 --mat-radio-checked-ripple-color: #0275ff;
+}
+ .pv-protvista .pv-track-label-col .mdc-label {
+	 font-size: 12px;
+}
+/* ========================================================================== LAYOUT STRUCTURE (Track Rows, Columns, Containers) ========================================================================== */
+ .pv-protvista .pv-track-row {
+	 display: flex;
+	 align-content: center;
+	 flex-wrap: wrap;
+	 align-items: flex-start;
+}
+ .pv-protvista .pv-track-row > .collapsible {
+	 width: 100%;
+}
+ .pv-protvista .pv-track-row.btns {
+	 display: flex;
+	 margin-top: 6px;
+}
+ .pv-protvista .pv-track-row.btns img {
+	 height: 34px;
+	 margin-left: 8px;
+	 margin-right: 26px;
+}
+ .pv-protvista .pv-track-row.btns p {
+	 font-size: 14px;
+	 line-height: 30px;
+}
+ .pv-protvista .pv-track-row.no-data {
+	 min-height: 40px;
+}
+ .pv-protvista .pv-track-col {
+	 display: flex;
+	 flex-direction: column;
+	 width: 80%;
+	 background: #fff;
+	 z-index: 6;
+}
+ .pv-protvista .pv-track-col.small {
+	 width: 20%;
+}
+ .pv-protvista .pv-track-col.controls {
+	 flex-direction: row;
+	 justify-content: flex-end;
+	 gap: 6px;
+	 padding-top: 5px;
+	 padding-right: 12px;
+	 z-index: 6;
+}
+ .pv-protvista .pv-track-container {
+	 width: 80%;
+}
+ .pv-protvista .pv-track-container.btns {
+	 width: 80%;
+	 display: flex;
+	 gap: 8px;
+	 z-index: 6;
+	 padding-bottom: 4px;
+	 background: #fff;
+}
+ .pv-protvista .pv-track-container.no-data {
+	 display: flex;
+	 align-items: center;
+	 padding-left: 4px;
+	 font-size: 14px;
+	 min-height: 40px;
+	 line-height: 18px;
+}
+ .pv-protvista .pv-track-container.custom-data {
+	 margin-top: 3px;
+	 margin-bottom: 3px;
+}
+/* .pv-protvista .pv-track-label-col {
+	 width: 20%;
+	 margin-top: 2px;
+	 margin-bottom: 2px;
+	 display: flex;
+	 flex-wrap: nowrap;
+	 align-items: center;
+	 word-break: break-word;
+	 font-size: 14px;
+	 line-height: 18px;
+	 justify-content: flex-start;
+	 cursor: pointer;
+	 padding-right: 12px;
+}
+ */
+ .pv-protvista nightingale-navigation .container .brush .handle {
+	 fill: #a9a9a9;
+	 stroke: #000;
+	 stroke-width: 1px;
+	 height: 18px;
+	 y: 0;
+}
+ .pv-protvista .pv-track-label-col {
+	 width: 20%;
+	 padding-top: 2px;
+	 padding-bottom: 2px;
+	 display: flex;
+	 flex-wrap: wrap;
+	 align-items: flex-start;
+	 word-break: break-word;
+	 font-size: 14px;
+	 line-height: 18px;
+	 justify-content: flex-start;
+	 cursor: pointer;
+	 padding-right: 12px;
+	 z-index: 8;
+	 background: #fff;
+}
+ .pv-protvista .pv-track-label-col > .track-title {
+	 flex-basis: 100%;
+	 display: flex;
+	 flex-wrap: nowrap;
+	 align-items: center;
+}
+ .pv-protvista .pv-track-label-col > .track-btns {
+	 margin-top: 4px;
+	 flex-basis: 100%;
+	 display: flex;
+	 flex-wrap: nowrap;
+	 align-items: center;
+}
+ .pv-protvista .pv-track-label-col > .track-btns button.in-3d-btn {
+	 display: flex;
+	 padding: 0 4px;
+	 justify-content: center;
+	 align-items: center;
+	 gap: 10px;
+	 background: #f3f3f3;
+	 color: #3b6fb6;
+	 cursor: pointer;
+	/* Small body text */
+	 font-family: 'IBM Plex Sans';
+	 font-size: 14px;
+	 font-style: normal;
+	 font-weight: 400;
+	 line-height: 22.4px;
+	/* 160% */
+}
+ .pv-protvista .pv-track-label-col > .track-btns button.in-3d-btn.active {
+	 color: #193f90;
+	 font-weight: 500;
+	 background: #b9d4f1;
+}
+ .pv-protvista .pv-track-label-col.label-only {
+	 cursor: default;
+}
+ .pv-protvista .pv-track-label-col > p {
+	 line-break: anywhere;
+}
+ .pv-protvista .pv-track-label-col.nested {
+	 padding-left: 12px;
+}
+ .pv-protvista .pv-track-label-col.subtrack {
+	 padding-left: 12px;
+}
+ .pv-protvista .pv-track-label-col.nested.subtrack {
+	 padding-left: 16px;
+}
+ .pv-protvista .pv-track-label-col.variation {
+	 flex-direction: column;
+	 align-items: flex-start;
+	 overflow-x: auto;
+	 padding-left: 0;
+}
+ .pv-protvista nightingale-scrollbox {
+	 width: 100%;
+}
+ .pv-protvista .expand-icon {
+	 display: flex;
+	 min-width: 14px;
+}
+ .pv-protvista .action-icon {
+	 width: 24px;
+	 height: 24px;
+	 padding: 3px;
+	 cursor: pointer;
+}
+ .pv-protvista .action-icon:hover {
+	 background-color: #d1e3f6;
+}
+ .pv-protvista .yscale-wrapper {
+	 display: flex;
+}
+/* ========================================================================== TRACK STYLING ========================================================================== */
+/* Border between expanded Tracks rows */
+ .pv-protvista .non-header-track {
+	 border-bottom: 1px solid #c6c6c6;
+}
+/* Hide border on collapsed Tracks rows */
+ .pv-protvista .non-header-track.track {
+	 border: none;
+}
+/* Track header column minimum height */
+ .pv-protvista .non-header-track > .pv-track-label-col {
+	 min-height: 40px;
+}
+/* Track header column on expanded color */
+ .pv-protvista .non-header-track.expanded > .pv-track-label-col {
+	 background-color: #e1e1e1;
+}
+/** Track header column on hover color */
+ .pv-protvista .pv-track-label-col.hoverable:hover, .pv-protvista .non-header-track > .pv-track-label-col.hoverable:hover, .pv-protvista .non-header-track.expanded > .pv-track-label-col.hoverable:hover {
+	 background-color: #efefef;
+}
+/* Custom Tracks separation border */
+ .pv-protvista .always-on-top .custom-row {
+	/* border-bottom: 1px solid #000;
+	 */
+	 z-index: 3;
+	 position: relative;
+	 background: #fff;
+}
+ .pv-protvista .always-on-top img.custom-row {
+	 z-index: 3;
+	 position: relative;
+	 background: transparent;
+}
+/* Custom Tracks maximum row height */
+ .pv-protvista .always-on-top .non-header-track > .pv-track-label-col {
+	 max-height: 40px;
+	 text-overflow: ellipsis;
+}
+/* ========================================================================== TOOLTIP STYLING (Hover + Pinned) ========================================================================== */
+ .pv-protvista .manual-tooltip {
+	 background-color: #fff;
+	 color: #1a1c1a;
+	 font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
+	 font-size: 16px;
+	 line-height: 27px;
+	 padding: 10px;
+	 box-shadow: 0 5px 5px -3px #000, 0 8px 10px 1px #000, 0 3px 14px 2px #000;
+	 max-width: 40%;
+	 overflow: scroll;
+	 max-height: unset;
+	 border-radius: 0;
+}
+ .pv-protvista .manual-tooltip a {
+	 font-size: 16px;
+}
+/* For Variation tooltips (tables received as tooltipContent) styling */
+ .pv-protvista .manual-tooltip td {
+	 font-size: 14px;
+	 padding: 2px 4px;
+	 line-height: 20px;
+}
+/* For Variation tooltips (tables received as tooltipContent) styling */
+ .pv-protvista .manual-tooltip td a {
+	 font-size: 14px;
+}
+/* Pinned tooltips share normal tooltip stylings with extra ajustments for close button */
+ .pv-protvista .pinned-tooltip .tooltip-header {
+	 float: right;
+	 margin-top: -6px;
+	 margin-right: -6px;
+	 max-height: 20px;
+}
+ .pv-protvista .pinned-tooltip .close-btn {
+	 border: none;
+	 background: transparent;
+	 cursor: pointer;
+	 font-size: 14px;
+	 color: #888;
+}
+ .pv-protvista .pinned-tooltip .close-btn:hover {
+	 color: #000;
+}
+/* ========================================================================== VISUAL ELEMENTS (Icons, Legend, Buttons, Sequence Text) ========================================================================== */
+ .pv-protvista .navigation-zoom-hint {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 4px;
+	 z-index: 2;
+	 background: #fff;
+	 font-size: 13px;
+	 color: #333;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 pointer-events: none;
+	 height: 30px;
+	/* @media (width <= 1140px) {
+		 font-size: 0.65rem;
+	}
+	 */
+}
+ .pv-protvista .navigation-zoom-hint img {
+	 scale: 0.9;
+	 margin: 2px;
+}
+ .pv-protvista .navigation-zoom-hint kbd {
+	 line-height: 12px !important;
+	 margin: 4px !important;
+}
+ .pv-protvista .icon {
+	 height: 15px;
+	 margin-bottom: 2px;
+	 margin-left: 2px;
+     text-decoration: none;
+     font-style: normal;
+     text-rendering: optimizeLegibility !important;
+     background-size: contain;
+     font-weight: 400;
+     display: inline-block;
+     vertical-align: middle;
+     max-width: 100%;
+     border-style: none;
+}
+/* .pv-protvista .pv-link-btn {
+	 font-size: 14px;
+	 line-height: 18px;
+}
+ */
+ .pv-protvista .pv-link-btn {
+	 line-height: 18px;
+	 padding: 6px 12px;
+	 font-size: 14px;
+	 font-family: 'IBM Plex Sans';
+	 font-weight: 700;
+	 color: #0a5032;
+	 border: 1px solid var(--Purple-800, #0a5032);
+	 background: #fff;
+	 box-shadow: 2px 2px 0 0 #0a5032;
+	 cursor: pointer;
+}
+ .pv-protvista .pv-sel-menu-item {
+	 border-color: #0a5032;
+	 border-width: 1px;
+	 border-style: solid;
+	 height: 18px;
+	 padding-top: 8px;
+	 border-radius: 8px;
+	 padding-left: 4px;
+	 padding-right: 4px;
+	 font-size: 12px;
+	 color: #0a5032;
+}
+ .pv-protvista .pv-sel-menu-item.sel {
+	 border-style: dashed;
+}
+/* Overrides Nightingale-sequence default font size (too small) */
+ .pv-protvista .sequence, .pv-protvista .sequence > .base {
+	 font-size: 12px;
+}
+/* Legend styles below migrated from previous protvista */
+ .pv-protvista .legend {
+	 margin-top: 8px;
+}
+ .pv-protvista .protvista-sc-legend {
+	 display: flex;
+	 flex-direction: column;
+	 margin-top: 6px;
+}
+ .pv-protvista .protvista-sc-legend .protvista-sc-legend {
+	 margin-top: 2px;
+	 flex-direction: row;
+}
+ .pv-protvista .pv-legend-color {
+	 display: inline-block;
+	 min-height: 1rem;
+	 min-width: 1rem;
+	 max-width: 1rem;
+	 max-height: 1rem;
+}
+ .pv-protvista .pv-legend-text {
+	 display: inline-block;
+	 font-size: 90%;
+	 text-align: left;
+	 color: #333;
+	 margin-left: 2px;
+}
+ .pv-protvista .pv-radio-group > label {
+	 font-size: 12px;
+	 line-height: 18px;
+	 display: flex;
+}
+ .pv-protvista .pv-checkbox-group > label {
+	 font-size: 12px;
+	 line-height: 18px;
+	 display: flex;
+}
+ .pv-protvista .skeleton-loader {
+	 position: relative;
+	 overflow: hidden;
+	 width: 100%;
+	 height: 40px;
+	 margin-top: 8px;
+	 background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+	 background-size: 200% 100%;
+	 animation: skeleton-loading 8.2s infinite linear;
+	 margin-bottom: 8px;
+}
+ @keyframes skeleton-loading {
+	 0% {
+		 background-position: -200% 0;
+	}
+	 100% {
+		 background-position: 200% 0;
+	}
+}
+ .pv-protvista .custom-btn-control {
+	 display: flex;
+}
+ .pv-protvista #pv-add-custom-btn {
+	/* width: 100%;
+	 */
+	 flex: 1;
+	 background: #f3f3f3;
+	 color: #3b6fb6;
+	 text-align: center;
+	 cursor: pointer;
+	/* Small body text */
+	 font-family: 'IBM Plex Sans';
+	 font-size: 14px;
+	 font-style: normal;
+	 font-weight: 400;
+	 line-height: 22.4px;
+	/* 160% */
+}
+ .pv-protvista .heatmap-pinned-tooltip-close {
+	 top: 5px;
+	 right: 1px;
+	 background-color: #000 0;
+	 border: solid #000 0 1px;
+}
+ .pv-protvista .heatmap-pinned-tooltip-close path {
+	 fill: #888;
+	 stroke: #888;
+	 stroke-width: 5px;
+	 scale: 0.85;
+}
+ .pv-protvista .heatmap-tooltip-content {
+	 font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
+	 font-size: 16px;
+	 line-height: 27px;
+	 padding: 10px;
+}
+ .pv-protvista .heatmap-pinned-tooltip-content {
+	 font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
+	 font-size: 16px;
+	 line-height: 27px;
+	 padding: 14px;
+}
+ .pv-protvista g.highlighted rect {
+     fill: rgb(255 0 255 / 25%);
+}
+/** .pv-protvista .pv-track-label-col.subtrack.variation > p {
+	 white-space: pre;
+}
+ */
+/** .pv-protvista g.highlighted > rect:not(:last-child) {
+	 fill: #ffffff66;
+}
+ */
+/* ========================================================================== RESPONSIVENESS ========================================================================== */
+ @media screen and (width <= 1240px) {
+	 .pv-protvista .pv-track-label-col {
+		 font-size: 0.8rem;
+		 word-break: normal;
+	}
+	 .pv-protvista .navigation-zoom-hint {
+		 font-size: 0.69rem;
+	}
+	 .pv-protvista .pv-link-btn {
+		 padding: 3px 8px;
+		 font-size: 12px;
+	}
+	 .pv-protvista .pv-track-container.no-data {
+		 font-size: 12px;
+	}
 }
