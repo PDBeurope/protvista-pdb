@@ -101,14 +101,22 @@ class ProtvistaPDB extends HTMLElement {
 
             <nightingale-manager reflected-attributes="length display-start display-end highlight activefilters filters">
                 
-                <!-- Navigation section -->
-                ${this.viewerData.displayNavigation ? html`${PDBePvNavSection(this)}` : ``}
-                
-                <!-- Sequence section -->
-                ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this)}` : ``}
+                <div style="display:flex; flex-direction: column;    width: 100%;">
+                    <div style="line-height: 0">
+                    <!-- Navigation section -->
+                    ${this.viewerData.displayNavigation ? html`${PDBePvNavSection(this)}` : ``}
+                    </div>
+                    
+                    <div style="line-height: 0">
+                    <!-- Sequence section -->
+                    ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this)}` : ``}
+                    </div>
 
-                <!-- Tracks section -->
-                ${PDBePvTracksSection(this)}
+                    <div style="line-height: 0">
+                    <!-- Tracks section -->
+                    ${PDBePvTracksSection(this)}
+                    </div>
+                </div>
 
             </protvista-manager>
         </div>

@@ -69,6 +69,7 @@ function PDBePvNavSection(ctx) {
         <!-- Navigation Component -->
         <div class="protvistaCol2 pvNavSection">
             <protvista-pdb-navigation
+                height="44"
                 length=${ctx.viewerData.length}
                 offset=${ctx.viewerData.offset || 0}
                 display-start=${1}
