@@ -2,20 +2,35 @@
   "name": "protvista-pdb",
   "version": "4.0.0",
   "description": "PDB ProtVista Viewer",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "main": "dist/protvista-pdb.js",
-  "module": "src/index.js",
-  "jsnext:main": "src/index.js",
   "author": "Mandar Deshpande <mandar@ebi.ac.uk>",
   "contributors": [
     "Typhaine Paysan-Lafosse <typhaine@ebi.ac.uk>",
     "Sreenath Sasidharan Nair <sreenath@ebi.ac.uk>",
     "Marcelo Querino Lima Afonso <marcelo@ebi.ac.uk>"
   ],
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/protvista-pdb-4.0.0.min.js",
+  "module": "dist/protvista-pdb-4.0.0.min.mjs",
+  "style": "dist/protvista-pdb-4.0.0.min.css",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/protvista-pdb-4.0.0.min.mjs",
+      "require": "./dist/protvista-pdb-4.0.0.min.js",
+      "default": "./dist/protvista-pdb-4.0.0.min.js"
+    },
+    "./style.css": "./dist/protvista-pdb-4.0.0.min.css",
+    "./dist/*": "./dist/*"
+  },
+  "sideEffects": [
+  "*.css",
+  "dist/*",
+  "src/index.js"
+  ],
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 1339",
     "build": "vite build",
@@ -34,7 +49,6 @@
     "@nightingale-elements/nightingale-variation": "5.6.0",
     "d3": "^7.0.0",
     "lit": "^3.0.0",
-    "lit-html": "^3.0.0",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {

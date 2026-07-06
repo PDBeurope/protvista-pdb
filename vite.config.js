@@ -22,5 +22,16 @@ export default defineConfig({
       },
     },
     minify: "terser",
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith(".css")) {
+            return `protvista-pdb-${version}.min.css`;
+          }
+
+          return `protvista-pdb-${version}.[ext]`;
+        },
+      },
+    },
   },
 });

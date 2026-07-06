@@ -8,25 +8,6 @@ class LayoutHelper {
   postProcessLayout() {
     this.getScrollbarWidth(); // get scrollbar width for right spacing
 
-    // // apply padding according to the scollbar width to align tracks with scrollbar
-    // let navSectionEle = this.ctx.querySelectorAll('.pvNavSection')[0];
-    // if(navSectionEle){
-    //     navSectionEle.style.paddingRight = this.ctx.scrollbarWidth+'px';
-    //     setTimeout(() => {
-    //         let navEle = this.ctx.querySelectorAll('protvista-navigation')[0];
-    //         if(navEle) navEle.firstElementChild.firstElementChild.style.width = '100%';
-    //     },100);
-    // }
-
-    // let seqSectionEle = this.ctx.querySelectorAll('.pvSeqSection')[0];
-    // if(seqSectionEle){
-    //     seqSectionEle.style.paddingRight = this.ctx.scrollbarWidth+'px';
-    //     setTimeout(() => {
-    //         let seqEle = this.ctx.querySelectorAll('protvista-sequence')[0];
-    //         if(seqEle) seqEle.firstElementChild.firstElementChild.style.width = '100%';
-    //     },100);
-    // }
-
     let pvLineGraphSectionEle = this.ctx.querySelectorAll(
       ".pvLineGraphSection",
     )[0];
@@ -183,7 +164,6 @@ class LayoutHelper {
       trackEle.querySelectorAll(".pvTrack")[0].style.display = "none";
       subTrackEle.style.display = "block";
       if (this.ctx.formattedSubTracks.indexOf(trackIndex) == -1) {
-        // this.bindTrackData("subtrack", trackIndex, this.ctx.scrollbarWidth);
         this.initScrollboxes();
         this.ctx.formattedSubTracks.push(trackIndex);
       }
