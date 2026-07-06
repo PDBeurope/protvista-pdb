@@ -118,7 +118,7 @@ class ProtvistaPDB extends HTMLElement {
                     </div>
                 </div>
 
-            </protvista-manager>
+            </nightingale-manager>
         </div>
 
         <!-- div to measure scrollbar width for padding -->

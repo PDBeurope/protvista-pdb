@@ -13,7 +13,7 @@ import ProtvistaPdbTrack from './custom-pv-components/pdb-track'
 // import ProtvistaPdbSeqConservation from './custom-pv-components/pdb-seq-conservation'
 // import ProtvistaPdbVariationGraph from './custom-pv-components/pdb-variation-graph'
 // import ProtvistaPdbVariation from './custom-pv-components/pdb-variation'
-// import ProtvistaPdbTooltip from './custom-pv-components/pdb-tooltip'
+import ProtvistaPdbTooltip from './custom-pv-components/pdb-tooltip'
 import ProtvistaPDB from './protvista-pdb';
 import { loadComponent } from "./loadComponent";
 
@@ -29,7 +29,7 @@ const registerWebComponents = function() {
     // loadComponent("protvista-pdb-seq-conservation", ProtvistaPdbSeqConservation);
     // loadComponent("protvista-pdb-variation-graph", ProtvistaPdbVariationGraph);
     // loadComponent("protvista-pdb-variation", ProtvistaPdbVariation);
-    // loadComponent("protvista-tooltip", ProtvistaPdbTooltip);
+    loadComponent("protvista-tooltip", ProtvistaPdbTooltip);
     loadComponent('protvista-pdb', ProtvistaPDB);
 }
 
