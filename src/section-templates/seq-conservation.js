@@ -106,7 +106,7 @@ function PDBePvScSection(ctx) {
                         </div>
 
                         <div class="protvistaCol2 track-content pvConservationPlotSection">
-                            <protvista-pdb-seq-consevation sc-display-order="property" accession="${ctx._entryId ? ctx._entryId : ctx._accession}" length="${ctx.viewerData.length}"></protvista-pdb-seq-consevation>
+                            <protvista-pdb-seq-conservation sc-display-order="property" accession="${ctx._entryId ? ctx._entryId : ctx._accession}" length="${ctx.viewerData.length}"></protvista-pdb-seq-conservation>
                         </div>
                     </div>
                 </div>`

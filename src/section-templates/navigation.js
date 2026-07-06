@@ -1,7 +1,7 @@
-const { html } = require("lit-html")
+import { html } from "lit";
 
 function PDBePvNavSection(ctx) {
-    return html `<div class="protvistaRow">
+    return html`<div class="protvistaRow">
                     
         <!-- Top Menu Toolbar -->
         <div class="protvistaCol1 protvistaToolbar" style="position:relative">
@@ -33,7 +33,6 @@ function PDBePvNavSection(ctx) {
                     <button class="button tiny" style="margin:0; letter-spacing: 1px;" @click=${e => ctx.layoutHelper.pvRangeMenuSubmit()}>Submit</button>
                 </div>
             </div>
-            <!-- View / highlight menu -->
 
             <!-- Track categories settings menu -->
             <span class="protvistaToolbarIcon" title="Hide sections" @click=${e => ctx.layoutHelper.openCategorySettingsMenu()}>
@@ -49,12 +48,12 @@ function PDBePvNavSection(ctx) {
                         <tbody>
                         ${ctx.viewerData.tracks.map((trackData, trackIndex) => html`
                             <tr>
-                            <td style="width:10%;vertical-align:top;">
-                                <input type="checkbox" class="pvSectionChkBox" name="cb_${trackIndex}" style="margin:0" />
-                            </td>
-                            <td style="padding-bottom:5px;">
-                                ${trackData.label}
-                            </td>
+                                <td style="width:10%;vertical-align:top;">
+                                    <input type="checkbox" class="pvSectionChkBox" name="cb_${trackIndex}" style="margin:0" />
+                                </td>
+                                <td style="padding-bottom:5px;">
+                                    ${trackData.label}
+                                </td>
                             </tr>
                         `)}
                         <tr style="display:none" class="scOption"></tr>
@@ -65,16 +64,19 @@ function PDBePvNavSection(ctx) {
                     <button class="button tiny" style="margin:0; letter-spacing: 1px;" @click=${e => ctx.layoutHelper.pvCategorySettingsMenuSubmit()}>Submit</button>
                 </div>
             </div>
-            <!-- Track categories settings menu -->
         </div>
 
         <!-- Navigation Component -->
         <div class="protvistaCol2 pvNavSection">
-            <protvista-pdb-navigation length="${ctx.viewerData.length}" offset="${ctx.viewerData.offset}" ></protvista-pdb-navigation>
+            <protvista-pdb-navigation
+                length=${ctx.viewerData.length}
+                offset=${ctx.viewerData.offset || 0}
+                display-start=${1}
+                display-end=${ctx.viewerData.length}>
+            </protvista-pdb-navigation>
         </div>
 
-    </div>`
-        
+    </div>`;
 }
 
 export default PDBePvNavSection;

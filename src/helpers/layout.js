@@ -7,24 +7,24 @@ class LayoutHelper {
     postProcessLayout() {
         this.getScrollbarWidth(); // get scrollbar width for right spacing
 
-        // apply padding according to the scollbar width to align tracks with scrollbar
-        let navSectionEle = this.ctx.querySelectorAll('.pvNavSection')[0];
-        if(navSectionEle){ 
-            navSectionEle.style.paddingRight = this.ctx.scrollbarWidth+'px';
-            setTimeout(() => {
-                let navEle = this.ctx.querySelectorAll('protvista-navigation')[0];
-                if(navEle) navEle.firstElementChild.firstElementChild.style.width = '100%';
-            },100);
-        }
+        // // apply padding according to the scollbar width to align tracks with scrollbar
+        // let navSectionEle = this.ctx.querySelectorAll('.pvNavSection')[0];
+        // if(navSectionEle){ 
+        //     navSectionEle.style.paddingRight = this.ctx.scrollbarWidth+'px';
+        //     setTimeout(() => {
+        //         let navEle = this.ctx.querySelectorAll('protvista-navigation')[0];
+        //         if(navEle) navEle.firstElementChild.firstElementChild.style.width = '100%';
+        //     },100);
+        // }
         
-        let seqSectionEle = this.ctx.querySelectorAll('.pvSeqSection')[0];
-        if(seqSectionEle){ 
-            seqSectionEle.style.paddingRight = this.ctx.scrollbarWidth+'px';
-            setTimeout(() => {
-                let seqEle = this.ctx.querySelectorAll('protvista-sequence')[0];
-                if(seqEle) seqEle.firstElementChild.firstElementChild.style.width = '100%';
-            },100);
-        }
+        // let seqSectionEle = this.ctx.querySelectorAll('.pvSeqSection')[0];
+        // if(seqSectionEle){ 
+        //     seqSectionEle.style.paddingRight = this.ctx.scrollbarWidth+'px';
+        //     setTimeout(() => {
+        //         let seqEle = this.ctx.querySelectorAll('protvista-sequence')[0];
+        //         if(seqEle) seqEle.firstElementChild.firstElementChild.style.width = '100%';
+        //     },100);
+        // }
 
         let pvLineGraphSectionEle = this.ctx.querySelectorAll('.pvLineGraphSection')[0];
         if(pvLineGraphSectionEle){ 
@@ -321,8 +321,8 @@ class LayoutHelper {
         if (!navEle) return;
         
         if(typeof param === 'undefined'){
-          currentStartVal = navEle.getAttribute('displaystart');
-          currentEndVal = navEle.getAttribute('displayend');
+          currentStartVal = navEle.getAttribute('display-start');
+          currentEndVal = navEle.getAttribute('display-end');
         }else if(typeof param.trackData != 'undefined'){
           if(param.trackData.start && param.trackData.end){
             currentStartVal = param.trackData.start;
@@ -348,8 +348,7 @@ class LayoutHelper {
         if(typeof param !== 'undefined' && typeof param.highlight !== 'undefined' && param.highlight){
           navEle.dispatchEvent(new CustomEvent('change', {
             detail: {
-              highlightstart: currentStartVal,
-              highlightend: currentEndVal
+              highlight: `${currentStartVal}:${currentEndVal}`,
             }, bubbles: true, cancelable: true
           }));
           
@@ -357,15 +356,14 @@ class LayoutHelper {
 
             navEle.dispatchEvent(new CustomEvent('change', {
                 detail: {
-                  displaystart: currentStartVal,
-                  displayend: currentEndVal
+                'display-start': currentStartVal,
+                'display-end': currentEndVal
                 }, bubbles: true, cancelable: true
             }));  
     
           navEle.dispatchEvent(new CustomEvent('change', {
             detail: {
-              highlightstart: null,
-              highlightend: null
+              highlight: null,
             }, bubbles: true, cancelable: true
           }));
 
@@ -495,8 +493,8 @@ class LayoutHelper {
 
                 let navEle = this.ctx.querySelectorAll('.pvTrack')[0];
                 if (navEle){
-                    currentStartVal = navEle.getAttribute('displaystart');
-                    currentEndVal = navEle.getAttribute('displayend');
+                    currentStartVal = navEle.getAttribute('display-start');
+                    currentEndVal = navEle.getAttribute('display-end');
                 }
                 
                 startEle.value = Math.round(currentStartVal);

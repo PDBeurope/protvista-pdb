@@ -1,4 +1,4 @@
-const { html } = require("lit-html")
+import { html } from "lit";
 
 function PDBePvSeqSection(ctx) {
     return html `<div class="protvistaRow">
@@ -8,7 +8,7 @@ function PDBePvSeqSection(ctx) {
 
         <!-- Navigation Component -->
         <div class="protvistaCol2 pvSeqSection">
-            <protvista-sequence length="${ctx.viewerData.length}" sequence="${ctx.viewerData.sequence}"></protvista-sequence>
+            <nightingale-sequence length="${ctx.viewerData.length}" sequence="${ctx.viewerData.sequence}"></nightingale-sequence>
         </div>
 
     </div>`

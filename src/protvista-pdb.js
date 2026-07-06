@@ -1,4 +1,4 @@
-import { html, render } from "lit-html";
+import { html, render } from "lit";
 import "../styles/protvista-pdb.css"; // customised PDBe styling
 import filterData from "./custom-pv-components/filters"; // filter component data for PDBe implementation
 
@@ -6,9 +6,9 @@ import filterData from "./custom-pv-components/filters"; // filter component dat
 import PDBePvNavSection from "./section-templates/navigation";
 import PDBePvSeqSection from "./section-templates/sequence";
 import PDBePvTracksSection from "./section-templates/tracks";
-import PDBePvScSection from "./section-templates/seq-conservation";
-import PDBePvVariationSection from "./section-templates/variation";
-import PDBePvLegendsSection from "./section-templates/legends";
+// import PDBePvScSection from "./section-templates/seq-conservation";
+// import PDBePvVariationSection from "./section-templates/variation";
+// import PDBePvLegendsSection from "./section-templates/legends";
 
 // Helper modules
 import DataHelper from "./helpers/data"
@@ -88,35 +88,27 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     _render() {
-        if(!this.viewerData.length || this.viewerData.tracks.length == 0){
-            this.displayErrorMessage();
-            return;
-        }
+        // if(!this.viewerData.length || this.viewerData.tracks.length == 0){
+        //     this.displayErrorMessage();
+        //     return;
+        // }
 
         if(!this.showLegends) delete this.viewerData.legends;
 
         const mainHtml = () => html`
         <div class="protvista-pdb">
             <span class="labelTooltipBox" style="display:none"></span>
-            <protvista-manager attributes="length displaystart displayend highlightstart highlightend activefilters filters">
+
+            <nightingale-manager reflected-attributes="length display-start display-end highlight activefilters filters">
                 
                 <!-- Navigation section -->
                 ${this.viewerData.displayNavigation ? html`${PDBePvNavSection(this)}` : ``}
                 
                 <!-- Sequence section -->
                 ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this)}` : ``}
-                
+
                 <!-- Tracks section -->
                 ${PDBePvTracksSection(this)}
-                
-                <!-- Sequence conservation section -->
-                ${this.viewerData.displayConservation ? html`${PDBePvScSection(this)}` : ``}
-                
-                <!-- Variations section -->
-                ${this.viewerData.displayVariants ? html`${PDBePvVariationSection(this)}` : ``}
-                
-                <!-- Legends section -->
-                ${this.viewerData.legends ? html`${PDBePvLegendsSection(this)}` : ``}
 
             </protvista-manager>
         </div>
