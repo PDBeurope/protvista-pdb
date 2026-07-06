@@ -684,3 +684,7 @@ opacity: 1;
 .pvScrollboxItem {
     display: block;
 }
+
+nightingale-scrollbox {
+    width: 100%;
+}

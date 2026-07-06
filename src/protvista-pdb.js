@@ -7,7 +7,7 @@ import PDBePvNavSection from "./section-templates/navigation";
 import PDBePvSeqSection from "./section-templates/sequence";
 import PDBePvTracksSection from "./section-templates/tracks";
 import PDBePvScSection from "./section-templates/seq-conservation";
-// import PDBePvVariationSection from "./section-templates/variation";
+import PDBePvVariationSection from "./section-templates/variation";
 import PDBePvLegendsSection from "./section-templates/legends";
 
 // Helper modules
@@ -88,10 +88,10 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     _render() {
-        // if(!this.viewerData.length || this.viewerData.tracks.length == 0){
-        //     this.displayErrorMessage();
-        //     return;
-        // }
+        if(!this.viewerData.length || this.viewerData.tracks.length == 0){
+            this.displayErrorMessage();
+            return;
+        }
 
         if(!this.showLegends) delete this.viewerData.legends;
 
@@ -120,6 +120,11 @@ class ProtvistaPDB extends HTMLElement {
                     <div style="line-height: 0">
                     <!-- Sequence conservation section -->
                     ${this.viewerData.displayConservation ? html`${PDBePvScSection(this)}` : ``}
+                    </div>
+
+                    <div style="line-height: 0">
+                    <!-- Variations section -->
+                    ${this.viewerData.displayVariants ? html`${PDBePvVariationSection(this)}` : ``}
                     </div>
 
                     <!-- Legends section -->

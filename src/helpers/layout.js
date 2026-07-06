@@ -1,4 +1,5 @@
 import { render } from "lit";
+import filterData, { keywordMap } from "../custom-pv-components/filters";
 class LayoutHelper {
   constructor(ctx) {
     this.ctx = ctx;
@@ -136,6 +137,9 @@ class LayoutHelper {
         trackEle.style.paddingRight = this.ctx.scrollbarWidth + "px";
         if (borderBottom) trackEle.style.borderBottom = "1px solid lightgrey";
         trackEle.firstElementChild.data = resultData;
+        if (trackClass === ".pvVariantPlotSection") {
+          this.updateVariationFilterAvailability(resultData);
+        }
       }
 
       this.addHideOptions(
@@ -830,6 +834,52 @@ initScrollboxes() {
       const container = getRenderContainer(item);
       render(item.data.renderHidden(), container);
     });
+  });
+}
+
+updateVariationFilterAvailability(resultData) {
+  const variants = resultData?.variants || [];
+
+  const filterElement = this.ctx.querySelector(
+    'nightingale-filter[for="pdbe-variation-track"]',
+  );
+
+  if (!filterElement || !variants.length) return;
+
+  const unavailableFilterNames = new Set(
+    filterData
+      .filter((filter) => {
+        const keyword = keywordMap[filter.name];
+
+        if (!keyword) return false;
+
+        return !variants.some((variant) =>
+          variant.keywords?.includes(keyword),
+        );
+      })
+      .map((filter) => filter.name),
+  );
+
+  requestAnimationFrame(() => {
+    filterElement
+      .querySelectorAll("input.protvista_checkbox_input")
+      .forEach((input) => {
+        const isUnavailable = unavailableFilterNames.has(input.value);
+
+        input.disabled = isUnavailable;
+
+        if (isUnavailable) {
+          input.checked = false;
+        }
+
+        const label = input.closest("label");
+
+        if (label) {
+          label.classList.toggle("disabled", isUnavailable);
+          label.style.opacity = isUnavailable ? "0.45" : "";
+          label.style.cursor = isUnavailable ? "not-allowed" : "";
+        }
+      });
   });
 }
 

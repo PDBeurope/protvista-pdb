@@ -1,4 +1,4 @@
-const {html} = require("lit-html");
+import { html } from "lit";
 
 function PDBePvScSection(ctx) {
     return html`<div class="protvistaRow pvConsHistoRow" style="display:none">
@@ -6,7 +6,11 @@ function PDBePvScSection(ctx) {
                     <div class="protvistaCol1 category-label" @click=${e => ctx.layoutHelper.showConservationPlot()} style="background-color:rgb(128,128,128); borderBottom:1px solid lightgrey">Sequence conservation</div>
 
                     <div class="protvistaCol2 aggregate-track-content pvConservationHistoSection">
-                        <protvista-pdb-sc-histogram accession="${ctx._entryId ? ctx._entryId : ctx._accession}" length="${ctx.viewerData.length}"></protvista-pdb-sc-histogram>
+                        <protvista-pdb-sc-histogram
+                            accession=${ctx._entryId ? ctx._entryId : ctx._accession}
+                            length=${ctx.viewerData.length}
+                            height=${44}
+                        ></protvista-pdb-sc-histogram>
                     </div>
                 </div>
                 <div class="pvConservationPlotRow" style="display:none">
@@ -106,7 +110,14 @@ function PDBePvScSection(ctx) {
                         </div>
 
                         <div class="protvistaCol2 track-content pvConservationPlotSection">
-                            <protvista-pdb-seq-conservation sc-display-order="property" accession="${ctx._entryId ? ctx._entryId : ctx._accession}" length="${ctx.viewerData.length}"></protvista-pdb-seq-conservation>
+                            <protvista-pdb-seq-conservation
+                            sc-display-order="property"
+                            accession=${ctx._entryId ? ctx._entryId : ctx._accession}
+                            length=${ctx.viewerData.length}
+                            height=${430}
+                            display-start=${ctx.viewerData.displayStart || 1}
+                            display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+                            ></protvista-pdb-seq-conservation>
                         </div>
                     </div>
                 </div>`
