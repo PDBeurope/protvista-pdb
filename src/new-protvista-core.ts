@@ -243,4 +243,15 @@ export class NewProtvistaVisualisation {
     this.containerElement = null;
     this.bindingDataAndEvents = null;
   }
+
+  public setFirstIn3DActive(): string | undefined {
+    if (!this.containerElement || !this.bindingDataAndEvents) return undefined;
+    return this.bindingDataAndEvents.setFirstIn3DActive(this.containerElement);
+  }
+
+  public setIn3DActiveWithoutEmit(eventId: string): void {
+    if (!this.containerElement || !this.bindingDataAndEvents) return;
+
+    this.bindingDataAndEvents.setIn3DActiveWithoutEmit(this.containerElement, eventId);
+  }
 }

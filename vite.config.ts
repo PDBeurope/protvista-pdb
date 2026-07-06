@@ -19,15 +19,6 @@ export default defineConfig({
       name: 'ProtvistaPdb',
       fileName: (format) => `protvista-pdb-${pkg.version}.${format}.min.js`,
       formats: ['es', 'umd'],
-    },
-    rollupOptions: {
-      external: ['rxjs', 'd3'],
-      output: {
-        globals: {
-          rxjs: 'rxjs',
-          d3: 'd3',
-        },
-      },
-    },
+    }
   },
 });

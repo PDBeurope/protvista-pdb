@@ -42,13 +42,19 @@ export function getTrackCanvasHTML(
 
   // Added controls for sending colour in 3D event
   const colourIn3DHTML =
-    !isExpandable && colourIn3DControl
-      ? `
-    <div class="track-btns">
-      <span class="expand-icon collapsed" style="visibility: hidden;">▸</span>
-      <button data-event-id="${trackId}->${trackName}" class="in-3d-btn">in 3D<button>
-    </div>
-  `
+    colourIn3DControl
+      ? isExpandable
+        ? `
+          <div class="track-btns">
+            <button data-event-id="none" data-parent-track="${trackId}" class="in-3d-btn-parent">in 3D</button>
+          </div>
+        `
+        : `
+          <div class="track-btns">
+            <span class="expand-icon collapsed" style="visibility: hidden;">▸</span>
+            <button data-event-id="${trackId}->${trackName}" class="in-3d-btn">in 3D</button>
+          </div>
+        `
       : '';
 
   return `

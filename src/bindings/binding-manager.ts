@@ -267,4 +267,12 @@ export class ProtvistaBindingManager {
       bound.unbind(container);
     }
   }
+
+  public setFirstIn3DActive(container: HTMLElement): string | undefined {
+    return this.colour3DBtnBinder?.setFirstActive(container);
+  }
+
+  public setIn3DActiveWithoutEmit(container: HTMLElement, eventId: string): void {
+    this.colour3DBtnBinder?.setActiveWithoutEmit(container, eventId);
+  }
 }
