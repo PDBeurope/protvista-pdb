@@ -5,13 +5,15 @@
 // original Nightingale components
 import NightingaleManager from "@nightingale-elements/nightingale-manager";
 import NightingaleSequence from "@nightingale-elements/nightingale-sequence";
-import { NightingaleScrollbox, NightingaleScrollboxItem } from "@nightingale-elements/nightingale-scrollbox";"@nightingale-elements/nightingale-scrollbox";
+import { NightingaleScrollbox, NightingaleScrollboxItem } from "@nightingale-elements/nightingale-scrollbox";
+import NightingaleLinegraphTrack from "@nightingale-elements/nightingale-linegraph-track";
+import NightingaleConservationTrack from "@nightingale-elements/nightingale-conservation-track";
 
 // // customised PV components
 import ProtvistaPdbNavigation from "./custom-pv-components/pdb-navigation";
 import ProtvistaPdbTrack from './custom-pv-components/pdb-track'
-// import ProtvistaPdbScHistogram from './custom-pv-components/pdb-sc-histogram'
-// import ProtvistaPdbSeqConservation from './custom-pv-components/pdb-seq-conservation'
+import ProtvistaPdbScHistogram from './custom-pv-components/pdb-sc-histogram'
+import ProtvistaPdbSeqConservation from './custom-pv-components/pdb-seq-conservation'
 // import ProtvistaPdbVariationGraph from './custom-pv-components/pdb-variation-graph'
 // import ProtvistaPdbVariation from './custom-pv-components/pdb-variation'
 import ProtvistaPdbTooltip from './custom-pv-components/pdb-tooltip'
@@ -25,11 +27,13 @@ const registerWebComponents = function() {
     loadComponent("nightingale-sequence", NightingaleSequence);
     loadComponent("nightingale-scrollbox", NightingaleScrollbox);
     loadComponent("nightingale-scrollbox-item", NightingaleScrollboxItem);
+    loadComponent("nightingale-conservation-track", NightingaleConservationTrack);
+    loadComponent("nightingale-linegraph-track", NightingaleLinegraphTrack);
     // loadComponent("protvista-filter", ProtvistaFilter);
     loadComponent("protvista-pdb-navigation", ProtvistaPdbNavigation);
     loadComponent("protvista-pdb-track", ProtvistaPdbTrack);
-    // loadComponent("protvista-pdb-sc-histogram", ProtvistaPdbScHistogram);
-    // loadComponent("protvista-pdb-seq-conservation", ProtvistaPdbSeqConservation);
+    loadComponent("protvista-pdb-sc-histogram", ProtvistaPdbScHistogram);
+    loadComponent("protvista-pdb-seq-conservation", ProtvistaPdbSeqConservation);
     // loadComponent("protvista-pdb-variation-graph", ProtvistaPdbVariationGraph);
     // loadComponent("protvista-pdb-variation", ProtvistaPdbVariation);
     loadComponent("protvista-tooltip", ProtvistaPdbTooltip);

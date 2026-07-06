@@ -6,7 +6,7 @@ import filterData from "./custom-pv-components/filters"; // filter component dat
 import PDBePvNavSection from "./section-templates/navigation";
 import PDBePvSeqSection from "./section-templates/sequence";
 import PDBePvTracksSection from "./section-templates/tracks";
-// import PDBePvScSection from "./section-templates/seq-conservation";
+import PDBePvScSection from "./section-templates/seq-conservation";
 // import PDBePvVariationSection from "./section-templates/variation";
 import PDBePvLegendsSection from "./section-templates/legends";
 
@@ -115,6 +115,11 @@ class ProtvistaPDB extends HTMLElement {
                     <div style="line-height: 0">
                     <!-- Tracks section -->
                     ${PDBePvTracksSection(this)}
+                    </div>
+                
+                    <div style="line-height: 0">
+                    <!-- Sequence conservation section -->
+                    ${this.viewerData.displayConservation ? html`${PDBePvScSection(this)}` : ``}
                     </div>
 
                     <!-- Legends section -->

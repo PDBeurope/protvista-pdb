@@ -774,11 +774,13 @@ class LayoutHelper {
   }
 
   filterSc(orderValue) {
-    const scContainerEle = this.ctx.querySelector(".pvConservationPlotSection");
-    scContainerEle.firstElementChild.setAttribute(
-      "sc-display-order",
-      orderValue,
+    const scTrack = this.ctx.querySelector(
+      ".pvConservationPlotSection protvista-pdb-seq-conservation",
     );
+  
+    if (!scTrack) return;
+  
+    scTrack.setAttribute("sc-display-order", orderValue);
   }
 
   getMSADownloadUrl() {
