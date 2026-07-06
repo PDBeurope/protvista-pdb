@@ -5,6 +5,7 @@
 // original Nightingale components
 import NightingaleManager from "@nightingale-elements/nightingale-manager";
 import NightingaleSequence from "@nightingale-elements/nightingale-sequence";
+import { NightingaleScrollbox, NightingaleScrollboxItem } from "@nightingale-elements/nightingale-scrollbox";"@nightingale-elements/nightingale-scrollbox";
 
 // // customised PV components
 import ProtvistaPdbNavigation from "./custom-pv-components/pdb-navigation";
@@ -22,6 +23,8 @@ const registerWebComponents = function() {
     // loadComponent("protvista-manager", ProtvistaManager);
     // loadComponent("protvista-sequence", ProtvistaSequence);
     loadComponent("nightingale-sequence", NightingaleSequence);
+    loadComponent("nightingale-scrollbox", NightingaleScrollbox);
+    loadComponent("nightingale-scrollbox-item", NightingaleScrollboxItem);
     // loadComponent("protvista-filter", ProtvistaFilter);
     loadComponent("protvista-pdb-navigation", ProtvistaPdbNavigation);
     loadComponent("protvista-pdb-track", ProtvistaPdbTrack);

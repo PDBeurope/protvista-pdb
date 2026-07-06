@@ -8,7 +8,7 @@ import PDBePvSeqSection from "./section-templates/sequence";
 import PDBePvTracksSection from "./section-templates/tracks";
 // import PDBePvScSection from "./section-templates/seq-conservation";
 // import PDBePvVariationSection from "./section-templates/variation";
-// import PDBePvLegendsSection from "./section-templates/legends";
+import PDBePvLegendsSection from "./section-templates/legends";
 
 // Helper modules
 import DataHelper from "./helpers/data"
@@ -116,6 +116,9 @@ class ProtvistaPDB extends HTMLElement {
                     <!-- Tracks section -->
                     ${PDBePvTracksSection(this)}
                     </div>
+
+                    <!-- Legends section -->
+                    ${this.viewerData.legends ? html`${PDBePvLegendsSection(this)}` : ``}
                 </div>
 
             </nightingale-manager>

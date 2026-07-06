@@ -673,3 +673,13 @@ opacity: 0.4;
 #filter-uncertain .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
 opacity: 1;
 }
+
+.pvSubtrackScrollbox {
+    display: block;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.pvScrollboxItem {
+    display: block;
+}
