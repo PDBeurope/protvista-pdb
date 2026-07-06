@@ -1,9 +1,25 @@
 import { defineConfig } from "vite";
+import minifyHTMLLiterals from "rollup-plugin-minify-html-literals";
 import pkg from "./package.json" assert { type: "json" };
+
+const minifyHTML =
+  minifyHTMLLiterals.default ||
+  minifyHTMLLiterals.minifyHTMLLiterals ||
+  minifyHTMLLiterals;
 
 const version = pkg.version;
 
 export default defineConfig({
+  plugins: [
+    minifyHTML({
+      options: {
+        minifyCSS: true,
+        minifyJS: true,
+        removeComments: true,
+        collapseWhitespace: true,
+      },
+    }),
+  ],
   build: {
     lib: {
       entry: "src/index.js",
@@ -22,6 +38,18 @@ export default defineConfig({
       },
     },
     minify: "terser",
+    terserOptions: {
+      compress: {
+        passes: 3,
+        drop_console: true,
+        drop_debugger: true,
+      },
+      mangle: true,
+      format: {
+        comments: false,
+      },
+    },
+    sourcemap: false,
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
