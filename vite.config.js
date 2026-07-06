@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import minifyHTMLLiterals from "rollup-plugin-minify-html-literals";
-import pkg from "./package.json" assert { type: "json" };
+import pkg from "./package.json";
 
 const minifyHTML =
   minifyHTMLLiterals.default ||

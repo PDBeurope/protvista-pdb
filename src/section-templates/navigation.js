@@ -73,7 +73,9 @@ function PDBePvNavSection(ctx) {
                 length=${ctx.viewerData.length}
                 offset=${ctx.viewerData.offset || 0}
                 display-start=${1}
-                display-end=${ctx.viewerData.length}>
+                display-end=${ctx.viewerData.length}
+                margin-left=${ctx.pvTrackMargins.left}
+                margin-right=${ctx.pvTrackMargins.right}
             </protvista-pdb-navigation>
         </div>
 

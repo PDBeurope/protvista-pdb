@@ -91,6 +91,10 @@ class LayoutHelper {
       }
     }
 
+    if (this.ctx.viewerData.displayBoxplot && this.ctx.viewerData.boxplot) {
+       this.addBoxplotSection(this.ctx.viewerData.boxplot);
+    }
+
     // subscribe to other PDBe web-component events
     if (this.ctx.subscribeEvents) this.addEventSubscription();
   }
@@ -179,11 +183,20 @@ class LayoutHelper {
   }
 
   addHideOptions(optionClass, tIndex, label) {
-    let optionEle = this.ctx.querySelector("." + optionClass);
+    const optionEle = this.ctx.querySelector("." + optionClass);
+
+    if (!optionEle) {
+        console.warn(`Hide option container not found: .${optionClass}`);
+        return;
+    }
+
     optionEle.innerHTML = `<tr>
-            <td style="width:10%;vertical-align:top;"><input type="checkbox" class="pvSectionChkBox" name="cb_${tIndex}" style="margin:0" /></td>
-            <td style="padding-bottom:5px;">${label}</td>
-        </tr>`;
+        <td style="width:10%;vertical-align:top;">
+        <input type="checkbox" class="pvSectionChkBox" name="cb_${tIndex}" style="margin:0" />
+        </td>
+        <td style="padding-bottom:5px;">${label}</td>
+    </tr>`;
+
     optionEle.style.display = "table-row";
   }
 
@@ -894,6 +907,62 @@ updateVariationFilterAvailability(resultData) {
       );
     }
   }
+
+  addBoxplotSection(resultData) {
+  if (!resultData) return;
+
+  const graphRow = this.ctx.querySelector(".pvBoxplotGraphRow");
+  const detailRow = this.ctx.querySelector(".pvBoxplotDetailRow");
+
+  const graphTrack = this.ctx.querySelector(
+    ".pvBoxplotGraphSection protvista-pdb-boxplot-linegraph",
+  );
+
+  const rsaTrack = this.ctx.querySelector(
+    ".pvBoxplotRsaSection protvista-pdb-boxplot-track",
+  );
+
+  const simulatedRsaTrack = this.ctx.querySelector(
+    ".pvBoxplotSimRsaSection protvista-pdb-boxplot-track",
+  );
+
+  if (graphRow) {
+    graphRow.style.display = "table";
+  }
+
+  if (graphTrack) {
+    graphTrack.data = resultData;
+  }
+
+  if (rsaTrack && resultData.rsa) {
+    rsaTrack.data = resultData.rsa;
+  }
+
+  if (simulatedRsaTrack && resultData.simulatedRsa) {
+    simulatedRsaTrack.data = resultData.simulatedRsa;
+  }
+
+  this.addHideOptions(
+    "boxplotOption",
+    this.ctx.viewerData.tracks.length + 2,
+    "Relative solvent accessibility",
+  );
+}
+
+showBoxplotSection() {
+  const detailRow = this.ctx.querySelector(".pvBoxplotDetailRow");
+  const graphRow = this.ctx.querySelector(".pvBoxplotGraphRow");
+
+  if (!detailRow || !graphRow) return;
+
+  if (detailRow.style.display === "none") {
+    detailRow.style.display = "block";
+    graphRow.classList.add("expanded");
+  } else {
+    detailRow.style.display = "none";
+    graphRow.classList.remove("expanded");
+  }
+}
 
   addEventSubscription() {
     document.addEventListener("PDB.topologyViewer.click", (e) => {

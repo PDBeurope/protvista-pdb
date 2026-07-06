@@ -72,6 +72,8 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
                     .height=${ctx.layoutHelper.getTrackHeight(subtrackData.length, subtrackData.overlapping)}
                     .display-start=${ctx.viewerData.displayStart || 1}
                     .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+                    .margin-left=${ctx.pvTrackMargins.left}
+                    .margin-right=${ctx.pvTrackMargins.right}
                 ></protvista-pdb-track>
             </div>
         </div>
@@ -146,6 +148,8 @@ function PDBePvTracksSection(ctx) {
                     .height=${ctx.layoutHelper.getTrackHeight(trackData.length, trackData.overlapping)}
                     .display-start=${ctx.viewerData.displayStart || 1}
                     .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+                    .margin-left=${ctx.pvTrackMargins.left}
+                    .margin-right=${ctx.pvTrackMargins.right}
                 ></protvista-pdb-track>
             </div>
         </div>

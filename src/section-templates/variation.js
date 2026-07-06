@@ -54,6 +54,8 @@ function PDBePvVariationSection(ctx) {
           .height=${40}
           .display-start=${ctx.viewerData.displayStart || 1}
           .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+          .margin-left=${ctx.pvTrackMargins.left}
+          .margin-right=${ctx.pvTrackMargins.right}
         ></protvista-pdb-variation-graph>
       </div>
     </div>
@@ -75,6 +77,8 @@ function PDBePvVariationSection(ctx) {
             .height=${430}
             .display-start=${ctx.viewerData.displayStart || 1}
             .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+            .margin-left=${ctx.pvTrackMargins.left}
+            .margin-right=${ctx.pvTrackMargins.right}
           ></protvista-pdb-variation>
         </div>
       </div>

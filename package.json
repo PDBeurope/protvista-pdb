@@ -1,6 +1,6 @@
 {
   "name": "protvista-pdb",
-  "version": "4.0.0",
+  "version": "4.0.0-mddb",
   "description": "PDB ProtVista Viewer",
   "author": "Mandar Deshpande <mandar@ebi.ac.uk>",
   "contributors": [
@@ -10,26 +10,26 @@
   ],
   "license": "Apache-2.0",
   "type": "module",
-  "main": "dist/protvista-pdb-4.0.0.min.js",
-  "module": "dist/protvista-pdb-4.0.0.min.mjs",
-  "style": "dist/protvista-pdb-4.0.0.min.css",
+  "main": "dist/protvista-pdb-4.0.0-mddb.min.js",
+  "module": "dist/protvista-pdb-4.0.0-mddb.min.mjs",
+  "style": "dist/protvista-pdb-4.0.0-mddb.min.css",
   "files": [
     "dist",
     "src"
   ],
   "exports": {
     ".": {
-      "import": "./dist/protvista-pdb-4.0.0.min.mjs",
-      "require": "./dist/protvista-pdb-4.0.0.min.js",
-      "default": "./dist/protvista-pdb-4.0.0.min.js"
+      "import": "./dist/protvista-pdb-4.0.0-mddb.min.mjs",
+      "require": "./dist/protvista-pdb-4.0.0-mddb.min.js",
+      "default": "./dist/protvista-pdb-4.0.0-mddb.min.js"
     },
-    "./style.css": "./dist/protvista-pdb-4.0.0.min.css",
+    "./style.css": "./dist/protvista-pdb-4.0.0-mddb.min.css",
     "./dist/*": "./dist/*"
   },
   "sideEffects": [
-  "*.css",
-  "dist/*",
-  "src/index.js"
+    "*.css",
+    "dist/*",
+    "src/index.js"
   ],
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 1339",
@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@nightingale-elements/nightingale-conservation-track": "5.6.0",
+    "@nightingale-elements/nightingale-filter": "5.6.0",
     "@nightingale-elements/nightingale-linegraph-track": "5.6.0",
     "@nightingale-elements/nightingale-manager": "5.6.0",
     "@nightingale-elements/nightingale-navigation": "5.6.0",
@@ -45,7 +46,6 @@
     "@nightingale-elements/nightingale-sequence": "5.6.0",
     "@nightingale-elements/nightingale-track": "5.6.0",
     "@nightingale-elements/nightingale-track-canvas": "5.6.0",
-    "@nightingale-elements/nightingale-filter": "5.6.0",
     "@nightingale-elements/nightingale-variation": "5.6.0",
     "d3": "^7.0.0",
     "lit": "^3.0.0",

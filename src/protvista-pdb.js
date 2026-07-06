@@ -10,6 +10,7 @@ import PDBePvTracksSection from "./section-templates/tracks";
 import PDBePvScSection from "./section-templates/seq-conservation";
 import PDBePvVariationSection from "./section-templates/variation";
 import PDBePvLegendsSection from "./section-templates/legends";
+import PDBePvBoxplotSection from "./section-templates/boxplot";
 
 // Helper modules
 import DataHelper from "./helpers/data"
@@ -34,6 +35,11 @@ class ProtvistaPDB extends HTMLElement {
             }
         };
 
+        this.pvTrackMargins = {
+            right: 0,
+            left: 0,
+        }
+
         // Create layout helper instance
         this.layoutHelper = new LayoutHelper(this);
     }
@@ -49,6 +55,11 @@ class ProtvistaPDB extends HTMLElement {
 
         if(typeof this.viewerData.sequenceConservation !== 'undefined') this.viewerData.displayConservation = true;
         if(typeof this.viewerData.variants !== 'undefined') this.viewerData.displayVariants = true;
+        if(typeof this.viewerData.boxplot !== 'undefined') {
+            this.viewerData.displayBoxplot = true;
+            this.pvTrackMargins.right = 10;
+            this.pvTrackMargins.left = 35;
+        }
         
         this._render();
     }
@@ -84,6 +95,11 @@ class ProtvistaPDB extends HTMLElement {
         this.viewerData = await this.dataHelper.processMutlplePDBeApiData();
         this.viewerData.displayConservation = (this.pageSection && this.pageSection == '2') ? false : true;
         this.viewerData.displayVariants = (this.pageSection && this.pageSection == '2') ? false : true;
+        this.viewerData.displayBoxplot = (this.pageSection && this.pageSection == '2') ? false : true;
+        if (typeof this.viewerData.boxplot !== 'undefined') {
+            this.pvTrackMargins.right = 10;
+            this.pvTrackMargins.left = 35;
+        }
 
         this._render();
     }
@@ -93,7 +109,6 @@ class ProtvistaPDB extends HTMLElement {
             this.displayErrorMessage();
             return;
         }
-
         if(!this.showLegends) delete this.viewerData.legends;
 
         const mainHtml = () => html`
@@ -116,6 +131,11 @@ class ProtvistaPDB extends HTMLElement {
                     <div style="line-height: 0">
                     <!-- Tracks section -->
                     ${PDBePvTracksSection(this)}
+                    </div>
+
+                    <div style="line-height: 0">
+                    <!-- RSA Distribuition section -->
+                    ${this.viewerData.displayBoxplot ? html`${PDBePvBoxplotSection(this)}` : ``}
                     </div>
                 
                     <div style="line-height: 0">

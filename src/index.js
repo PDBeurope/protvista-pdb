@@ -6,6 +6,7 @@ import NightingaleLinegraphTrack from "@nightingale-elements/nightingale-linegra
 import NightingaleConservationTrack from "@nightingale-elements/nightingale-conservation-track";
 import NightingaleVariation from "@nightingale-elements/nightingale-variation";
 import NightingaleFilter from "@nightingale-elements/nightingale-filter";
+import NightingaleBoxplotTrack from "./vendor/nightingale-boxplot-track/index.js";
 
 // customised PV components
 import ProtvistaPdbNavigation from "./custom-pv-components/pdb-navigation";
@@ -15,6 +16,8 @@ import ProtvistaPdbSeqConservation from './custom-pv-components/pdb-seq-conserva
 import ProtvistaPdbVariationGraph from './custom-pv-components/pdb-variation-graph'
 import ProtvistaPdbVariation from './custom-pv-components/pdb-variation'
 import ProtvistaPdbTooltip from './custom-pv-components/pdb-tooltip'
+import ProtvistaPdbBoxplotTrack from "./custom-pv-components/pdb-boxplot-track"
+import ProtvistaPdbBoxplotLinegraph from "./custom-pv-components/pdb-boxplot-linegraph";
 import ProtvistaPDB from './protvista-pdb';
 import { loadComponent } from "./loadComponent";
 
@@ -27,6 +30,7 @@ const registerWebComponents = function() {
     loadComponent("nightingale-linegraph-track", NightingaleLinegraphTrack);
     loadComponent("nightingale-variation", NightingaleVariation);
     loadComponent("nightingale-filter", NightingaleFilter);
+    loadComponent("nightingale-boxplot-track", NightingaleBoxplotTrack);
     loadComponent("protvista-pdb-navigation", ProtvistaPdbNavigation);
     loadComponent("protvista-pdb-track", ProtvistaPdbTrack);
     loadComponent("protvista-pdb-sc-histogram", ProtvistaPdbScHistogram);
@@ -34,6 +38,8 @@ const registerWebComponents = function() {
     loadComponent("protvista-pdb-variation-graph", ProtvistaPdbVariationGraph);
     loadComponent("protvista-pdb-variation", ProtvistaPdbVariation);
     loadComponent("protvista-tooltip", ProtvistaPdbTooltip);
+    loadComponent("protvista-pdb-boxplot-track", ProtvistaPdbBoxplotTrack);
+    loadComponent("protvista-pdb-boxplot-linegraph", ProtvistaPdbBoxplotLinegraph);
     loadComponent('protvista-pdb', ProtvistaPDB);
 }
 
