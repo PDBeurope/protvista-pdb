@@ -1,18 +1,17 @@
 const RSA_CLASS_CONFIG = {
-  Switching: {
-    color: "#ffbf00",
+  Buried: {
+    color: "#2166ac", // blue
     order: 0,
   },
-  Buried: {
-    color: "#e6e600",
+  Switching: {
+    color: "#7b3294", // purple
     order: 1,
   },
   Exposed: {
-    color: "#ff1a00",
+    color: "#d6604d", // orange/red
     order: 2,
   },
 };
-
 function makeRsaClassTooltip(className, residue) {
   const start = residue.startIndex;
   const end = residue.endIndex ?? residue.startIndex;

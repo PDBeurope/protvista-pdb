@@ -909,45 +909,50 @@ updateVariationFilterAvailability(resultData) {
   }
 
   addBoxplotSection(resultData) {
-  if (!resultData) return;
+    if (!resultData) return;
 
-  const graphRow = this.ctx.querySelector(".pvBoxplotGraphRow");
-  const detailRow = this.ctx.querySelector(".pvBoxplotDetailRow");
+    const graphRow = this.ctx.querySelector(".pvBoxplotGraphRow");
+    const detailRow = this.ctx.querySelector(".pvBoxplotDetailRow");
 
-  const graphTrack = this.ctx.querySelector(
-    ".pvBoxplotGraphSection protvista-pdb-boxplot-linegraph",
-  );
+    const graphTrack = this.ctx.querySelector(
+      ".pvBoxplotGraphSection protvista-pdb-boxplot-linegraph",
+    );
 
-  const rsaTrack = this.ctx.querySelector(
-    ".pvBoxplotRsaSection protvista-pdb-boxplot-track",
-  );
+    const rsaTrack = this.ctx.querySelector(
+      ".pvBoxplotRsaSection protvista-pdb-boxplot-track",
+    );
 
-  const simulatedRsaTrack = this.ctx.querySelector(
-    ".pvBoxplotSimRsaSection protvista-pdb-boxplot-track",
-  );
+    if (graphRow) {
+      graphRow.style.display = "table";
+    }
 
-  if (graphRow) {
-    graphRow.style.display = "table";
+    if (graphTrack) {
+      graphTrack.data = resultData;
+    }
+
+    const dataForDistribution = [];
+    if (rsaTrack && resultData.rsa) {
+      dataForDistribution.push({
+          name: "RSA",
+          color: '#4169e1',
+          positions: resultData.rsa?.data?.[0]?.positions
+      });
+    }
+    if (rsaTrack && resultData.simulatedRsa) {
+      dataForDistribution.push({
+          name: "Simulated RSA",
+          color: '#d95f02',
+          positions: resultData.simulatedRsa?.data?.[0]?.positions
+      });
+    }
+    rsaTrack.data = dataForDistribution;
+
+    this.addHideOptions(
+      "boxplotOption",
+      this.ctx.viewerData.tracks.length + 2,
+      "Relative solvent accessibility",
+    );
   }
-
-  if (graphTrack) {
-    graphTrack.data = resultData;
-  }
-
-  if (rsaTrack && resultData.rsa) {
-    rsaTrack.data = resultData.rsa;
-  }
-
-  if (simulatedRsaTrack && resultData.simulatedRsa) {
-    simulatedRsaTrack.data = resultData.simulatedRsa;
-  }
-
-  this.addHideOptions(
-    "boxplotOption",
-    this.ctx.viewerData.tracks.length + 2,
-    "Relative solvent accessibility",
-  );
-}
 
 showBoxplotSection() {
   const detailRow = this.ctx.querySelector(".pvBoxplotDetailRow");

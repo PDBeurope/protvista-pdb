@@ -10,8 +10,10 @@ function PDBePvScSection(ctx) {
                             accession=${ctx._entryId ? ctx._entryId : ctx._accession}
                             length=${ctx.viewerData.length}
                             height=${44}
-                            margin-left=${ctx.pvTrackMargins.left}
-                            margin-right=${ctx.pvTrackMargins.right}
+                            .margin-left=${ctx.pvTrackMargins.left}
+                            .margin-right=${ctx.pvTrackMargins.right}
+                            .display-start=${ctx.viewerData.displayStart || 1}
+                            .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
                         ></protvista-pdb-sc-histogram>
                     </div>
                 </div>
@@ -117,10 +119,10 @@ function PDBePvScSection(ctx) {
                             accession=${ctx._entryId ? ctx._entryId : ctx._accession}
                             length=${ctx.viewerData.length}
                             height=${430}
-                            display-start=${ctx.viewerData.displayStart || 1}
-                            display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
-                            margin-left=${ctx.pvTrackMargins.left}
-                            margin-right=${ctx.pvTrackMargins.right}
+                            .display-start=${ctx.viewerData.displayStart || 1}
+                            .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+                            .margin-left=${ctx.pvTrackMargins.left}
+                            .margin-right=${ctx.pvTrackMargins.right}
                             ></protvista-pdb-seq-conservation>
                         </div>
                     </div>

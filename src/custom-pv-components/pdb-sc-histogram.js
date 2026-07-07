@@ -7,17 +7,23 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
     this.type = "Sequence conservation";
     this["show-label-name"] = false;
 
-    this.addEventListener("change", this._onNightingaleChange);
+    this.addEventListener("change", this._onNightingaleChange, true);
+
+    requestAnimationFrame(() => {
+      this._installPdbeMouseOverlay();
+    });
   }
 
   disconnectedCallback() {
-    this.removeEventListener("change", this._onNightingaleChange);
+    this.removeEventListener("change", this._onNightingaleChange, true);
+    this._removePdbeMouseOverlay();
     super.disconnectedCallback?.();
   }
 
   set data(data) {
     this._rawData = data;
-    super.data = this._normaliseData(data);
+    this._normalisedData = this._normaliseData(data);
+    super.data = this._normalisedData;
   }
 
   get data() {
@@ -39,7 +45,7 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
         fill: "rgba(128, 128, 128, 0.35)",
         lineCurve: "curveStep",
         values: source.index.map((position) => ({
-          position,
+          position: Number(position),
           value: source.conservation_score[position - 1] || 0,
         })),
       },
@@ -50,36 +56,155 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
     const detail = event.detail || {};
     const type = detail.eventtype || detail.eventType || detail.type;
 
-    if (type === "mouseover") {
-      this._handleMouseover(detail);
+    if (detail._pdbeCompatHighlightEvent) {
+      return;
     }
 
-    if (type === "mouseout") {
-      this._handleMouseout(detail);
-    }
-
-    if (type === "click") {
-      this._handleClick(detail);
+    // Native Nightingale linegraph hover is unreliable at the left edge.
+    // The overlay handles hover/click directly, so suppress native mouse events.
+    if (type === "mouseover" || type === "mouseout" || type === "click") {
+      event.stopImmediatePropagation();
+      event.preventDefault();
     }
   };
+
+  // Nightingale linegraph's native hover can miss residues near the left edge
+  // under some zoom/margin combinations. This overlay emits corrected
+  // ProtVista-compatible hover/click events using rendered track coordinates.
+  _installPdbeMouseOverlay() {
+    if (this._pdbeMouseOverlay) return;
+
+    const parent = this.parentElement || this;
+    const parentStyle = window.getComputedStyle(parent);
+
+    if (parentStyle.position === "static") {
+      parent.style.position = "relative";
+    }
+
+    const overlay = document.createElement("div");
+    overlay.className = "pdbe-linegraph-hover-overlay";
+
+    Object.assign(overlay.style, {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      zIndex: "20",
+      background: "transparent",
+      cursor: "crosshair",
+    });
+
+    overlay.addEventListener("mousemove", this._onPdbeOverlayMousemove);
+    overlay.addEventListener("mouseleave", this._onPdbeOverlayMouseleave);
+    overlay.addEventListener("click", this._onPdbeOverlayClick);
+
+    parent.appendChild(overlay);
+    this._pdbeMouseOverlay = overlay;
+  }
+
+  _removePdbeMouseOverlay() {
+    if (!this._pdbeMouseOverlay) return;
+
+    this._pdbeMouseOverlay.removeEventListener(
+      "mousemove",
+      this._onPdbeOverlayMousemove,
+    );
+    this._pdbeMouseOverlay.removeEventListener(
+      "mouseleave",
+      this._onPdbeOverlayMouseleave,
+    );
+    this._pdbeMouseOverlay.removeEventListener(
+      "click",
+      this._onPdbeOverlayClick,
+    );
+
+    this._pdbeMouseOverlay.remove();
+    this._pdbeMouseOverlay = null;
+  }
+
+  _onPdbeOverlayMousemove = (mouseEvent) => {
+    const position = this._getPositionFromNativeMouse(mouseEvent);
+
+    if (!Number.isFinite(position)) {
+      this._lastPdbeHoverPosition = null;
+      this._handleMouseout();
+      return;
+    }
+
+    this._lastPdbeHoverPosition = position;
+
+    this._handleMouseover({
+      parentEvent: mouseEvent,
+      highlight: `${position}:${position}`
+    });
+  };
+
+  _onPdbeOverlayMouseleave = () => {
+    this._lastPdbeHoverPosition = null;
+    this._handleMouseout();
+  };
+
+  _onPdbeOverlayClick = (mouseEvent) => {
+    const position = this._getPositionFromNativeMouse(mouseEvent);
+
+    if (!Number.isFinite(position)) return;
+
+    this._handleClick({
+      parentEvent: mouseEvent,
+      highlight: `${position}:${position}`
+    });
+  };
+
+  _getPositionFromNativeMouse(mouseEvent) {
+    const rect = this.getBoundingClientRect();
+    const mouseX = mouseEvent.clientX - rect.left;
+
+    const marginLeft = Number(this["margin-left"] || 0);
+    const marginRight = Number(this["margin-right"] || 0);
+
+    const displayStart = Number(this["display-start"] || 1);
+    const displayEnd = Number(
+      this["display-end"] || this.length || displayStart,
+    );
+
+    const plotLeft = marginLeft;
+    const plotRight = rect.width - marginRight;
+    const plotWidth = plotRight - plotLeft;
+
+    const tolerance = 8;
+
+    if (
+      plotWidth <= 0 ||
+      mouseX < plotLeft - tolerance ||
+      mouseX > plotRight + tolerance
+    ) {
+      return undefined;
+    }
+
+    const clampedMouseX = Math.min(Math.max(mouseX, plotLeft), plotRight);
+
+    const ratio = (clampedMouseX - plotLeft) / plotWidth;
+    const visibleLength = displayEnd - displayStart + 1;
+
+    const position = Math.round(displayStart + ratio * (visibleLength - 1));
+
+    return Math.min(Math.max(position, displayStart), displayEnd);
+  }
 
   _getPositionFromDetail(detail) {
     const highlight = detail.highlight;
 
-    if (typeof highlight === "string" && highlight.includes(":")) {
+    if (typeof highlight === "string" && highlight.indexOf(":") > -1) {
       return Number(highlight.split(":")[0]);
     }
 
-    const mouseEvent = detail.parentEvent;
-    if (
-      mouseEvent &&
-      typeof mouseEvent.offsetX === "number" &&
-      typeof this.getSeqPositionFromX === "function"
-    ) {
-      return Math.floor(this.getSeqPositionFromX(mouseEvent.offsetX));
-    }
+    const feature = detail.feature || {};
+    const firstValue = Object.keys(feature)
+      .map((key) => feature[key])
+      .find((value) => value && Number.isFinite(Number(value.position)));
 
-    return undefined;
+    return firstValue ? Number(firstValue.position) : undefined;
   }
 
   _getScore(position) {
@@ -114,9 +239,7 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
     const oldTooltip = document.querySelector("protvista-tooltip");
 
     if (!(oldTooltip && oldTooltip.className === "click-open")) {
-      window.setTimeout(() => {
-        this.createTooltipFromTooltipData(detail.parentEvent, tooltipData);
-      }, 50);
+      this.createTooltipFromTooltipData(detail.parentEvent, tooltipData);
     }
 
     this.dispatchEvent(
@@ -127,7 +250,16 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
           highlightend: position,
           "highlight-start": position,
           "highlight-end": position,
+          _pdbeCompatHighlightEvent: true,
         },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-mouseover", {
+        detail: tooltipData,
         bubbles: true,
         cancelable: true,
       }),
@@ -198,19 +330,36 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
 
     const tooltip = document.createElement("protvista-tooltip");
 
-    tooltip.left = mouseEvent.pageX + 15;
-    tooltip.top = mouseEvent.pageY + 5;
-    tooltip.style.marginLeft = 0;
-    tooltip.style.marginTop = 0;
     tooltip.title = `${tooltipData.feature.type} residue ${tooltipData.start}`;
     tooltip.closeable = closeable;
     tooltip.content = tooltipData.feature.tooltipContent;
+
+    tooltip.left = mouseEvent.pageX + 15;
+    tooltip.top = mouseEvent.pageY + 5;
+
+    tooltip.style.position = "absolute";
+    tooltip.style.left = mouseEvent.pageX + 15 + "px";
+    tooltip.style.top = mouseEvent.pageY + 5 + "px";
+    tooltip.style.marginLeft = "0";
+    tooltip.style.marginTop = "0";
 
     if (closeable) {
       tooltip.classList.add("click-open");
     }
 
     document.body.appendChild(tooltip);
+
+    const tooltipBox = tooltip.getBoundingClientRect();
+    const bottomSpace = window.innerHeight - mouseEvent.clientY;
+    const rightSpace = window.innerWidth - mouseEvent.clientX;
+
+    if (bottomSpace < tooltipBox.height + 20) {
+      tooltip.style.top = mouseEvent.pageY - tooltipBox.height - 20 + "px";
+    }
+
+    if (rightSpace < tooltipBox.width + 20) {
+      tooltip.style.left = mouseEvent.pageX - tooltipBox.width - 20 + "px";
+    }
   }
 }
 
