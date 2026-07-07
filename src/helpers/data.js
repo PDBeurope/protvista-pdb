@@ -217,15 +217,15 @@ class DataHelper {
 
         this.addLegendGroup("Simulated RSA Classes", [
           {
-            color: "#ffbf00",
-            text: "Switching",
-          },
-          {
-            color: "#e6e600",
+            color: "#2166ac",
             text: "Buried",
           },
           {
-            color: "#ff1a00",
+            color: "#7b3294",
+            text: "Switching",
+          },
+          {
+            color: "#d6604d",
             text: "Exposed",
           },
         ]);
