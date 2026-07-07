@@ -62,7 +62,7 @@ function PDBePvScSection(ctx) {
                             }}
                             style = "${ctx._entryId ? "display: none" : ""}"
                             >
-                                <a class="button" style="padding: 2px 4px 2px 4px; background-color: #ececec; border: solid 1px dimgrey; border-radius: 3px; margin-top: 10px;"
+                                <a class="button" style="padding: 2px 4px 2px 4px; background-color: #ececec; border: solid 1px dimgrey; border-radius: 3px; margin-top: 10px; color: #222;"
                                     href="${ctx.layoutHelper.getMSADownloadUrl()}">
                                     Download MSA <i class="icon icon-functional" data-icon="="></i>
                                 </a>
