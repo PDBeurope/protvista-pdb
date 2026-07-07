@@ -68,7 +68,7 @@ function normaliseAverageLinegraphData(input, length) {
         datasetToLine(
           {
             ...rsaDataset,
-            name: "RSA average",
+            name: "PDB RSA average",
             color: LINE_COLORS.rsa,
           },
           LINE_COLORS.rsa,

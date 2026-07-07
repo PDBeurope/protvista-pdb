@@ -24,7 +24,7 @@ function makeRsaClassTooltip(className, residue) {
   const entries = residue.mddbEntries || [];
 
   const entryList = entries.length
-    ? `<br>MDDB entries:<br>
+    ? `<br>MDposit entries:<br>
       ${entries
         .slice(0, 5)
         .map((entry) => {
@@ -32,7 +32,7 @@ function makeRsaClassTooltip(className, residue) {
             ? ` chain ${entry.chainIds.join(",")}`
             : "";
 
-          return `${entry.pdbId || ""} / ${entry.mddbId || ""}${chains}`;
+          return `<a href="https://mdposit.mddbr.eu/#/pointer?ref=pdbs&id=${entry.pdbId || ''}" target="_blank">${entry.pdbId || ""}</a> / ${entry.mddbId || ""}${chains}`;
         })
         .join("<br>")}${entries.length > 5 ? `<br>+${entries.length - 5} more` : ""}`
     : "";
@@ -70,11 +70,11 @@ function makeRsaClassLabelTooltip(className, residues = []) {
     descriptions[className] ||
       "Residues annotated based on the summary of relative solvent accessible surface area during the simulation.",
     `Residues: ${residueCount}`,
-    `MDDB observations: ${entryCount}`,
+    `MDposit observations: ${entryCount}`,
   ].join("<br>");
 }
 
-export function transformSimRsaClassesToTrack(mockEntry) {
+export function transformSimRsaClassesToTrack(proteinsId, mockEntry) {
   if (!mockEntry?.data) return null;
 
   const rows = mockEntry.data
@@ -95,7 +95,7 @@ export function transformSimRsaClassesToTrack(mockEntry) {
 
   return {
     labelType: "text",
-    label: "Simulated RSA classes (MDDB)",
+    label: `Simulated RSA classes (MDposit) <a href='https://mdposit.mddbr.eu/#/pointer?ref=proteins&id=${proteinsId}' target='_blank'>${proteinsId} <i class="icon icon-generic" data-icon="x"></i></a>`,
     type: "Simulated relative solvent accessibility",
     overlapping: false,
     labelColor: "rgb(128,128,128)",

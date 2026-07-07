@@ -200,17 +200,17 @@ class DataHelper {
       this.addLegendGroup("Relative solvent accessibility", [
           {
             color: "#4169e1",
-            text: "RSA average",
+            text: "PDB RSA",
           },
           {
             color: "#d95f02",
-            text: "Simulated RSA average",
+            text: "Simulated RSA",
           },
       ]);
     }
 
     if (simulatedRsaClassesEntry) {
-      const simRsaTrack = transformSimRsaClassesToTrack(simulatedRsaClassesEntry);
+      const simRsaTrack = transformSimRsaClassesToTrack(this.accession, simulatedRsaClassesEntry);
 
       if (simRsaTrack) {
         this.viewerData.tracks.push(simRsaTrack);

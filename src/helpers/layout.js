@@ -933,7 +933,7 @@ updateVariationFilterAvailability(resultData) {
     const dataForDistribution = [];
     if (rsaTrack && resultData.rsa) {
       dataForDistribution.push({
-          name: "RSA",
+          name: "PDB RSA",
           color: '#4169e1',
           positions: resultData.rsa?.data?.[0]?.positions
       });

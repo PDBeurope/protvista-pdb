@@ -7,7 +7,7 @@ function PDBePvBoxplotSection(ctx) {
         class="protvistaCol1 category-label" style="background-color:rgb(128,128,128); border-bottom:1px solid lightgrey"
         @click=${() => ctx.layoutHelper.showBoxplotSection()}
       >
-        Relative solvent accessibility (MDDB)
+        Relative solvent accessibility (PDB and MDposit)
       </div>
 
       <div class="protvistaCol2 aggregate-track-content pvBoxplotGraphSection">
@@ -25,7 +25,7 @@ function PDBePvBoxplotSection(ctx) {
     <div class="pvBoxplotDetailRow" style="display:none">
       <div class="protvistaRow">
         <div class="protvistaCol1 track-label" style="background-color:#d3d3d3;border-bottom:1px solid #d3d3d3">
-          RSA and Simulated RSA distributions
+          PDB RSA and Simulated RSA distributions
         </div>
 
         <div class="protvistaCol2 track-content pvBoxplotRsaSection">
