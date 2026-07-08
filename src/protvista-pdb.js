@@ -169,7 +169,7 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     displayLoadingMessage() {
-        render(html`<div class="protvista-pdb" style="text-align:center;">Loading Protvista...</div>`, this);
+        render(html`<div class=${this.useDefaultStyles ? "protvista-pdb default-styles" : "protvista-pdb"} style="text-align:center;">Loading Protvista...</div>`, this);
     }
 
     displayErrorMessage() {

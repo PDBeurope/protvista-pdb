@@ -2,9 +2,20 @@ import { html } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import "@nightingale-elements/nightingale-scrollbox";
 
+function isSubtrackHidden(ctx, trackData, subtrackData) {
+    return ctx.hiddenSubtracks?.[trackData.uuid]?.includes(subtrackData.uuid);
+}
+
 function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackIndex) {
     return html`
-        <div class="protvistaRow pvSubtrackRow_${trackIndex}_${subtrackIndex}">
+        <div
+            class="protvistaRow pvSubtrackRow_${trackIndex}_${subtrackIndex}"
+            data-track-uuid=${trackData.uuid}
+            data-subtrack-uuid=${subtrackData.uuid}
+            style=${styleMap(isSubtrackHidden(ctx, trackData, subtrackData) ? {
+                display: "none"
+            } : {})}
+        >
             <div
                 class="protvistaCol1 track-label"
                 style=${styleMap(subtrackData.labelColor ? {
@@ -85,7 +96,14 @@ function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, s
     return html`
         <div
             class="protvistaRow pvSubtrackRow_${trackIndex}_${subtrackIndex} pvSubtrackPlaceholder"
-            style="height:${ctx.layoutHelper.getTrackHeight(subtrackData.length, subtrackData.overlapping)}px;"
+            data-track-uuid=${trackData.uuid}
+            data-subtrack-uuid=${subtrackData.uuid}
+            style=${styleMap({
+                height: `${ctx.layoutHelper.getTrackHeight(subtrackData.length, subtrackData.overlapping)}px`,
+                ...(isSubtrackHidden(ctx, trackData, subtrackData)
+                    ? { display: "none" }
+                    : {})
+            })}
         >
             <div
                 class="protvistaCol1 track-label"

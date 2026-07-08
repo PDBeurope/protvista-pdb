@@ -329,14 +329,24 @@ class LayoutHelper {
   }
 
   resetSection(trackIndex) {
-    this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
-      "none";
-    this.ctx.hiddenSubtracks[trackIndex].forEach((subtrackIndex) => {
-      this.ctx.querySelector(
-        `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
-      ).style.display = "table";
-    });
-    delete this.ctx.hiddenSubtracks[trackIndex];
+      const trackData = this.ctx.viewerData.tracks[trackIndex];
+
+      if (!trackData?.uuid) return;
+
+      this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
+          "none";
+
+      trackData.data.forEach((_, subtrackIndex) => {
+          const row = this.ctx.querySelector(
+              `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
+          );
+
+          if (row) {
+              row.style.display = "table";
+          }
+      });
+
+      delete this.ctx.hiddenSubtracks[trackData.uuid];
   }
 
   hideSection(trackIndex) {
@@ -413,26 +423,33 @@ class LayoutHelper {
   }
 
   hideSubTrack(trackIndex, subtrackIndex) {
-    //Add subtrack index details
-    if (typeof this.ctx.hiddenSubtracks[trackIndex] == "undefined") {
-      this.ctx.hiddenSubtracks[trackIndex] = [subtrackIndex];
-    } else {
-      this.ctx.hiddenSubtracks[trackIndex].push(subtrackIndex);
-    }
+      const trackData = this.ctx.viewerData.tracks[trackIndex];
+      const subtrackData = trackData?.data?.[subtrackIndex];
 
-    //hide dom
-    this.ctx.querySelector(
-      `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
-    ).style.display = "none";
-    this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
-      "inline-block";
+      if (!trackData?.uuid || !subtrackData?.uuid) return;
 
-    if (
-      this.ctx.hiddenSubtracks[trackIndex].length ==
-      this.ctx.viewerData.tracks[trackIndex].data.length
-    ) {
-      this.hideSection(trackIndex);
-    }
+      if (!Array.isArray(this.ctx.hiddenSubtracks[trackData.uuid])) {
+          this.ctx.hiddenSubtracks[trackData.uuid] = [];
+      }
+
+      if (!this.ctx.hiddenSubtracks[trackData.uuid].includes(subtrackData.uuid)) {
+          this.ctx.hiddenSubtracks[trackData.uuid].push(subtrackData.uuid);
+      }
+
+      const row = this.ctx.querySelector(
+          `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
+      );
+
+      if (row) {
+          row.style.display = "none";
+      }
+
+      this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
+          "inline-block";
+
+      if (this.ctx.hiddenSubtracks[trackData.uuid].length === trackData.data.length) {
+          this.hideSection(trackIndex);
+      }
   }
 
   resetZoom(param) {

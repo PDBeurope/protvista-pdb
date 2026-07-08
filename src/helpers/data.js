@@ -2,6 +2,7 @@ import { p00918RsaBoxplot } from "../mock-data/P00918-uniprot-rsa";
 import { p00918SimRsaBoxplot } from "../mock-data/P00918-uniprot-simulated-rsa";
 import { p00918SimRsaClasses } from "../mock-data/P00918-uniprot-simulated-rsa-classes.js";
 import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.js";
+import { addTrackUuids } from "./data-track-uuids";
 class DataHelper {
   constructor(envAttrValue, accession, entryId, entityId, pageSection) {
     // Set Env property
@@ -156,7 +157,8 @@ class DataHelper {
         }
       }
     });
-   this.addMockBoxplotData();
+    this.addMockBoxplotData();
+    this.viewerData.tracks = addTrackUuids(this.viewerData.tracks);
 
     return this.viewerData;
   }
