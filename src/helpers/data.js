@@ -5,7 +5,14 @@ import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.
 import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
 class DataHelper {
-  constructor(envAttrValue, accession, entryId, entityId, pageSection) {
+  constructor(
+    envAttrValue,
+    accession,
+    entryId,
+    entityId,
+    pageSection,
+    apiNames = [],
+  ) {
     // Set Env property
     if (envAttrValue) {
       this.appUrlEnv = envAttrValue;
@@ -21,6 +28,7 @@ class DataHelper {
     this.entryId = entryId;
     this.entityId = entityId;
     this.pageSection = pageSection;
+    this.apiNames = Array.isArray(apiNames) ? apiNames : null;
 
     // Initial Viewer Data
     this.viewerData = {
@@ -41,77 +49,143 @@ class DataHelper {
   }
 
   getPDBePVApiUrls() {
-    // Default PDBe ProtVista API Urls
-    let pdbePvApiUrls = {
+    const pdbePvApiUrls = {
       uniprot: [
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/unipdb/${this.accession}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/domains/${this.accession}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/secondary_structures/protvista/variation/${this.accession}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/ligand_sites/${this.accession}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/interface_residues/${this.accession}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/annotations/${this.accession}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`
+        {
+          name: "unipdb",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/unipdb/${this.accession}`,
+        },
+        {
+          name: "domains",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/domains/${this.accession}`,
+        },
+        {
+          name: "secondary_structure_variation",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/secondary_structures/protvista/variation/${this.accession}`,
+        },
+        {
+          name: "ligand_sites",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/ligand_sites/${this.accession}`,
+        },
+        {
+          name: "interface_residues",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/interface_residues/${this.accession}`,
+        },
+        {
+          name: "annotations",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/annotations/${this.accession}`,
+        },
+        {
+          name: "3dbeacons",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`,
+          processor: "3dbeacons",
+        },
       ],
+
       entry: [
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/uniprot_mapping/${this.entryId}/${this.entityId}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/chains/${this.entryId}/${this.entityId}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/domains/${this.entryId}/${this.entityId}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/rfam/${this.entryId}/${this.entityId}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/secondary_structure/${this.entryId}/${this.entityId}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/binding_sites/${this.entryId}/${this.entityId}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/interfaces/${this.entryId}/${this.entityId}`,
-        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/annotations/${this.entryId}/${this.entityId}`,
+        {
+          name: "uniprot_mapping",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/uniprot_mapping/${this.entryId}/${this.entityId}`,
+        },
+        {
+          name: "chains",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/chains/${this.entryId}/${this.entityId}`,
+        },
+        {
+          name: "domains",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/domains/${this.entryId}/${this.entityId}`,
+        },
+        {
+          name: "rfam",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/rfam/${this.entryId}/${this.entityId}`,
+        },
+        {
+          name: "secondary_structure",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/secondary_structure/${this.entryId}/${this.entityId}`,
+        },
+        {
+          name: "binding_sites",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/binding_sites/${this.entryId}/${this.entityId}`,
+        },
+        {
+          name: "interfaces",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/interfaces/${this.entryId}/${this.entityId}`,
+        },
+        {
+          name: "annotations",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/annotations/${this.entryId}/${this.entityId}`,
+        },
       ],
     };
 
-    let urls = [];
+    let configs = [];
+
     if (this.accession) {
-      urls = pdbePvApiUrls.uniprot;
+      configs = pdbePvApiUrls.uniprot;
     } else if (this.entryId && this.entityId && !this.pageSection) {
-      urls = pdbePvApiUrls.entry;
+      configs = pdbePvApiUrls.entry;
     } else if (this.entryId && this.entityId && this.pageSection) {
-      urls =
+      configs =
         this.pageSection === "2"
-          ? [pdbePvApiUrls.entry.pop()]
-          : pdbePvApiUrls.entry.slice(0, -1);
+          ? pdbePvApiUrls.entry.filter(
+              (config) => config.name === "annotations",
+            )
+          : pdbePvApiUrls.entry.filter(
+              (config) => config.name !== "annotations",
+            );
     }
 
-    return urls;
+    if (this.apiNames?.length) {
+      const selectedNames = new Set(this.apiNames);
+      configs = configs.filter((config) => selectedNames.has(config.name));
+    }
+
+    return configs;
   }
 
   async processMutlplePDBeApiData() {
-    const pdbeApiUrls = this.getPDBePVApiUrls();
+    const pdbeApiConfigs = this.getPDBePVApiUrls();
 
     const results = await Promise.all(
-      pdbeApiUrls.map(async (url) => {
+      pdbeApiConfigs.map(async (config) => {
         try {
-          const response = await fetch(url);
+          const response = await fetch(config.url);
 
           if (!response.ok) {
             console.warn(
-              `API unavailable: ${url}`,
+              `API unavailable: ${config.name}`,
+              config.url,
               response.status,
               response.statusText,
             );
             return null;
           }
 
-          return await response.json();
+          return {
+            config,
+            data: await response.json(),
+          };
         } catch (err) {
-          console.warn(`API unavailable: ${url}`, err);
+          console.warn(`API unavailable: ${config.name}`, config.url, err);
           return null;
         }
       }),
     );
 
-    results.forEach((result, resultIndex) => {
-      if (!result || Object.keys(result).length === 0) {
+    results.forEach((resultWrapper) => {
+      if (
+        !resultWrapper?.data ||
+        Object.keys(resultWrapper.data).length === 0
+      ) {
         return;
       }
 
+      const { config } = resultWrapper;
+      let result = resultWrapper.data;
+
       let resultKey = this.entryId ? this.entryId : this.accession;
 
-      if (pdbeApiUrls[resultIndex].split("/").indexOf("uniprot_mapping") > -1) {
+      if (config.name === "uniprot_mapping") {
         if (
           result[resultKey]?.tracks &&
           result[resultKey].tracks.length === 1
@@ -122,12 +196,8 @@ class DataHelper {
       }
 
       // processing for 3d beacons API to convert to protvista track
-      const is3DBeaconsResult =
-        pdbeApiUrls[resultIndex].includes("/3dbeacons/api/uniprot/summary/");
-
-      if (is3DBeaconsResult) {
+      if (config.processor === "3dbeacons") {
         result = process3DBeaconsData(result, this.accession);
-
         if (!result) return;
       }
 
@@ -212,19 +282,22 @@ class DataHelper {
         this.viewerData.length = sourceEntry.length;
       }
       this.addLegendGroup("Relative solvent accessibility", [
-          {
-            color: "#4169e1",
-            text: "PDB RSA",
-          },
-          {
-            color: "#d95f02",
-            text: "Simulated RSA",
-          },
+        {
+          color: "#4169e1",
+          text: "PDB RSA",
+        },
+        {
+          color: "#d95f02",
+          text: "Simulated RSA",
+        },
       ]);
     }
 
     if (simulatedRsaClassesEntry) {
-      const simRsaTrack = transformSimRsaClassesToTrack(this.accession, simulatedRsaClassesEntry);
+      const simRsaTrack = transformSimRsaClassesToTrack(
+        this.accession,
+        simulatedRsaClassesEntry,
+      );
 
       if (simRsaTrack) {
         this.viewerData.tracks.push(simRsaTrack);

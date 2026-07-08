@@ -34,7 +34,7 @@ class LayoutHelper {
           ".pvVariantPlotSection",
           hideSectionOptions,
         );
-      } else {
+      } else if (!this.ctx.apiNames || this.ctx.apiNames.indexOf('variation') > 1) {
         this.ctx.dataHelper
           .getPDBeApiDataByName("variation")
           .then((resultData) => {
@@ -70,7 +70,7 @@ class LayoutHelper {
           hideSectionOptions,
           true,
         );
-      } else {
+      } else if (!this.ctx.apiNames || this.ctx.apiNames.indexOf('sequence_conservation') > 1)  {
         this.ctx.dataHelper
           .getPDBeApiDataByName("sequence_conservation")
           .then((resultData) => {

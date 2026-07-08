@@ -64,6 +64,33 @@ class ProtvistaPDB extends HTMLElement {
         this._render();
     }
 
+    set apinames(value) {
+        this.apiNames = this.normaliseApiNames(value);
+    }
+
+    get apinames() {
+        return this.apiNames;
+    }
+
+    normaliseApiNames(value) {
+        if (!value) return null;
+
+        if (Array.isArray(value)) {
+            return value
+                .map(name => String(name).trim())
+                .filter(Boolean);
+        }
+
+        if (typeof value === "string") {
+            return value
+                .split(",")
+                .map(name => name.trim())
+                .filter(Boolean);
+        }
+
+        return null;
+    }
+
     async connectedCallback() {
 
         // Attribute values
@@ -77,6 +104,9 @@ class ProtvistaPDB extends HTMLElement {
         this.showLegends = (this.getAttribute("legends") === 'false') ? false : true;
         this.useDefaultStyles = this.getAttribute("no-stylesheet") === null;
         this.useTrackStyles = this.getAttribute("no-track-styles") === null;
+        this.apiNames = this.normaliseApiNames(
+            this.apiNames || this.getAttribute("api-names")
+        );
         
         // Default web-component state properties
         this.hiddenSubtracks = {};
@@ -89,7 +119,7 @@ class ProtvistaPDB extends HTMLElement {
         this.displayLoadingMessage();
 
         // Create data helper instance
-        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection);
+        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection, this.apiNames);
 
         if(typeof this.customData !== 'undefined' && this.customData !== null) return;
 
