@@ -11,6 +11,54 @@ function addBorderClass(ctx, hasLabelColor, orAggregate) {
     return ctx.useDefaultStyles && hasLabelColor ? " non-aggregate-track-border" : otherClass;
 }
 
+function hasIn3DSubtrack(trackData) {
+    return Array.isArray(trackData?.data) && trackData.data.some(item => item?.in3D);
+}
+
+function isTrackIn3DActive(ctx, trackData) {
+    return Array.isArray(trackData?.data) &&
+        trackData.data.some(item => item?.uuid === ctx.activeIn3DTrackUuid);
+}
+
+function isSubtrackIn3DActive(ctx, subtrackData) {
+    return subtrackData?.uuid && subtrackData.uuid === ctx.activeIn3DTrackUuid;
+}
+
+function in3DButtonTemplate(ctx, trackData, subtrackData = null) {
+    if (!ctx.enableIn3D) return ``;
+
+    const hasIn3D = subtrackData
+        ? subtrackData.in3D
+        : hasIn3DSubtrack(trackData);
+
+    if (!hasIn3D) return ``;
+
+    const isActive = subtrackData
+        ? isSubtrackIn3DActive(ctx, subtrackData)
+        : isTrackIn3DActive(ctx, trackData);
+
+    const uuidAttr = subtrackData?.uuid || "";
+
+    return html`
+        <span
+            class="in3DTag${isActive ? " active" : ""}"
+            data-in3d-uuid=${uuidAttr}
+            title="View in 3D"
+            @click=${e => {
+                e.stopPropagation();
+
+                if (subtrackData) {
+                    ctx.layoutHelper.triggerIn3D(trackData, subtrackData, e.currentTarget);
+                } else {
+                    ctx.layoutHelper.triggerFirstIn3DForTrack(trackData, e.currentTarget);
+                }
+            }}
+        >
+            in 3D
+        </span>
+    `;
+}
+
 function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackIndex) {
     return html`
         <div
@@ -48,6 +96,7 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
                 <div
                     class="pvSubtrackLabel_${trackIndex}_${subtrackIndex} subtrackLabel"
                 ></div>
+                ${in3DButtonTemplate(ctx, trackData, subtrackData)}
 
                 <span
                     class="icon icon-functional labelZoomIcon pvZoomIcon_${trackIndex}_${subtrackIndex}"
@@ -135,6 +184,7 @@ function PDBePvTracksSection(ctx) {
                 } : {})}
             >
                 <span class="pvTrackLabel_${trackIndex}"></span>
+                ${in3DButtonTemplate(ctx, trackData)}
                 <span
                     class="protvistaResetSectionIcon pvResetSection_${trackIndex}"
                     @click=${e => {

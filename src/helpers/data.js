@@ -4,6 +4,7 @@ import { p00918SimRsaClasses } from "../mock-data/P00918-uniprot-simulated-rsa-c
 import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.js";
 import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
+import { addIn3DToUniPdbTracks } from "./data-processing/data-track-add-in3d.js";
 class DataHelper {
   constructor(
     envAttrValue,
@@ -239,7 +240,14 @@ class DataHelper {
         }
       }
     });
+
+    // Post-processing
+    // 1. Add mock RSA data
     this.addMockBoxplotData();
+    // 2. Add in3D tag to tracks
+    const apiNames = pdbeApiConfigs.map(config => config.name);
+    this.viewerData.tracks = addIn3DToUniPdbTracks(this.viewerData.tracks, apiNames);
+    // 3. Add uuid to tracks and subtracks
     this.viewerData.tracks = addTrackUuids(this.viewerData.tracks);
 
     return this.viewerData;

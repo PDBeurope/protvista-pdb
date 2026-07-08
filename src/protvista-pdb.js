@@ -107,6 +107,8 @@ class ProtvistaPDB extends HTMLElement {
         this.apiNames = this.normaliseApiNames(
             this.apiNames || this.getAttribute("api-names")
         );
+this.enableIn3D = this.getAttribute("enable-in3d") !== null;
+        this.triggerFirstIn3D = this.getAttribute("trigger-first-in3d") !== null;
         
         // Default web-component state properties
         this.hiddenSubtracks = {};
@@ -115,6 +117,8 @@ class ProtvistaPDB extends HTMLElement {
         this.formattedSubTracks = [];
         this.zoomedTrack = '';
         this.variantFilterAttr = JSON.stringify(filterData);
+        this.activeIn3DTrackUuid = null;
+        this._firstIn3DTriggered = false;
         
         this.displayLoadingMessage();
 
@@ -197,6 +201,7 @@ class ProtvistaPDB extends HTMLElement {
 
         // Post process layout to add scrollbar spacing and track data
         this.layoutHelper.postProcessLayout();
+        this.layoutHelper.postProcessIn3D();
     }
 
     displayLoadingMessage() {

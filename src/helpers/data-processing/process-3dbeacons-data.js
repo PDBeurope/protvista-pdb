@@ -32,6 +32,7 @@ export function process3DBeaconsData(result, accession) {
         labelType: "text",
         labelTooltip: provider,
         type: "UniProt range",
+        in3D: true,
         locations: [
           {
             fragments: [

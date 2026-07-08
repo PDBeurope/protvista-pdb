@@ -34,7 +34,10 @@ class LayoutHelper {
           ".pvVariantPlotSection",
           hideSectionOptions,
         );
-      } else if (!this.ctx.apiNames || this.ctx.apiNames.indexOf('variation') > 1) {
+      } else if (
+        !this.ctx.apiNames ||
+        this.ctx.apiNames.indexOf("variation") > 1
+      ) {
         this.ctx.dataHelper
           .getPDBeApiDataByName("variation")
           .then((resultData) => {
@@ -70,7 +73,10 @@ class LayoutHelper {
           hideSectionOptions,
           true,
         );
-      } else if (!this.ctx.apiNames || this.ctx.apiNames.indexOf('sequence_conservation') > 1)  {
+      } else if (
+        !this.ctx.apiNames ||
+        this.ctx.apiNames.indexOf("sequence_conservation") > 1
+      ) {
         this.ctx.dataHelper
           .getPDBeApiDataByName("sequence_conservation")
           .then((resultData) => {
@@ -92,7 +98,7 @@ class LayoutHelper {
     }
 
     if (this.ctx.viewerData.displayBoxplot && this.ctx.viewerData.boxplot) {
-       this.addBoxplotSection(this.ctx.viewerData.boxplot);
+      this.addBoxplotSection(this.ctx.viewerData.boxplot);
     }
 
     // subscribe to other PDBe web-component events
@@ -120,7 +126,8 @@ class LayoutHelper {
       let trackEle = this.ctx.querySelectorAll(trackClass)[0];
       if (trackEle) {
         trackEle.style.paddingRight = this.ctx.scrollbarWidth + "px";
-        if (this.ctx.useDefaultStyles && borderBottom) trackEle.style.borderBottom = "1px solid lightgrey";
+        if (this.ctx.useDefaultStyles && borderBottom)
+          trackEle.style.borderBottom = "1px solid lightgrey";
         trackEle.firstElementChild.data = resultData;
         if (trackClass === ".pvVariantPlotSection") {
           this.updateVariationFilterAvailability(resultData);
@@ -186,8 +193,8 @@ class LayoutHelper {
     const optionEle = this.ctx.querySelector("." + optionClass);
 
     if (!optionEle) {
-        console.warn(`Hide option container not found: .${optionClass}`);
-        return;
+      console.warn(`Hide option container not found: .${optionClass}`);
+      return;
     }
 
     optionEle.innerHTML = `<tr>
@@ -332,7 +339,7 @@ class LayoutHelper {
           '"' +
           innerIconStyle +
           "></i></span>";
-          
+
         if (typeof iconData.url != "undefined" && iconData.url != "")
           iconHtml =
             '<a class="pdbIconslogoA" href="' +
@@ -361,24 +368,24 @@ class LayoutHelper {
   }
 
   resetSection(trackIndex) {
-      const trackData = this.ctx.viewerData.tracks[trackIndex];
+    const trackData = this.ctx.viewerData.tracks[trackIndex];
 
-      if (!trackData?.uuid) return;
+    if (!trackData?.uuid) return;
 
-      this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
-          "none";
+    this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
+      "none";
 
-      trackData.data.forEach((_, subtrackIndex) => {
-          const row = this.ctx.querySelector(
-              `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
-          );
+    trackData.data.forEach((_, subtrackIndex) => {
+      const row = this.ctx.querySelector(
+        `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
+      );
 
-          if (row) {
-              row.style.display = "table";
-          }
-      });
+      if (row) {
+        row.style.display = "table";
+      }
+    });
 
-      delete this.ctx.hiddenSubtracks[trackData.uuid];
+    delete this.ctx.hiddenSubtracks[trackData.uuid];
   }
 
   hideSection(trackIndex) {
@@ -420,7 +427,8 @@ class LayoutHelper {
 
         if (
           trackData?.uuid &&
-          this.ctx.hiddenSubtracks[trackData.uuid]?.length === trackData.data.length
+          this.ctx.hiddenSubtracks[trackData.uuid]?.length ===
+            trackData.data.length
         ) {
           this.resetSection(trackIndex);
         }
@@ -458,33 +466,35 @@ class LayoutHelper {
   }
 
   hideSubTrack(trackIndex, subtrackIndex) {
-      const trackData = this.ctx.viewerData.tracks[trackIndex];
-      const subtrackData = trackData?.data?.[subtrackIndex];
+    const trackData = this.ctx.viewerData.tracks[trackIndex];
+    const subtrackData = trackData?.data?.[subtrackIndex];
 
-      if (!trackData?.uuid || !subtrackData?.uuid) return;
+    if (!trackData?.uuid || !subtrackData?.uuid) return;
 
-      if (!Array.isArray(this.ctx.hiddenSubtracks[trackData.uuid])) {
-          this.ctx.hiddenSubtracks[trackData.uuid] = [];
-      }
+    if (!Array.isArray(this.ctx.hiddenSubtracks[trackData.uuid])) {
+      this.ctx.hiddenSubtracks[trackData.uuid] = [];
+    }
 
-      if (!this.ctx.hiddenSubtracks[trackData.uuid].includes(subtrackData.uuid)) {
-          this.ctx.hiddenSubtracks[trackData.uuid].push(subtrackData.uuid);
-      }
+    if (!this.ctx.hiddenSubtracks[trackData.uuid].includes(subtrackData.uuid)) {
+      this.ctx.hiddenSubtracks[trackData.uuid].push(subtrackData.uuid);
+    }
 
-      const row = this.ctx.querySelector(
-          `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
-      );
+    const row = this.ctx.querySelector(
+      `.pvSubtrackRow_${trackIndex}_${subtrackIndex}`,
+    );
 
-      if (row) {
-          row.style.display = "none";
-      }
+    if (row) {
+      row.style.display = "none";
+    }
 
-      this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
-          "inline-block";
+    this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
+      "inline-block";
 
-      if (this.ctx.hiddenSubtracks[trackData.uuid].length === trackData.data.length) {
-          this.hideSection(trackIndex);
-      }
+    if (
+      this.ctx.hiddenSubtracks[trackData.uuid].length === trackData.data.length
+    ) {
+      this.hideSection(trackIndex);
+    }
   }
 
   resetZoom(param) {
@@ -829,9 +839,9 @@ class LayoutHelper {
     const scTrack = this.ctx.querySelector(
       ".pvConservationPlotSection protvista-pdb-seq-conservation",
     );
-  
+
     if (!scTrack) return;
-  
+
     scTrack.setAttribute("sc-display-order", orderValue);
   }
 
@@ -844,90 +854,92 @@ class LayoutHelper {
     }
   }
 
-initScrollboxes() {
-  const scrollboxes = this.ctx.querySelectorAll("nightingale-scrollbox");
+  initScrollboxes() {
+    const scrollboxes = this.ctx.querySelectorAll("nightingale-scrollbox");
 
-  scrollboxes.forEach((scrollbox) => {
-    if (scrollbox._pdbeCallbacksInitialised) return;
-    scrollbox._pdbeCallbacksInitialised = true;
+    scrollboxes.forEach((scrollbox) => {
+      if (scrollbox._pdbeCallbacksInitialised) return;
+      scrollbox._pdbeCallbacksInitialised = true;
 
-    const getRenderContainer = (item) => {
-      let container = item.querySelector(":scope > .pdbe-scrollbox-render-root");
-
-      if (!container) {
-        item.replaceChildren();
-
-        container = document.createElement("div");
-        container.className = "pdbe-scrollbox-render-root";
-
-        item.appendChild(container);
-      }
-
-      return container;
-    };
-
-    scrollbox.onEnter((item) => {
-      if (!item.data?.renderVisible) return;
-
-      const container = getRenderContainer(item);
-      render(item.data.renderVisible(), container);
-
-      const { trackIndex, subtrackIndex } = item.data;
-      this.bindSingleSubtrackData(trackIndex, subtrackIndex);
-    });
-
-    scrollbox.onExit((item) => {
-      if (!item.data?.renderHidden) return;
-
-      const container = getRenderContainer(item);
-      render(item.data.renderHidden(), container);
-    });
-  });
-}
-
-updateVariationFilterAvailability(resultData) {
-  const variants = resultData?.variants || [];
-
-  const filterElement = this.ctx.querySelector(
-    'nightingale-filter[for="pdbe-variation-track"]',
-  );
-
-  if (!filterElement || !variants.length) return;
-
-  const unavailableFilterNames = new Set(
-    filterData
-      .filter((filter) => {
-        const keyword = keywordMap[filter.name];
-
-        if (!keyword) return false;
-
-        return !variants.some((variant) =>
-          variant.keywords?.includes(keyword),
+      const getRenderContainer = (item) => {
+        let container = item.querySelector(
+          ":scope > .pdbe-scrollbox-render-root",
         );
-      })
-      .map((filter) => filter.name),
-  );
 
-  requestAnimationFrame(() => {
-    filterElement
-      .querySelectorAll("input.protvista_checkbox_input")
-      .forEach((input) => {
-        const isUnavailable = unavailableFilterNames.has(input.value);
+        if (!container) {
+          item.replaceChildren();
 
-        input.disabled = isUnavailable;
+          container = document.createElement("div");
+          container.className = "pdbe-scrollbox-render-root";
 
-        if (isUnavailable) {
-          input.checked = false;
+          item.appendChild(container);
         }
 
-        const label = input.closest("label");
+        return container;
+      };
 
-        if (label) {
-          label.classList.toggle("disabled", isUnavailable);
-        }
+      scrollbox.onEnter((item) => {
+        if (!item.data?.renderVisible) return;
+
+        const container = getRenderContainer(item);
+        render(item.data.renderVisible(), container);
+
+        const { trackIndex, subtrackIndex } = item.data;
+        this.bindSingleSubtrackData(trackIndex, subtrackIndex);
       });
-  });
-}
+
+      scrollbox.onExit((item) => {
+        if (!item.data?.renderHidden) return;
+
+        const container = getRenderContainer(item);
+        render(item.data.renderHidden(), container);
+      });
+    });
+  }
+
+  updateVariationFilterAvailability(resultData) {
+    const variants = resultData?.variants || [];
+
+    const filterElement = this.ctx.querySelector(
+      'nightingale-filter[for="pdbe-variation-track"]',
+    );
+
+    if (!filterElement || !variants.length) return;
+
+    const unavailableFilterNames = new Set(
+      filterData
+        .filter((filter) => {
+          const keyword = keywordMap[filter.name];
+
+          if (!keyword) return false;
+
+          return !variants.some((variant) =>
+            variant.keywords?.includes(keyword),
+          );
+        })
+        .map((filter) => filter.name),
+    );
+
+    requestAnimationFrame(() => {
+      filterElement
+        .querySelectorAll("input.protvista_checkbox_input")
+        .forEach((input) => {
+          const isUnavailable = unavailableFilterNames.has(input.value);
+
+          input.disabled = isUnavailable;
+
+          if (isUnavailable) {
+            input.checked = false;
+          }
+
+          const label = input.closest("label");
+
+          if (label) {
+            label.classList.toggle("disabled", isUnavailable);
+          }
+        });
+    });
+  }
 
   bindSingleSubtrackData(trackIndex, subtrackIndex) {
     const trackEle = this.ctx.querySelector(
@@ -986,16 +998,16 @@ updateVariationFilterAvailability(resultData) {
     const dataForDistribution = [];
     if (rsaTrack && resultData.rsa) {
       dataForDistribution.push({
-          name: "PDB RSA",
-          color: '#4169e1',
-          positions: resultData.rsa?.data?.[0]?.positions
+        name: "PDB RSA",
+        color: "#4169e1",
+        positions: resultData.rsa?.data?.[0]?.positions,
       });
     }
     if (rsaTrack && resultData.simulatedRsa) {
       dataForDistribution.push({
-          name: "Simulated RSA",
-          color: '#d95f02',
-          positions: resultData.simulatedRsa?.data?.[0]?.positions
+        name: "Simulated RSA",
+        color: "#d95f02",
+        positions: resultData.simulatedRsa?.data?.[0]?.positions,
       });
     }
     rsaTrack.data = dataForDistribution;
@@ -1007,20 +1019,141 @@ updateVariationFilterAvailability(resultData) {
     );
   }
 
-showBoxplotSection() {
-  const detailRow = this.ctx.querySelector(".pvBoxplotDetailRow");
-  const graphRow = this.ctx.querySelector(".pvBoxplotGraphRow");
+  showBoxplotSection() {
+    const detailRow = this.ctx.querySelector(".pvBoxplotDetailRow");
+    const graphRow = this.ctx.querySelector(".pvBoxplotGraphRow");
 
-  if (!detailRow || !graphRow) return;
+    if (!detailRow || !graphRow) return;
 
-  if (detailRow.style.display === "none") {
-    detailRow.style.display = "block";
-    graphRow.classList.add("expanded");
-  } else {
-    detailRow.style.display = "none";
-    graphRow.classList.remove("expanded");
+    if (detailRow.style.display === "none") {
+      detailRow.style.display = "block";
+      graphRow.classList.add("expanded");
+    } else {
+      detailRow.style.display = "none";
+      graphRow.classList.remove("expanded");
+    }
   }
-}
+
+  triggerFirstIn3DForTrack(trackData, sourceElement) {
+    const firstIn3DSubtrack = trackData?.data?.find((item) => item?.in3D);
+
+    if (!firstIn3DSubtrack) return;
+
+    this.triggerIn3D(trackData, firstIn3DSubtrack, sourceElement);
+  }
+
+  triggerFirstIn3DForTrack(trackData, sourceElement) {
+    const firstIn3DSubtrack = trackData?.data?.find((item) => item?.in3D);
+
+    if (!firstIn3DSubtrack) return;
+
+    this.triggerIn3D(trackData, firstIn3DSubtrack, sourceElement);
+  }
+
+  triggerIn3D(trackData, subtrackData, sourceElement) {
+    if (!this.ctx.enableIn3D || !subtrackData?.in3D) return;
+
+    const previousUuid = this.ctx.activeIn3DTrackUuid || null;
+    const nextUuid = subtrackData.uuid;
+
+    if (!nextUuid) return;
+
+    this.ctx.activeIn3DTrackUuid = nextUuid;
+
+    this.updateIn3DButtonState(previousUuid, nextUuid);
+
+    this.ctx.dispatchEvent(
+      new CustomEvent("protvista-pdb-in3d", {
+        bubbles: true,
+        composed: true,
+        detail: {
+          activeTrackUuid: nextUuid,
+          previousTrackUuid: previousUuid,
+          track: trackData,
+          subtrack: subtrackData,
+          sourceElement,
+          accession: this.ctx._accession,
+          entryId: this.ctx._entryId,
+          entityId: this.ctx._entityId,
+        },
+      }),
+    );
+  }
+
+  updateIn3DButtonState(previousUuid, nextUuid) {
+    this.ctx.querySelectorAll(".in3DTag.active").forEach((element) => {
+      element.classList.remove("active");
+    });
+
+    if (!nextUuid) return;
+
+    this.ctx
+      .querySelectorAll(`[data-in3d-uuid="${nextUuid}"]`)
+      .forEach((element) => {
+        element.classList.add("active");
+      });
+
+    this.ctx.viewerData.tracks.forEach((trackData, trackIndex) => {
+      const isParentActive = trackData.data?.some(
+        (subtrackData) => subtrackData.uuid === nextUuid,
+      );
+
+      const parentRow = this.ctx.querySelector(`.pvTracks_${trackIndex}`);
+
+      if (!parentRow) return;
+
+      const parentButton = parentRow.querySelector(".in3DTag");
+
+      if (parentButton) {
+        parentButton.classList.toggle("active", Boolean(isParentActive));
+      }
+    });
+  }
+
+  postProcessIn3D() {
+    if (!this.ctx.enableIn3D || !this.ctx.triggerFirstIn3D) return;
+    if (this.ctx.activeIn3DTrackUuid) return;
+    if (this.ctx._firstIn3DTriggered) return;
+
+    const first = this.findFirstIn3DSubtrack();
+
+    if (!first) return;
+
+    this.ctx._firstIn3DTriggered = true;
+
+    requestAnimationFrame(() => {
+      this.triggerIn3D(first.trackData, first.subtrackData, this.ctx);
+    });
+  }
+
+  findFirstIn3DSubtrack() {
+    const tracks = this.ctx.viewerData?.tracks || [];
+
+    for (let trackIndex = 0; trackIndex < tracks.length; trackIndex++) {
+      const trackData = tracks[trackIndex];
+
+      if (!Array.isArray(trackData.data)) continue;
+
+      for (
+        let subtrackIndex = 0;
+        subtrackIndex < trackData.data.length;
+        subtrackIndex++
+      ) {
+        const subtrackData = trackData.data[subtrackIndex];
+
+        if (subtrackData?.in3D) {
+          return {
+            trackData,
+            subtrackData,
+            trackIndex,
+            subtrackIndex,
+          };
+        }
+      }
+    }
+
+    return null;
+  }
 
   addEventSubscription() {
     document.addEventListener("PDB.topologyViewer.click", (e) => {
