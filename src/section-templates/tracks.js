@@ -42,8 +42,7 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
                 ></span>
 
                 <div
-                    class="pvSubtrackLabel_${trackIndex}_${subtrackIndex}"
-                    style="word-break: break-all;"
+                    class="pvSubtrackLabel_${trackIndex}_${subtrackIndex} subtrackLabel"
                 ></div>
 
                 <span
@@ -113,8 +112,7 @@ function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, s
                 } : {})}
             >
                 <div
-                    class="pvSubtrackLabel_${trackIndex}_${subtrackIndex}"
-                    style="word-break: break-all;"
+                    class="pvSubtrackLabel_${trackIndex}_${subtrackIndex} subtrackLabel"
                 ></div>
             </div>
 

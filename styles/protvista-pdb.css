@@ -239,6 +239,10 @@
     font-size: 10px;
 }
 
+.protvista-pdb.default-styles .subtrackLabel{
+    word-break: break-all;
+}
+
 .protvista-pdb.default-styles .protvistaResetSectionIcon{
     position: absolute;
     border: 1px solid #828181;
@@ -261,6 +265,7 @@
 }
 
 .protvista-pdb.default-styles .protvistaToolbar{
+    position: relative;
     text-align: right;
 }
 
@@ -315,6 +320,58 @@
     text-align: left;
     font-weight: 600;
     color: #444;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm {
+    width: 170px;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm > .left {
+    float: left;
+    width: 48%;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm > .right {
+    float: right;
+    width: 48%;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm > .highlight {
+    margin: 0 0 10px 0;
+    clear: both;
+}
+
+.protvista-pdb.default-styles .protvistaForm.pvRangeMenu {
+    display: inline-block;
+    margin: 0;
+}
+
+.protvista-pdb.default-styles .protvistaForm.checkForm {
+    width: 215px;
+    max-height: 400px;
+}
+
+.protvista-pdb.default-styles .pvHideOptionsTable {
+    font-size: inherit;
+    margin-bottom: 0;
+}
+
+.protvista-pdb.default-styles .pvSectionChkBox {
+    margin: 0;
+}
+
+.protvista-pdb.default-styles .pvChkBoxTd {
+    width: 10%;
+    vertical-align: top;
+}
+
+.protvista-pdb.default-styles .pvChkBoxLabelTd {
+    padding-bottom: 5px;
+}
+
+.protvista-pdb.default-styles .pvSmallOptionsBtn {
+    margin: 0;
+    letter-spacing: 1px;
 }
 
 .protvista-pdb.default-styles .divWithScroll {
@@ -695,4 +752,50 @@ opacity: 1;
 
 .protvista-pdb.default-styles nightingale-scrollbox {
     width: 100%;
+}
+
+.protvista-pdb.default-styles .pvGreyCategoryLabel,
+.protvista-pdb.default-styles .pvGreyCategoryLabel.category-label:hover,
+.protvista-pdb.default-styles .protvistaRow.expanded > .pvGreyCategoryLabel.category-label {
+    background-color: rgb(128, 128, 128);
+    border-bottom: 1px solid lightgrey;
+}
+
+.protvista-pdb.default-styles .pvBoxplotDetailLabel {
+    background-color: #d3d3d3;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+.protvista-pdb.default-styles .pvConsDetailLabel {
+    background-color: rgb(211,211,211);
+    border-bottom: 1px solid #d3d3d3;
+}
+
+.protvista-pdb.default-styles .pvConsDetailTitle {
+    height:30px;
+}
+
+.protvista-pdb.default-styles .pvConsDetailTitle > span {
+    float: right;
+}
+
+.protvista-pdb.default-styles .pvConsDetailTitle > span > a {
+    border-bottom: none;
+}
+
+.protvista-pdb.default-styles .pvConsDetailControl {
+    height:90px;
+}
+
+.protvista-pdb.default-styles .pvConsDetailMSABtn {
+    padding: 2px 4px 2px 4px;
+    background-color: #ececec;
+    border: solid 1px dimgrey;
+    border-radius: 3px;
+    margin-top: 10px;
+    color: #222;
+}
+
+.protvista-pdb.default-styles .pvConsDetailLegend {
+    height:200px;
 }

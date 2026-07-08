@@ -3,7 +3,7 @@ import { html } from "lit";
 function PDBePvScSection(ctx) {
     return html`<div class="protvistaRow pvConsHistoRow" style="display:none">
                     
-                    <div class="protvistaCol1 category-label" @click=${e => ctx.layoutHelper.showConservationPlot()} style="background-color:rgb(128,128,128); borderBottom:1px solid lightgrey">Sequence conservation</div>
+                    <div class="protvistaCol1 category-label pvGreyCategoryLabel" @click=${e => ctx.layoutHelper.showConservationPlot()} >Sequence conservation</div>
 
                     <div class="protvistaCol2 aggregate-track-content pvConservationHistoSection">
                         <protvista-pdb-sc-histogram
@@ -20,18 +20,17 @@ function PDBePvScSection(ctx) {
                 </div>
                 <div class="pvConservationPlotRow" style="display:none">
                     <div class="protvistaRow">
-                        <div class="protvistaCol1 track-label" style="background-color:rgb(211,211,211); borderBottom:1px solid lightgrey">
-                            <div style="height:30px;">
+                        <div class="protvistaCol1 track-label pvConsDetailLabel">
+                            <div class="pvConsDetailTitle">
                                 <b>Amino acid probabilities</b>
-                                <span style="float: right" @mouseover=${e => {
+                                <span @mouseover=${e => {
                                     e.stopPropagation();
                                     ctx.layoutHelper.showLabelTooltip(e)
                                     }} @mouseout=${e => {
                                     e.stopPropagation();
                                     ctx.layoutHelper.hideLabelTooltip()
                                 }}>
-                                    <a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Sequence-conservation-scores" target="_blank"
-                                    style="border-bottom: none">
+                                    <a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Sequence-conservation-scores" target="_blank">
                                         <i class="icon icon-generic" data-icon="?"></i>
                                     </a>
                                     <span class="labelTooltipContent" style="display:none;">
@@ -39,7 +38,7 @@ function PDBePvScSection(ctx) {
                                     </span>
                                 </span>
                             </div>
-                            <div class="control" style="height:90px;">
+                            <div class="pvConsDetailControl control">
                                 <p>Data displayed by</p>
                                 <div>
                                     <label class="legendText">
@@ -63,7 +62,7 @@ function PDBePvScSection(ctx) {
                             }}
                             style = "${ctx._entryId ? "display: none" : ""}"
                             >
-                                <a class="button" style="padding: 2px 4px 2px 4px; background-color: #ececec; border: solid 1px dimgrey; border-radius: 3px; margin-top: 10px; color: #222;"
+                                <a class="pvConsDetailMSABtn button"
                                     href="${ctx.layoutHelper.getMSADownloadUrl()}">
                                     Download MSA <i class="icon icon-functional" data-icon="="></i>
                                 </a>
@@ -72,7 +71,7 @@ function PDBePvScSection(ctx) {
                                 </span>
                             </div>
 
-                            <div class="legend" style="height:200px;">
+                            <div class="pvConsDetailLegend legend">
                                 <p>Amino acid properties</p>
                                 <div class="protvista-sc-legend">
                                     <div class="protvista-sc-legend">

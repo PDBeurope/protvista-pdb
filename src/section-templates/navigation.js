@@ -4,7 +4,7 @@ function PDBePvNavSection(ctx) {
     return html`<div class="protvistaRow">
                     
         <!-- Top Menu Toolbar -->
-        <div class="protvistaCol1 protvistaToolbar" style="position:relative">
+        <div class="protvistaCol1 protvistaToolbar">
             <span class="protvistaToolbarIcon" @click=${e => ctx.layoutHelper.resetView()} title="Reset view">
                 <i class="icon icon-functional" data-icon="R"></i>
             </span>
@@ -18,19 +18,19 @@ function PDBePvNavSection(ctx) {
                     <div>View region</div>
                     <span class="icon icon-functional protvistaMenuClose" data-icon="x" title="close" @click=${e => {e.stopPropagation();ctx.layoutHelper.openRangeMenu()}}></span>
                 </div>
-                <div class="protvistaForm rangeForm" style="width:170px;">
-                    <div style="float:left;width:48%;">
+                <div class="protvistaForm rangeForm">
+                    <div class="left">
                         From <br>
-                        <input type="number" class="pvRangeMenuStart" value="0" style="display:inline-block;margin:0;" min="1" max="${ctx.viewerData.length}" step="1" />
+                        <input type="number" class="pvRangeMenu pvRangeMenuStart" value="0" min="1" max="${ctx.viewerData.length}" step="1" />
                     </div>
-                    <div style="float:right;width:48%;">
+                    <div class="right">
                         To <br>
-                        <input type="number" class="pvRangeMenuEnd" value="0" style="display:inline-block;margin:0;" min="1" max="${ctx.viewerData.length}" step="1" /> <br><br>
+                        <input type="number" class="pvRangeMenu pvRangeMenuEnd" value="0" min="1" max="${ctx.viewerData.length}" step="1" /> <br><br>
                     </div>
-                    <div style="margin:0 0 10px 0;clear:both;">
+                    <div class="highlight">
                         <input type="checkbox" class="pvRangeMenuHighlight" /> highlight-only
                     </div>                                
-                    <button class="button tiny" style="margin:0; letter-spacing: 1px;" @click=${e => ctx.layoutHelper.pvRangeMenuSubmit()}>Submit</button>
+                    <button class="button tiny pvSmallOptionsBtn" @click=${e => ctx.layoutHelper.pvRangeMenuSubmit()}>Submit</button>
                 </div>
             </div>
 
@@ -43,15 +43,15 @@ function PDBePvNavSection(ctx) {
                     <div>Hide sections</div>
                     <span class="icon icon-functional protvistaMenuClose" data-icon="x" title="close" @click=${e => {e.stopPropagation();ctx.layoutHelper.openCategorySettingsMenu()}}></span>
                 </div>
-                <div class="protvistaForm rangeForm" style="width:215px;max-height:400px;">
-                    <table style="font-size:inherit;margin-bottom:0" class="pvHideOptionsTable">
+                <div class="protvistaForm checkForm">
+                    <table class="pvHideOptionsTable">
                         <tbody>
                         ${ctx.viewerData.tracks.map((trackData, trackIndex) => html`
                             <tr>
-                                <td style="width:10%;vertical-align:top;">
-                                    <input type="checkbox" class="pvSectionChkBox" name="cb_${trackIndex}" style="margin:0" />
+                                <td class="pvChkBoxTd">
+                                    <input type="checkbox" class="pvSectionChkBox" name="cb_${trackIndex}" />
                                 </td>
-                                <td style="padding-bottom:5px;">
+                                <td class="pvChkBoxLabelTd">
                                     ${trackData.label}
                                 </td>
                             </tr>
@@ -61,7 +61,7 @@ function PDBePvNavSection(ctx) {
                         </tbody>
                     </table>
                     <br>
-                    <button class="button tiny" style="margin:0; letter-spacing: 1px;" @click=${e => ctx.layoutHelper.pvCategorySettingsMenuSubmit()}>Submit</button>
+                    <button class="button tiny pvSmallOptionsBtn" @click=${e => ctx.layoutHelper.pvCategorySettingsMenuSubmit()}>Submit</button>
                 </div>
             </div>
         </div>
