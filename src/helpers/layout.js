@@ -401,23 +401,26 @@ class LayoutHelper {
       let trackEle = this.ctx.querySelector(trackClass);
       if (trackEle) trackEle.style.display = "none";
     }
-
-    this.ctx.hiddenSections.push(trackIndex);
+    if (!this.ctx.hiddenSections.includes(trackIndex)) {
+      this.ctx.hiddenSections.push(trackIndex);
+    }
   }
 
   showSection(trackIndex) {
     let totalTracks = this.ctx.viewerData.tracks.length;
     if (trackIndex < totalTracks) {
+      const trackData = this.ctx.viewerData.tracks[trackIndex];
+
       let pvTracksEle = this.ctx.querySelector(`.pvTracks_${trackIndex}`);
       pvTracksEle.style.display = "table";
 
       if (pvTracksEle.classList.contains("expanded")) {
         let pvSbTrkEle = this.ctx.querySelector(`.pvSubtracks_${trackIndex}`);
         pvSbTrkEle.style.display = "block";
+
         if (
-          typeof this.ctx.hiddenSubtracks[trackIndex] != "undefined" &&
-          this.ctx.hiddenSubtracks[trackIndex].length ==
-            pvSbTrkEle.children.length
+          trackData?.uuid &&
+          this.ctx.hiddenSubtracks[trackData.uuid]?.length === trackData.data.length
         ) {
           this.resetSection(trackIndex);
         }
@@ -612,9 +615,12 @@ class LayoutHelper {
       .querySelectorAll(`.protvistaRowGroup`)
       .forEach((trackSubSection, subSectionIndex) => {
         trackSubSection.style.display = "none";
-        //Reset hidden subtracks
-        if (typeof this.ctx.hiddenSubtracks[subSectionIndex] != "undefined")
+
+        const trackData = this.ctx.viewerData.tracks[subSectionIndex];
+
+        if (trackData?.uuid && this.ctx.hiddenSubtracks[trackData.uuid]) {
           this.resetSection(subSectionIndex);
+        }
       });
     this.ctx.querySelector(`.pvSubtracks_0`).style.display = "block";
     this.ctx.querySelector(`.pvResetSection_0`).style.display = "none";
