@@ -2,7 +2,8 @@ import { p00918RsaBoxplot } from "../mock-data/P00918-uniprot-rsa";
 import { p00918SimRsaBoxplot } from "../mock-data/P00918-uniprot-simulated-rsa";
 import { p00918SimRsaClasses } from "../mock-data/P00918-uniprot-simulated-rsa-classes.js";
 import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.js";
-import { addTrackUuids } from "./data-track-uuids";
+import { addTrackUuids } from "./data-processing/data-track-uuids.js";
+import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
 class DataHelper {
   constructor(envAttrValue, accession, entryId, entityId, pageSection) {
     // Set Env property
@@ -42,13 +43,14 @@ class DataHelper {
   getPDBePVApiUrls() {
     // Default PDBe ProtVista API Urls
     let pdbePvApiUrls = {
-      uniport: [
+      uniprot: [
         `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/unipdb/${this.accession}`,
         `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/domains/${this.accession}`,
         `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/secondary_structures/protvista/variation/${this.accession}`,
         `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/ligand_sites/${this.accession}`,
         `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/interface_residues/${this.accession}`,
         `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/protvista/annotations/${this.accession}`,
+        `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`
       ],
       entry: [
         `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/uniprot_mapping/${this.entryId}/${this.entityId}`,
@@ -64,7 +66,7 @@ class DataHelper {
 
     let urls = [];
     if (this.accession) {
-      urls = pdbePvApiUrls.uniport;
+      urls = pdbePvApiUrls.uniprot;
     } else if (this.entryId && this.entityId && !this.pageSection) {
       urls = pdbePvApiUrls.entry;
     } else if (this.entryId && this.entityId && this.pageSection) {
@@ -117,6 +119,16 @@ class DataHelper {
           this.accession = result[resultKey].tracks[0].data[0].label;
           resultKey = this.accession;
         }
+      }
+
+      // processing for 3d beacons API to convert to protvista track
+      const is3DBeaconsResult =
+        pdbeApiUrls[resultIndex].includes("/3dbeacons/api/uniprot/summary/");
+
+      if (is3DBeaconsResult) {
+        result = process3DBeaconsData(result, this.accession);
+
+        if (!result) return;
       }
 
       if (!result[resultKey]) return;
