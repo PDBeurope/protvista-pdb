@@ -95,7 +95,8 @@ export function transformSimRsaClassesToTrack(proteinsId, mockEntry) {
 
   return {
     labelType: "text",
-    label: `Simulated RSA classes (MDposit) <a href='https://mdposit.mddbr.eu/#/pointer?ref=proteins&id=${proteinsId}' target='_blank'>${proteinsId} <i class="icon icon-generic" data-icon="x"></i></a>`,
+    uniProtId: proteinsId,
+    label: "Simulated RSA classes (MDposit)",
     type: "Simulated relative solvent accessibility",
     overlapping: false,
     labelColor: "rgb(128,128,128)",

@@ -241,6 +241,15 @@ class LayoutHelper {
                 <i class="icon icon-generic" data-icon="x"></i>
               </a>`;
         }
+        if (labelDetails === "Simulated RSA classes (MDposit)") {
+          const uniProtId = this.ctx.viewerData.tracks[trackIndex]?.uniProtId;
+          if (uniProtId) {
+            labelDetails += `<a href='https://mdposit.mddbr.eu/#/pointer?ref=proteins&id=${uniProtId}' target='_blank' style="border-bottom: none;margin-left:5px;box-shadow:none;">
+              ${uniProtId}
+              <i class="icon icon-generic" data-icon="x">
+            </i></a>`;
+          }
+        }
         labelEle.innerHTML = labelDetails;
 
         let transform = "";
