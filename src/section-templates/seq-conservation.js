@@ -7,6 +7,7 @@ function PDBePvScSection(ctx) {
 
                     <div class="protvistaCol2 aggregate-track-content pvConservationHistoSection">
                         <protvista-pdb-sc-histogram
+                            .useDefaultStyles=${ctx.useDefaultStyles}
                             accession=${ctx._entryId ? ctx._entryId : ctx._accession}
                             length=${ctx.viewerData.length}
                             height=${44}
@@ -119,6 +120,7 @@ function PDBePvScSection(ctx) {
                             accession=${ctx._entryId ? ctx._entryId : ctx._accession}
                             length=${ctx.viewerData.length}
                             height=${430}
+                            .useDefaultStyles=${ctx.useDefaultStyles}
                             .display-start=${ctx.viewerData.displayStart || 1}
                             .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
                             .margin-left=${ctx.pvTrackMargins.left}

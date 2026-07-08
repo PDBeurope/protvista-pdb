@@ -65,6 +65,7 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
                 } : {})}
             >
                 <protvista-pdb-track
+                    .useDefaultStyles=${ctx.useDefaultStyles}
                     class="pvSubtrack_${trackIndex}"
                     .data=${subtrackData.data || [subtrackData]}
                     .length=${ctx.viewerData.length}
@@ -142,6 +143,7 @@ function PDBePvTracksSection(ctx) {
             >
                 <protvista-pdb-track
                     class="pvTrack"
+                    .useDefaultStyles=${ctx.useDefaultStyles}
                     .data=${trackData.data}
                     .length=${ctx.viewerData.length}
                     .layout=${ctx.layoutHelper.getTrackLayout(trackData.overlapping)}

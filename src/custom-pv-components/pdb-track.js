@@ -7,6 +7,11 @@ import {
 import { getColorByType } from "@nightingale-elements/nightingale-track";
 
 class ProtvistaPdbTrack extends NightingaleTrackCanvas {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
+
   drawCanvasContent() {
     // Magic number from packages/nightingale-track/src/FeatureShape.ts:
     const SYMBOL_SIZE = 10;
@@ -211,7 +216,7 @@ class ProtvistaPdbTrack extends NightingaleTrackCanvas {
 
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.createTooltipFromFeature(
           mouseEvent,
@@ -251,7 +256,7 @@ class ProtvistaPdbTrack extends NightingaleTrackCanvas {
   _handleFeatureMouseout() {
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.removeAllTooltips();
       }, 50);
@@ -415,6 +420,10 @@ class ProtvistaPdbTrack extends NightingaleTrackCanvas {
     this.removeAllTooltips();
 
     const tooltip = document.createElement("protvista-tooltip");
+    
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
 
     tooltip.left = mouseEvent.pageX + 15;
     tooltip.top = mouseEvent.pageY + 5;

@@ -12,6 +12,7 @@ function PDBePvBoxplotSection(ctx) {
 
       <div class="protvistaCol2 aggregate-track-content pvBoxplotGraphSection">
         <protvista-pdb-boxplot-linegraph
+          .useDefaultStyles=${ctx.useDefaultStyles}
           .length=${ctx.viewerData.length}
           .height=${50}
           .display-start=${ctx.viewerData.displayStart || 1}
@@ -30,6 +31,7 @@ function PDBePvBoxplotSection(ctx) {
 
         <div class="protvistaCol2 track-content pvBoxplotRsaSection">
           <protvista-pdb-boxplot-track
+            .useDefaultStyles=${ctx.useDefaultStyles}
             .length=${ctx.viewerData.length}
             .height=${300}
             .display-start=${ctx.viewerData.displayStart || 1}

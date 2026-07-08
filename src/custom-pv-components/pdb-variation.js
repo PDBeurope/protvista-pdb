@@ -18,6 +18,11 @@ function normaliseVariantFilters(filters = []) {
 }
 
 class ProtvistaPdbVariation extends NightingaleVariation {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -174,7 +179,7 @@ class ProtvistaPdbVariation extends NightingaleVariation {
 
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.createTooltipFromTooltipData(
           this._getMouseEvent(value),
@@ -210,7 +215,7 @@ class ProtvistaPdbVariation extends NightingaleVariation {
   _handleMouseout() {
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.removeAllTooltips();
       }, 50);
@@ -272,6 +277,10 @@ class ProtvistaPdbVariation extends NightingaleVariation {
     this.removeAllTooltips();
 
     const tooltip = document.createElement("protvista-tooltip");
+
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
 
     tooltip.left = mouseEvent.pageX + 15;
     tooltip.top = mouseEvent.pageY + 5;

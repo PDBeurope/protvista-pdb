@@ -43,6 +43,11 @@ function normaliseDataset(dataset) {
 }
 
 class ProtvistaPdbBoxplotTrack extends NightingaleBoxplotTrack {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -106,7 +111,7 @@ class ProtvistaPdbBoxplotTrack extends NightingaleBoxplotTrack {
 
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.createTooltipFromBoxplotDetail(detail, tooltipContent, false);
       }, 50);
@@ -118,7 +123,7 @@ class ProtvistaPdbBoxplotTrack extends NightingaleBoxplotTrack {
   _handleMouseout() {
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.removeAllTooltips();
       }, 50);
@@ -163,6 +168,10 @@ class ProtvistaPdbBoxplotTrack extends NightingaleBoxplotTrack {
 
     const feature = detail.feature;
     const tooltip = document.createElement("protvista-tooltip");
+    
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
 
     tooltip.left = mouseEvent.pageX + 15;
     tooltip.top = mouseEvent.pageY + 5;

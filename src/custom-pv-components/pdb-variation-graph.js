@@ -1,6 +1,11 @@
 import NightingaleLinegraphTrack from "@nightingale-elements/nightingale-linegraph-track";
 
 class ProtvistaPdbVariationGraph extends NightingaleLinegraphTrack {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -309,7 +314,7 @@ class ProtvistaPdbVariationGraph extends NightingaleLinegraphTrack {
 
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       this.createTooltipFromDetail(detail, tooltipContent);
     }
 
@@ -349,7 +354,7 @@ class ProtvistaPdbVariationGraph extends NightingaleLinegraphTrack {
 
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.removeAllTooltips();
       }, 50);
@@ -420,6 +425,10 @@ class ProtvistaPdbVariationGraph extends NightingaleLinegraphTrack {
 
     const position = this._getPositionFromDetail(detail);
     const tooltip = document.createElement("protvista-tooltip");
+
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
 
     tooltip.title = `Variants residue ${position}`;
     tooltip.closeable = closeable;

@@ -1,6 +1,11 @@
 import NightingaleLinegraphTrack from "@nightingale-elements/nightingale-linegraph-track";
 
 class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -238,7 +243,7 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
 
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       this.createTooltipFromTooltipData(detail.parentEvent, tooltipData);
     }
 
@@ -269,7 +274,7 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
   _handleMouseout() {
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.removeAllTooltips();
       }, 50);
@@ -329,6 +334,10 @@ class ProtvistaPdbScHistogram extends NightingaleLinegraphTrack {
     this.removeAllTooltips();
 
     const tooltip = document.createElement("protvista-tooltip");
+    
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
 
     tooltip.title = `${tooltipData.feature.type} residue ${tooltipData.start}`;
     tooltip.closeable = closeable;

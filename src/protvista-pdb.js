@@ -75,6 +75,7 @@ class ProtvistaPDB extends HTMLElement {
         let envAttrValue = this.getAttribute("env");
         this.subscribeEvents = (this.getAttribute("subscribe-events") === 'false') ? false : true;
         this.showLegends = (this.getAttribute("legends") === 'false') ? false : true;
+        this.useDefaultStyles = this.getAttribute("no-stylesheet") === null;
         
         // Default web-component state properties
         this.hiddenSubtracks = {};
@@ -112,7 +113,7 @@ class ProtvistaPDB extends HTMLElement {
         if(!this.showLegends) delete this.viewerData.legends;
 
         const mainHtml = () => html`
-        <div class="protvista-pdb">
+        <div class=${this.useDefaultStyles ? "protvista-pdb default-styles" : "protvista-pdb"}>
             <span class="labelTooltipBox" style="display:none"></span>
 
             <nightingale-manager reflected-attributes="length display-start display-end highlight activefilters filters">

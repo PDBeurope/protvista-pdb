@@ -108,6 +108,11 @@ function normaliseAverageLinegraphData(input, length) {
 }
 
 class ProtvistaPdbBoxplotLinegraph extends NightingaleLinegraphTrack {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -439,7 +444,7 @@ class ProtvistaPdbBoxplotLinegraph extends NightingaleLinegraphTrack {
 
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.createTooltipFromDetail(detail, tooltipContent);
       }, 50);
@@ -462,7 +467,7 @@ class ProtvistaPdbBoxplotLinegraph extends NightingaleLinegraphTrack {
   _handleMouseout() {
     const oldTooltip = document.querySelector("protvista-tooltip");
 
-    if (!(oldTooltip && oldTooltip.className === "click-open")) {
+    if (!oldTooltip?.classList.contains("click-open")) {
       window.setTimeout(() => {
         this.removeAllTooltips();
       }, 50);
@@ -516,6 +521,10 @@ class ProtvistaPdbBoxplotLinegraph extends NightingaleLinegraphTrack {
 
     const position = this._getPositionFromDetail(detail);
     const tooltip = document.createElement("protvista-tooltip");
+    
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
 
     tooltip.title = `RSA residue ${position}`;
     tooltip.closeable = closeable;
