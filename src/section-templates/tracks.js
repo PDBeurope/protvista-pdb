@@ -6,6 +6,11 @@ function isSubtrackHidden(ctx, trackData, subtrackData) {
     return ctx.hiddenSubtracks?.[trackData.uuid]?.includes(subtrackData.uuid);
 }
 
+function addBorderClass(ctx, hasLabelColor, orAggregate) {
+    const otherClass = orAggregate ? "aggregate-track-border" : "";
+    return ctx.useDefaultStyles && hasLabelColor ? " non-aggregate-track-border" : otherClass;
+}
+
 function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackIndex) {
     return html`
         <div
@@ -17,10 +22,9 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
             } : {})}
         >
             <div
-                class="protvistaCol1 track-label"
-                style=${styleMap(subtrackData.labelColor ? {
-                    backgroundColor: subtrackData.labelColor,
-                    borderBottom: "1px solid lightgrey"
+                class="protvistaCol1 track-label${addBorderClass(ctx, subtrackData.labelColor, false)}"
+                style=${styleMap(ctx.useTrackStyles && subtrackData.labelColor ? {
+                    backgroundColor: subtrackData.labelColor
                 } : {})}
                 @mouseover=${e => {
                     e.stopPropagation();
@@ -69,10 +73,7 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
             </div>
 
             <div
-                class="protvistaCol2 track-content"
-                style=${styleMap(trackData.labelColor ? {
-                    borderBottom: "1px solid lightgrey"
-                } : {})}
+                class="protvistaCol2 track-content${addBorderClass(ctx, trackData.labelColor, false)}"
             >
                 <protvista-pdb-track
                     .useDefaultStyles=${ctx.useDefaultStyles}
@@ -105,10 +106,9 @@ function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, s
             })}
         >
             <div
-                class="protvistaCol1 track-label"
-                style=${styleMap(subtrackData.labelColor ? {
-                    backgroundColor: subtrackData.labelColor,
-                    borderBottom: "1px solid lightgrey"
+                class="protvistaCol1 track-label${addBorderClass(ctx, subtrackData.labelColor, false)}"
+                style=${styleMap(ctx.useTrackStyles && subtrackData.labelColor ? {
+                    backgroundColor: subtrackData.labelColor
                 } : {})}
             >
                 <div
@@ -117,10 +117,7 @@ function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, s
             </div>
 
             <div
-                class="protvistaCol2 track-content"
-                style=${styleMap(trackData.labelColor ? {
-                    borderBottom: "1px solid lightgrey"
-                } : {})}
+                class="protvistaCol2 track-content${addBorderClass(ctx, trackData.labelColor, false)}"
             ></div>
         </div>
     `;
@@ -130,12 +127,11 @@ function PDBePvTracksSection(ctx) {
     return html`${ctx.viewerData.tracks.map((trackData, trackIndex) => html`
         <div class="protvistaRow pvTrackRow pvTracks_${trackIndex}">
             <div
-                class="protvistaCol1 category-label"
+                class="protvistaCol1 category-label${addBorderClass(ctx, trackData.labelColor, false)}"
                 data-label-index="${trackIndex}"
                 @click=${e => ctx.layoutHelper.showSubtracks(trackIndex)}
-                style=${styleMap(trackData.labelColor ? {
-                    backgroundColor: trackData.labelColor,
-                    borderBottom: "1px solid lightgrey"
+                style=${styleMap(ctx.useTrackStyles && trackData.labelColor ? {
+                    backgroundColor: trackData.labelColor
                 } : {})}
             >
                 <span class="pvTrackLabel_${trackIndex}"></span>
@@ -152,10 +148,7 @@ function PDBePvTracksSection(ctx) {
             </div>
 
             <div
-                class="protvistaCol2 aggregate-track-content"
-                style=${styleMap(trackData.labelColor ? {
-                    borderBottom: "1px solid lightgrey"
-                } : {})}
+                class="protvistaCol2 aggregate-track-content${addBorderClass(ctx, trackData.labelColor, true)}"
             >
                 <protvista-pdb-track
                     class="pvTrack"

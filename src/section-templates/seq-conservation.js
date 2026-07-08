@@ -5,7 +5,7 @@ function PDBePvScSection(ctx) {
                     
                     <div class="protvistaCol1 category-label pvGreyCategoryLabel" @click=${e => ctx.layoutHelper.showConservationPlot()} >Sequence conservation</div>
 
-                    <div class="protvistaCol2 aggregate-track-content pvConservationHistoSection">
+                    <div class="protvistaCol2 aggregate-track-content non-aggregate-track-border pvConservationHistoSection">
                         <protvista-pdb-sc-histogram
                             .useDefaultStyles=${ctx.useDefaultStyles}
                             accession=${ctx._entryId ? ctx._entryId : ctx._accession}
@@ -20,7 +20,7 @@ function PDBePvScSection(ctx) {
                 </div>
                 <div class="pvConservationPlotRow" style="display:none">
                     <div class="protvistaRow">
-                        <div class="protvistaCol1 track-label pvConsDetailLabel">
+                        <div class="protvistaCol1 track-label pvConsDetailLabel non-aggregate-track-border">
                             <div class="pvConsDetailTitle">
                                 <b>Amino acid probabilities</b>
                                 <span @mouseover=${e => {

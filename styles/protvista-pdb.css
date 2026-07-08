@@ -143,7 +143,14 @@
     -webkit-transition: opacity .1s;
     /* Safari */
     transition: opacity .1s;
+}
+
+.protvista-pdb.default-styles .aggregate-track-border {
     border-bottom: 1px solid #b2f5ff;
+}
+
+.protvista-pdb.default-styles .non-aggregate-track-border {
+    border-bottom: 1px solid lightgrey;
 }
 
 .protvista-pdb.default-styles .aggregate-track-content{
@@ -758,17 +765,14 @@ opacity: 1;
 .protvista-pdb.default-styles .pvGreyCategoryLabel.category-label:hover,
 .protvista-pdb.default-styles .protvistaRow.expanded > .pvGreyCategoryLabel.category-label {
     background-color: rgb(128, 128, 128);
-    border-bottom: 1px solid lightgrey;
 }
 
 .protvista-pdb.default-styles .pvBoxplotDetailLabel {
     background-color: #d3d3d3;
-    border-bottom: 1px solid #d3d3d3;
 }
 
 .protvista-pdb.default-styles .pvConsDetailLabel {
     background-color: rgb(211,211,211);
-    border-bottom: 1px solid #d3d3d3;
 }
 
 .protvista-pdb.default-styles .pvConsDetailTitle {
@@ -798,4 +802,9 @@ opacity: 1;
 
 .protvista-pdb.default-styles .pvConsDetailLegend {
     height:200px;
+}
+
+.protvista-pdb.default-styles nightingale-filter label.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }

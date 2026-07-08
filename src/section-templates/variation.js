@@ -48,7 +48,7 @@ function PDBePvVariationSection(ctx) {
         Variants
       </div>
 
-      <div class="protvistaCol2 aggregate-track-content pvVariantGraphSection">
+      <div class="protvistaCol2 aggregate-track-content aggregate-track-border pvVariantGraphSection">
         <protvista-pdb-variation-graph
           .useDefaultStyles=${ctx.useDefaultStyles}
           .length=${ctx.viewerData.length}

@@ -10,7 +10,7 @@ function PDBePvBoxplotSection(ctx) {
         Relative solvent accessibility (PDB and MDposit)
       </div>
 
-      <div class="protvistaCol2 aggregate-track-content pvBoxplotGraphSection">
+      <div class="protvistaCol2 aggregate-track-content non-aggregate-track-border pvBoxplotGraphSection">
         <protvista-pdb-boxplot-linegraph
           .useDefaultStyles=${ctx.useDefaultStyles}
           .length=${ctx.viewerData.length}
@@ -25,7 +25,7 @@ function PDBePvBoxplotSection(ctx) {
 
     <div class="pvBoxplotDetailRow" style="display:none">
       <div class="protvistaRow">
-        <div class="protvistaCol1 track-label pvBoxplotDetailLabel">
+        <div class="protvistaCol1 track-label pvBoxplotDetailLabel non-aggregate-track-border">
           PDB RSA and Simulated RSA distributions
         </div>
 

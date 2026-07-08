@@ -76,6 +76,7 @@ class ProtvistaPDB extends HTMLElement {
         this.subscribeEvents = (this.getAttribute("subscribe-events") === 'false') ? false : true;
         this.showLegends = (this.getAttribute("legends") === 'false') ? false : true;
         this.useDefaultStyles = this.getAttribute("no-stylesheet") === null;
+        this.useTrackStyles = this.getAttribute("no-track-styles") === null;
         
         // Default web-component state properties
         this.hiddenSubtracks = {};

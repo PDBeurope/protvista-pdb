@@ -112,7 +112,7 @@ class LayoutHelper {
       let trackSectionEle = this.ctx.querySelectorAll(aggregatedTrackClass)[0];
       if (trackSectionEle) {
         trackSectionEle.style.paddingRight = this.ctx.scrollbarWidth + "px";
-        if (borderBottom)
+        if (this.ctx.useDefaultStyles && borderBottom)
           trackSectionEle.style.borderBottom = "1px solid lightgrey";
         trackSectionEle.firstElementChild.data = resultData;
       }
@@ -120,7 +120,7 @@ class LayoutHelper {
       let trackEle = this.ctx.querySelectorAll(trackClass)[0];
       if (trackEle) {
         trackEle.style.paddingRight = this.ctx.scrollbarWidth + "px";
-        if (borderBottom) trackEle.style.borderBottom = "1px solid lightgrey";
+        if (this.ctx.useDefaultStyles && borderBottom) trackEle.style.borderBottom = "1px solid lightgrey";
         trackEle.firstElementChild.data = resultData;
         if (trackClass === ".pvVariantPlotSection") {
           this.updateVariationFilterAvailability(resultData);
@@ -236,15 +236,20 @@ class LayoutHelper {
           trackModel.label,
         );
         let labelEle = this.ctx.querySelectorAll(labelSelector)[0];
+
+        const inlineLinkStyle = this.ctx.useDefaultStyles
+          ? ' style="border-bottom:none;margin-left:5px;box-shadow:none;"'
+          : "";
+
         if (labelDetails === "Secondary structure variation") {
-          labelDetails += `<a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Secondary-structure-variance" target="_blank" style="border-bottom: none;margin-left:5px;box-shadow:none;" title="Documentation link">
+          labelDetails += `<a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Secondary-structure-variance" target="_blank" ${inlineLinkStyle} title="Documentation link">
                 <i class="icon icon-generic" data-icon="x"></i>
               </a>`;
         }
         if (labelDetails === "Simulated RSA classes (MDposit)") {
           const uniProtId = this.ctx.viewerData.tracks[trackIndex]?.uniProtId;
           if (uniProtId) {
-            labelDetails += `<a href='https://mdposit.mddbr.eu/#/pointer?ref=proteins&id=${uniProtId}' target='_blank' style="border-bottom: none;margin-left:5px;box-shadow:none;">
+            labelDetails += `<a href='https://mdposit.mddbr.eu/#/pointer?ref=proteins&id=${uniProtId}' target='_blank' ${inlineLinkStyle}>
               ${uniProtId}
               <i class="icon icon-generic" data-icon="x">
             </i></a>`;
@@ -307,16 +312,27 @@ class LayoutHelper {
         let rotateClass = "";
         if (iconData.type == "nucleicAcids") rotateClass = ""; //rotateClass = ' rotate';
 
+        const iconStyle = this.ctx.useTrackStyles
+          ? ` style="background-color:${iconData.background}"`
+          : "";
+
+        const innerIconStyle = this.ctx.useTrackStyles
+          ? ` style="color:#fff;"`
+          : "";
+
         let iconHtml =
-          '<span class="pdbIconslogo" style="background-color:' +
-          iconData.background +
-          '" title="' +
+          '<span class="pdbIconslogo"' +
+          iconStyle +
+          ' title="' +
           iconData.tooltipContent +
           '" ><i class="' +
           iconCode[iconData.type].class +
           '" data-icon="' +
           iconCode[iconData.type].dataIcon +
-          '" style="color: #fff;"></i></span>';
+          '"' +
+          innerIconStyle +
+          "></i></span>";
+          
         if (typeof iconData.url != "undefined" && iconData.url != "")
           iconHtml =
             '<a class="pdbIconslogoA" href="' +
@@ -327,12 +343,19 @@ class LayoutHelper {
         labelElements.push(iconHtml);
       });
 
-      if (value.resolution)
+      if (value.resolution) {
+        const resolutionStyle = this.ctx.useTrackStyles
+          ? ' style="color:#555"'
+          : "";
+
         labelElements.push(
-          '<strong style="color:#555">' +
+          "<strong" +
+            resolutionStyle +
+            ">" +
             value.resolution +
             "&Aring;</strong></span>",
         );
+      }
       return labelElements.join(" ");
     }
   }
@@ -895,8 +918,6 @@ updateVariationFilterAvailability(resultData) {
 
         if (label) {
           label.classList.toggle("disabled", isUnavailable);
-          label.style.opacity = isUnavailable ? "0.45" : "";
-          label.style.cursor = isUnavailable ? "not-allowed" : "";
         }
       });
   });
