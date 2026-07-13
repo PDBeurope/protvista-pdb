@@ -107,7 +107,7 @@ class ProtvistaPDB extends HTMLElement {
         this.apiNames = this.normaliseApiNames(
             this.apiNames || this.getAttribute("api-names")
         );
-this.enableIn3D = this.getAttribute("enable-in3d") !== null;
+        this.enableIn3D = this.getAttribute("enable-in3d") !== null;
         this.triggerFirstIn3D = this.getAttribute("trigger-first-in3d") !== null;
         
         // Default web-component state properties

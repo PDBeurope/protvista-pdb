@@ -1,9 +1,11 @@
+import { g2fid1Memprotmd } from "../mock-data/G2FID1-uniprot-memprotmd"
 import { p00918RsaBoxplot } from "../mock-data/P00918-uniprot-rsa";
 import { p00918SimRsaBoxplot } from "../mock-data/P00918-uniprot-simulated-rsa";
 import { p00918SimRsaClasses } from "../mock-data/P00918-uniprot-simulated-rsa-classes.js";
 import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.js";
 import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
+import { processMemProtMDData } from "./data-processing/process-memprotmd-data.js";
 import { addIn3DToUniPdbTracks } from "./data-processing/data-track-add-in3d.js";
 class DataHelper {
   constructor(
@@ -81,6 +83,18 @@ class DataHelper {
           url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`,
           processor: "3dbeacons",
         },
+        // TODO: add memprotmd
+        // {
+        //   name: "memprotmd",
+        //   url: "...",
+        //   processor: "memprotmd",
+        // }
+        // TODO: add RSA APIs
+        // {
+        //   name: "mddb-rsa",
+        //   url: "...",
+        //   processor: "mddb-rsa",
+        // }
       ],
 
       entry: [
@@ -202,6 +216,14 @@ class DataHelper {
         if (!result) return;
       }
 
+      // TODO: add memprotmd
+      // if (config.processor === "memprotmd") {
+      //   result = processMemProtMDData(result);
+      //   if (!result) return;
+      // }
+
+      // TODO: add RSA processing
+
       if (!result[resultKey]) return;
 
       if (result[resultKey].displayNavigation === false) {
@@ -242,6 +264,9 @@ class DataHelper {
     });
 
     // Post-processing
+    // 1. Add mock memprotmd as track
+    this.addMockMemprotmdData();
+
     // 1. Add mock RSA data
     this.addMockBoxplotData();
     // 2. Add in3D tag to tracks
@@ -249,7 +274,7 @@ class DataHelper {
     this.viewerData.tracks = addIn3DToUniPdbTracks(this.viewerData.tracks, apiNames);
     // 3. Add uuid to tracks and subtracks
     this.viewerData.tracks = addTrackUuids(this.viewerData.tracks);
-
+    
     return this.viewerData;
   }
 
@@ -264,6 +289,17 @@ class DataHelper {
     } catch (e) {
       console.log(`API ${apiName} unavailable!`, e);
     }
+  }
+  
+  addMockMemprotmdData() {
+    if (this.accession !== "G2FID1") return;
+
+    const result = processMemProtMDData(g2fid1Memprotmd);
+    if (!result) return;
+    this.viewerData.tracks.push(result);
+
+    // const legend = createMemProtMDLegend(g2fid1Memprotmd);
+    // this.addLegendGroup(legend.label, legend.colourMap);
   }
 
   addMockBoxplotData() {
