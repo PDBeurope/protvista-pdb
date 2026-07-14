@@ -46,15 +46,22 @@ function PDBePvNavSection(ctx) {
                 <div class="protvistaForm checkForm">
                     <table class="pvHideOptionsTable">
                         <tbody>
-                        ${ctx.viewerData.tracks.map((trackData, trackIndex) => html`
-                            <tr>
-                                <td class="pvChkBoxTd">
-                                    <input type="checkbox" class="pvSectionChkBox" name="cb_${trackIndex}" />
-                                </td>
-                                <td class="pvChkBoxLabelTd">
-                                    ${trackData.label}
-                                </td>
-                            </tr>
+                        ${ctx.getAllHideableSections().map(section => html`
+                        <tr>
+                            <td class="pvChkBoxTd">
+                                <input
+                                    type="checkbox"
+                                    class="pvSectionChkBox"
+                                    data-section-type=${section.type}
+                                    data-track-uuid=${section.trackUuid ?? ""}
+                                    data-track-prefix=${section.prefix ?? ""}
+                                    data-track-index=${section.trackIndex ?? ""}
+                                />
+                            </td>
+                            <td class="pvChkBoxLabelTd">
+                                ${section.label}
+                            </td>
+                        </tr>
                         `)}
                         <tr style="display:none" class="scOption"></tr>
                         <tr style="display:none" class="variationOption"></tr>

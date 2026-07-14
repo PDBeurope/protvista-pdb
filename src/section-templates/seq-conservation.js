@@ -1,7 +1,7 @@
 import { html } from "lit";
 
 function isAlwaysExpanded(ctx) {
-    return ctx.alwaysExpanded.includes('sequence_conservation') === true;
+    return ctx.alwaysExpanded?.includes('sequence_conservation') === true;
 }
 
 function PDBePvScSection(ctx) {

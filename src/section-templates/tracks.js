@@ -63,12 +63,15 @@ function in3DButtonTemplate(ctx, trackData, subtrackData = null) {
     `;
 }
 
-function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackIndex) {
+function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackIndex, prefix = "main") {
     return html`
         <div
-            class="protvistaRow pvSubtrackRow_${trackIndex}_${subtrackIndex}"
-            data-track-uuid=${trackData.uuid}
-            data-subtrack-uuid=${subtrackData.uuid}
+            class="protvistaRow pvSubtrackRow_${prefix}_${trackIndex}_${subtrackIndex}"
+            data-track-for="subtrack-container"
+            data-track-uuid=${subtrackData.uuid}
+            data-track-prefix=${prefix}
+            data-track-index=${trackIndex}
+            data-subtrack-index=${subtrackIndex}
             style=${styleMap(isSubtrackHidden(ctx, trackData, subtrackData) ? {
                 display: "none"
             } : {})}
@@ -93,19 +96,19 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
                     data-icon="x"
                     @click=${e => {
                         e.stopPropagation();
-                        ctx.layoutHelper.hideSubTrack(trackIndex, subtrackIndex);
+                        ctx.layoutHelper.hideSubTrack(trackIndex, subtrackIndex, trackData.uuid, subtrackData.uuid, prefix);
                     }}
                     title="Hide this section"
                 ></span>
                 ` : ``}
 
                 <div
-                    class="pvSubtrackLabel_${trackIndex}_${subtrackIndex} subtrackLabel"
+                    class="pvSubtrackLabel_${prefix}_${trackIndex}_${subtrackIndex} subtrackLabel"
                 ></div>
                 ${in3DButtonTemplate(ctx, trackData, subtrackData)}
 
                 <span
-                    class="icon icon-functional labelZoomIcon pvZoomIcon_${trackIndex}_${subtrackIndex}"
+                    class="icon icon-functional labelZoomIcon pvZoomIcon_${prefix}_${trackIndex}_${subtrackIndex}"
                     data-icon="T"
                     @click=${e => {
                         ctx.layoutHelper.zoomTrack(
@@ -132,7 +135,12 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
             >
                 <protvista-pdb-track
                     .useDefaultStyles=${ctx.useDefaultStyles}
-                    class="pvSubtrack_${trackIndex}"
+                    class="pvSubtrack_${prefix}_${trackIndex}"
+                    data-track-for="subtrack"
+                    data-track-uuid=${subtrackData.uuid}
+                    data-track-prefix=${prefix}
+                    data-track-index=${trackIndex}
+                    data-subtrack-index=${subtrackIndex}
                     .data=${subtrackData.data || [subtrackData]}
                     .length=${ctx.viewerData.length}
                     .layout=${ctx.layoutHelper.getTrackLayout(subtrackData.overlapping)}
@@ -147,12 +155,15 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
     `;
 }
 
-function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, subtrackIndex) {
+function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, subtrackIndex, prefix = "main") {
     return html`
         <div
-            class="protvistaRow pvSubtrackRow_${trackIndex}_${subtrackIndex} pvSubtrackPlaceholder"
-            data-track-uuid=${trackData.uuid}
-            data-subtrack-uuid=${subtrackData.uuid}
+            class="protvistaRow pvSubtrackRow_${prefix}_${trackIndex}_${subtrackIndex} pvSubtrackPlaceholder"
+            data-track-for="subtrack-container"
+            data-track-uuid=${subtrackData.uuid}
+            data-track-prefix=${prefix}
+            data-track-index=${trackIndex}
+            data-subtrack-index=${subtrackIndex}
             style=${styleMap({
                 height: `${ctx.layoutHelper.getTrackHeight(subtrackData.length, subtrackData.overlapping)}px`,
                 ...(isSubtrackHidden(ctx, trackData, subtrackData)
@@ -167,7 +178,7 @@ function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, s
                 } : {})}
             >
                 <div
-                    class="pvSubtrackLabel_${trackIndex}_${subtrackIndex} subtrackLabel"
+                    class="pvSubtrackLabel_${prefix}_${trackIndex}_${subtrackIndex} subtrackLabel"
                 ></div>
             </div>
 
@@ -178,27 +189,32 @@ function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, s
     `;
 }
 
-function PDBePvTracksSection(ctx) {
-    return html`${ctx.viewerData.tracks.map((trackData, trackIndex) => html`
-        <div class="protvistaRow pvTrackRow pvTracks_${trackIndex}">
+function PDBePvTracksSection(ctx, tracks = ctx.viewerData.tracks, prefix = "main") {
+    return html`${tracks.map((trackData, trackIndex) => html`
+        <div
+            class="protvistaRow pvTrackRow pvTracks_${prefix}_${trackIndex}"
+            data-track-for="track-container"
+            data-track-uuid=${trackData.uuid}
+            data-track-prefix=${prefix}
+            data-track-index=${trackIndex}
+        >
             <div
                 class="protvistaCol1 category-label${addBorderClass(ctx, trackData.labelColor, false)} ${isAlwaysExpanded(trackData) ? "no-icon" : ""}"
-                data-label-index="${trackIndex}"
                 @click=${e => {
-                    if (!isAlwaysExpanded(trackData)) ctx.layoutHelper.showSubtracks(trackIndex);
+                    if (!isAlwaysExpanded(trackData)) ctx.layoutHelper.showSubtracks(trackIndex, trackData.uuid, prefix);
                 }}
                 style=${styleMap(ctx.useTrackStyles && trackData.labelColor ? {
                     backgroundColor: trackData.labelColor
                 } : {})}
             >
-                <span class="pvTrackLabel_${trackIndex}"></span>
+                <span class="pvTrackLabel_${prefix}_${trackIndex}"></span>
                 ${in3DButtonTemplate(ctx, trackData)}
                 ${!isAlwaysExpanded(trackData) ? html`
                     <span
-                        class="protvistaResetSectionIcon pvResetSection_${trackIndex}"
+                        class="protvistaResetSectionIcon pvResetSection_${prefix}_${trackIndex}"
                         @click=${e => {
                             e.stopPropagation();
-                            ctx.layoutHelper.resetSection(trackIndex);
+                            ctx.layoutHelper.resetSection(trackIndex, trackData.uuid, prefix);
                         }}
                         title="Reset section"
                     >
@@ -213,6 +229,10 @@ function PDBePvTracksSection(ctx) {
                 <protvista-pdb-track
                     class="pvTrack"
                     .useDefaultStyles=${ctx.useDefaultStyles}
+                    data-track-for="track"
+                    data-track-uuid=${trackData.uuid}
+                    data-track-prefix=${prefix}
+                    data-track-index=${trackIndex}
                     .data=${trackData.data}
                     .length=${ctx.viewerData.length}
                     .layout=${ctx.layoutHelper.getTrackLayout(trackData.overlapping)}
@@ -225,20 +245,31 @@ function PDBePvTracksSection(ctx) {
             </div>
         </div>
 
-        <div class="protvistaRowGroup pvSubtracks_${trackIndex} ${isAlwaysExpanded(trackData) ? 'noMaxHeight' : ''}"
+        <div
+            class="protvistaRowGroup pvSubtracks_${prefix}_${trackIndex} ${isAlwaysExpanded(trackData) ? 'noMaxHeight' : ''}"
+            data-track-for="track-scrollbox-container"
+            data-track-uuid=${trackData.uuid}
+            data-track-prefix=${prefix}
+            data-track-index=${trackIndex}
             style=${styleMap(isAlwaysExpanded(trackData)
                     ? { display: "block" }
                     : {}
                 )}
         >
             <nightingale-scrollbox
-                class="pvSubtrackScrollbox pvSubtrackScrollbox_${trackIndex} ${isAlwaysExpanded(trackData) ? 'noMaxHeight' : ''}"
+                class="pvSubtrackScrollbox pvSubtrackScrollbox_${prefix}_${trackIndex} ${isAlwaysExpanded(trackData) ? 'noMaxHeight' : ''}"
                 root-margin="300px"
                 disable-scroll-with-ctrl
             >
                 ${trackData.data.map((subtrackData, subtrackIndex) => html`
                     <nightingale-scrollbox-item
-                        class="pvScrollboxItem pvScrollboxItem_${trackIndex}_${subtrackIndex}"
+                        class="pvScrollboxItem pvScrollboxItem_${prefix}_${trackIndex}_${subtrackIndex}"
+                        data-track-for="track-scrollbox"
+                        data-track-uuid=${trackData.uuid}
+                        data-subtrack-uuid=${subtrackData.uuid}
+                        data-track-prefix=${prefix}
+                        data-track-index=${trackIndex}
+                        data-subtrack-index=${subtrackIndex}
                         .data=${{
                             ctx,
                             trackData,

@@ -15,6 +15,7 @@ import PDBePvBoxplotSection from "./section-templates/boxplot";
 // Helper modules
 import DataHelper from "./helpers/data"
 import LayoutHelper from "./helpers/layout"
+import { addTrackUuids } from "./helpers/data-processing/data-track-uuids.js";
 
 class ProtvistaPDB extends HTMLElement {
     constructor() {
@@ -42,6 +43,9 @@ class ProtvistaPDB extends HTMLElement {
 
         // Create layout helper instance
         this.layoutHelper = new LayoutHelper(this);
+
+        this.uuidsToData = new Map();
+        this.pinnedTracks = [];
     }
 
     set viewerdata(data) {
@@ -50,6 +54,8 @@ class ProtvistaPDB extends HTMLElement {
         this.displayLoadingMessage();
 
         this.viewerData = data;
+        this.viewerData.tracks = addTrackUuids(this.viewerData.tracks);
+        this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks]);
         this.viewerData.displayNavigation = (typeof data.displayNavigation !== 'undefined') ? data.displayNavigation : true;
         this.viewerData.displaySequence = (typeof data.displaySequence !== 'undefined') ? data.displaySequence : true;
 
@@ -80,6 +86,11 @@ class ProtvistaPDB extends HTMLElement {
         return this.alwaysExpanded;
     }
 
+    set pinneddata(data) {
+        if (!data) return;
+        this.pinnedTracks = data;
+    }
+
     normaliseApiNames(value) {
         if (!value) return null;
 
@@ -97,6 +108,74 @@ class ProtvistaPDB extends HTMLElement {
         }
 
         return null;
+    }
+
+    registerUuids(listOfTracks) {
+        const uuidsToData = new Map();
+
+        for (const track of listOfTracks ?? []) {
+            if (!track?.uuid) continue;
+
+            uuidsToData.set(track.uuid, track);
+
+            for (const subtrack of track.data ?? []) {
+            if (subtrack?.uuid) {
+                uuidsToData.set(subtrack.uuid, subtrack);
+            }
+            }
+        }
+
+        this.uuidsToData = uuidsToData;
+    }
+
+    getDataByUuid(uuid) {
+        return this.uuidsToData.get(uuid) ?? null;
+    }
+
+    getAllTrackCollections() {
+        return [
+            ...(this.pinnedTracks ?? []).map((trackData, trackIndex) => ({
+                prefix: "pinned",
+                trackIndex,
+                trackData,
+            })),
+            ...(this.customTracks ?? []).map((trackData, trackIndex) => ({
+                prefix: "custom",
+                trackIndex,
+                trackData,
+            })),
+            ...(this.viewerData.tracks ?? []).map((trackData, trackIndex) => ({
+                prefix: "main",
+                trackIndex,
+                trackData,
+            })),
+        ];
+    }
+
+    getAllHideableSections() {
+        console.log("this.viewerData.displayBoxplot")
+        console.log(this.viewerData.displayBoxplot)
+        return [
+            ...this.getAllTrackCollections().map(({ prefix, trackIndex, trackData }) => ({
+                type: "track",
+                prefix,
+                trackIndex,
+                trackUuid: trackData.uuid,
+                label: trackData.label,
+            })),
+            ...(this.viewerData.displayConservation ? [{
+                type: "conservation",
+                label: "Sequence conservation",
+            }] : []),
+            ...(this.viewerData.displayVariants ? [{
+                type: "variation",
+                label: "Variation",
+            }] : []),
+            ...(this.viewerData.displayBoxplot ? [{
+                type: "boxplot",
+                label: "Relative solvent accessibility distribution",
+            }] : []),
+        ];
     }
 
     async connectedCallback() {
@@ -118,6 +197,11 @@ class ProtvistaPDB extends HTMLElement {
         this.alwaysExpanded = this.normaliseApiNames(
             this.alwaysExpanded || this.getAttribute("always-expanded")
         );
+        this.expandFirst = this.normaliseApiNames(
+            this.getAttribute("expand-first") ?? "main",
+        );
+        this.stickyHeader = this.getAttribute("sticky-header") !== "false";
+        this.maxHeight = this.getAttribute("max-height");
         this.enableIn3D = this.getAttribute("enable-in3d") !== null;
         this.triggerFirstIn3D = this.getAttribute("trigger-first-in3d") !== null;
         
@@ -140,10 +224,12 @@ class ProtvistaPDB extends HTMLElement {
 
         // Get data from PDBe PV APIs
         this.viewerData = await this.dataHelper.processMutlplePDBeApiData();
+        this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks]);
         this.viewerData.displayConservation = (this.pageSection && this.pageSection == '2') ? false : true;
         this.viewerData.displayVariants = (this.pageSection && this.pageSection == '2') ? false : true;
-        this.viewerData.displayBoxplot = (this.pageSection && this.pageSection == '2') ? false : true;
+        this.viewerData.displayBoxplot = false;
         if (typeof this.viewerData.boxplot !== 'undefined') {
+            this.viewerData.displayBoxplot = (this.pageSection && this.pageSection == '2') ? false : true;
             this.pvTrackMargins.right = 10;
             this.pvTrackMargins.left = 35;
         }
@@ -159,20 +245,39 @@ class ProtvistaPDB extends HTMLElement {
         if(!this.showLegends) delete this.viewerData.legends;
 
         const mainHtml = () => html`
-        <div class=${this.useDefaultStyles ? "protvista-pdb default-styles" : "protvista-pdb"}>
+        <div
+            class=${this.useDefaultStyles ? "protvista-pdb default-styles" : "protvista-pdb"}
+            style=${this.maxHeight
+              ? `max-height:${this.maxHeight};overflow-y:auto;`
+              : ""}
+        >
             <span class="labelTooltipBox" style="display:none"></span>
 
             <nightingale-manager reflected-attributes="length display-start display-end highlight activefilters filters">
                 
                 <div style="display:flex; flex-direction: column;    width: 100%;">
-                    <div style="line-height: 0">
-                    <!-- Navigation section -->
-                    ${this.viewerData.displayNavigation ? html`${PDBePvNavSection(this)}` : ``}
-                    </div>
-                    
-                    <div style="line-height: 0">
-                    <!-- Sequence section -->
-                    ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this)}` : ``}
+                   <div
+                    class=${this.stickyHeader === false ? '' : 'protvistaStickyHeader'}
+                    >
+                        <div style="line-height: 0">
+                        <!-- Navigation section -->
+                        ${this.viewerData.displayNavigation ? html`${PDBePvNavSection(this)}` : ``}
+                        </div>
+                        
+                        <div style="line-height: 0">
+                        <!-- Sequence section -->
+                        ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this)}` : ``}
+                        </div>
+
+                        <!-- Pinned tracks section -->
+                        ${this.pinnedTracks?.length
+                        ? html`<div style="line-height: 0">
+                            ${PDBePvTracksSection(this, this.pinnedTracks, "pinned")}
+                        </div>` : ``}                        
+
+                        <div style="line-height: 0">
+                        <!-- Custom annotations tracks section -->
+                        </div>
                     </div>
 
                     <div style="line-height: 0">

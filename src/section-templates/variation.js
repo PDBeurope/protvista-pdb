@@ -38,7 +38,7 @@ function normaliseVariantFilters(filters = []) {
 }
 
 function isAlwaysExpanded(ctx) {
-    return ctx.alwaysExpanded.includes('variation') === true;
+    return ctx.alwaysExpanded?.includes('variation') === true;
 }
 
 function PDBePvVariationSection(ctx) {
@@ -66,6 +66,7 @@ function PDBePvVariationSection(ctx) {
           .margin-left=${ctx.pvTrackMargins.left}
           .margin-right=${ctx.pvTrackMargins.right}
         ></protvista-pdb-variation-graph>
+        <p class="empty-state" style="display: none;">No variants data available</p>
       </div>
     </div>
 
@@ -90,6 +91,7 @@ function PDBePvVariationSection(ctx) {
             .margin-left=${ctx.pvTrackMargins.left}
             .margin-right=${ctx.pvTrackMargins.right}
           ></protvista-pdb-variation>
+          <p class="empty-state" style="display: none;">No variants data available</p>
         </div>
       </div>
     </div>

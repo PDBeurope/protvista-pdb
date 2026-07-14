@@ -1,7 +1,7 @@
 import { html } from "lit";
 
 function isAlwaysExpanded(ctx) {
-    return ctx.alwaysExpanded.includes('rsa') === true;
+    return ctx.alwaysExpanded?.includes('rsa_distribution') === true;
 }
 
 function PDBePvBoxplotSection(ctx) {
