@@ -87,8 +87,14 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     set pinneddata(data) {
-        if (!data) return;
-        this.pinnedTracks = data;
+        this.pinnedTracks = Array.isArray(data) ? data : [];
+
+        this.registerUuids([
+            ...this.viewerData.tracks,
+            ...this.pinnedTracks,
+        ]);
+
+        this._render();
     }
 
     normaliseApiNames(value) {

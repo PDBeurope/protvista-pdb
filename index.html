@@ -3,10 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <title>Migrated PDB Protvista demo</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Icon fonts stylesheet -->
-    <link rel="stylesheet" href="https://ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css" type="text/css" media="all"/>
+    <link
+      rel="stylesheet"
+      href="https://ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css"
+      type="text/css"
+      media="all"
+    />
     <!-- <link rel="stylesheet" href="/styles/protvista-pdb.css">
     <link rel="stylesheet" href="/styles/protvista-variation.css"> -->
     <!-- <link rel="stylesheet" href="/dist/protvista-pdb-4.0.0-mddb.min.css"> -->
@@ -14,27 +19,77 @@
   <body>
     <h1>Migrated PDB Protvista demo</h1>
 
-    <protvista-pdb accession="G2FID1" enable-in3d trigger-first-in3d></protvista-pdb>
+    <!-- <protvista-pdb
+      accession="G2FID1"
+      enable-in3d
+      trigger-first-in3d
+    ></protvista-pdb> -->
     <!-- <protvista-pdb accession="P00918" enable-in3d trigger-first-in3d></protvista-pdb> -->
 
     <!-- <protvista-pdb accession="P24666"></protvista-pdb> -->
     <!-- <protvista-pdb accession="P24666" api-names="unipdb,domains,secondary_structure_variation,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation"></protvista-pdb> -->
     <!-- <protvista-pdb accession="P24666" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation"></protvista-pdb> -->
-    <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" enable-in3d trigger-first-in3d></protvista-pdb> -->
+    <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" enable-in3d trigger-first-in3d></protvista-pdb>
     <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" sticky-header="false" enable-in3d trigger-first-in3d></protvista-pdb> -->
 
     <!-- <protvista-pdb entry-id="1trn" entity-id="1"></protvista-pdb>  -->
 
     <script type="module" src="/src/index.js"></script>
-    
-    
+
     <!-- Required for IE11 -->
     <script src="https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js"></script>
     <!-- Web component polyfill (only loads what it needs) -->
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-lite.js" charset="utf-8"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-lite.js"
+      charset="utf-8"
+    ></script>
     <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js" charset="utf-8"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"
+      charset="utf-8"
+    ></script>
     <!-- ProtVista PDB Web-Component script -->
     <!-- <script type="module" src="/dist/protvista-pdb-4.0.0-mddb.min.js"></script> -->
+    <script type="module">
+      const pv = document.querySelector("protvista-pdb");
+
+      pv.pinneddata = [
+        {
+          labelType: "text",
+          label: "Placeholder",
+          data: [
+            {
+              accession: "placeholder",
+              labelType: "text",
+              label: "Example pinned annotation",
+              color: "rgb(128,128,128)",
+              labelColor: "rgb(211,211,211)",
+              type: "UniProt range",
+              labelTooltip: "Example placeholder track",
+              locations: [
+                {
+                  fragments: [
+                    {
+                      start: 30,
+                      end: 70,
+                      color: "rgb(0,120,255)",
+                      tooltipContent: "Placeholder region 30–70",
+                    },
+                    {
+                      start: 90,
+                      end: 100,
+                      color: "rgb(0,120,255)",
+                      tooltipContent: "Placeholder region 90–100",
+                    },
+                  ],
+                },
+              ],
+              uuid: "placeholder_track_item_1",
+            },
+          ],
+          uuid: "placeholder_track",
+        },
+      ];
+    </script>
   </body>
 </html>

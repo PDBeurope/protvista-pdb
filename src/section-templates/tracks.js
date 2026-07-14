@@ -281,14 +281,16 @@ function PDBePvTracksSection(ctx, tracks = ctx.viewerData.tracks, prefix = "main
                                 trackData,
                                 trackIndex,
                                 subtrackData,
-                                subtrackIndex
+                                subtrackIndex,
+                                prefix
                             ),
                             renderHidden: () => subtrackPlaceholderTemplate(
                                 ctx,
                                 trackData,
                                 trackIndex,
                                 subtrackData,
-                                subtrackIndex
+                                subtrackIndex,
+                                prefix
                             )
                         }}
                     >
@@ -297,7 +299,8 @@ function PDBePvTracksSection(ctx, tracks = ctx.viewerData.tracks, prefix = "main
                             trackData,
                             trackIndex,
                             subtrackData,
-                            subtrackIndex
+                            subtrackIndex,
+                            prefix,
                         )}
                     </nightingale-scrollbox-item>
                 `)}
