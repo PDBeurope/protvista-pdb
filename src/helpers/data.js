@@ -7,6 +7,8 @@ import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
 import { processMemProtMDData } from "./data-processing/process-memprotmd-data.js";
 import { addIn3DToUniPdbTracks } from "./data-processing/data-track-add-in3d.js";
+import { addAlwaysExpandedTracks } from "./data-processing/data-track-add-always-expanded.js";
+
 class DataHelper {
   constructor(
     envAttrValue,
@@ -15,6 +17,7 @@ class DataHelper {
     entityId,
     pageSection,
     apiNames = [],
+    alwaysExpanded = [],
   ) {
     // Set Env property
     if (envAttrValue) {
@@ -32,6 +35,7 @@ class DataHelper {
     this.entityId = entityId;
     this.pageSection = pageSection;
     this.apiNames = Array.isArray(apiNames) ? apiNames : null;
+    this.alwaysExpanded = Array.isArray(alwaysExpanded) ? alwaysExpanded : null;
 
     // Initial Viewer Data
     this.viewerData = {
@@ -187,6 +191,7 @@ class DataHelper {
       }),
     );
 
+    let apiNamesForTracks = [];
     results.forEach((resultWrapper) => {
       if (
         !resultWrapper?.data ||
@@ -261,6 +266,9 @@ class DataHelper {
           }
         }
       }
+      for (const track of result[resultKey].tracks) {
+        apiNamesForTracks.push(config.name);
+      }
     });
 
     // Post-processing
@@ -271,9 +279,11 @@ class DataHelper {
     this.addMockBoxplotData();
     // 2. Add in3D tag to tracks
     const apiNames = pdbeApiConfigs.map(config => config.name);
-    this.viewerData.tracks = addIn3DToUniPdbTracks(this.viewerData.tracks, apiNames);
+    this.viewerData.tracks = addIn3DToUniPdbTracks(this.viewerData.tracks, apiNamesForTracks);
     // 3. Add uuid to tracks and subtracks
     this.viewerData.tracks = addTrackUuids(this.viewerData.tracks);
+    // 4. Add alwaysExpanded to tracks
+    this.viewerData.tracks = addAlwaysExpandedTracks(this.viewerData.tracks, apiNamesForTracks, this.alwaysExpanded);
     
     return this.viewerData;
   }

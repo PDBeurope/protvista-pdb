@@ -1,9 +1,20 @@
 import { html } from "lit";
 
+function isAlwaysExpanded(ctx) {
+    return ctx.alwaysExpanded.includes('sequence_conservation') === true;
+}
+
 function PDBePvScSection(ctx) {
-    return html`<div class="protvistaRow pvConsHistoRow" style="display:none">
+    return html`<div class="protvistaRow pvConsHistoRow" style="display:${isAlwaysExpanded(ctx) ? "table" : "none"}">
                     
-                    <div class="protvistaCol1 category-label pvGreyCategoryLabel" @click=${e => ctx.layoutHelper.showConservationPlot()} >Sequence conservation</div>
+                    <div
+                        class="protvistaCol1 category-label pvGreyCategoryLabel ${isAlwaysExpanded(ctx) ? "no-icon" : ""}"
+                        @click=${e => {
+                            if (!isAlwaysExpanded(ctx)) {
+                                ctx.layoutHelper.showConservationPlot();
+                            }
+                        }}
+                    >Sequence conservation</div>
 
                     <div class="protvistaCol2 aggregate-track-content non-aggregate-track-border pvConservationHistoSection">
                         <protvista-pdb-sc-histogram
@@ -18,7 +29,7 @@ function PDBePvScSection(ctx) {
                         ></protvista-pdb-sc-histogram>
                     </div>
                 </div>
-                <div class="pvConservationPlotRow" style="display:none">
+                <div class="pvConservationPlotRow" style="display:${isAlwaysExpanded(ctx) ? "block" : "none"}">
                     <div class="protvistaRow">
                         <div class="protvistaCol1 track-label pvConsDetailLabel non-aggregate-track-border">
                             <div class="pvConsDetailTitle">

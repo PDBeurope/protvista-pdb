@@ -227,9 +227,16 @@ class LayoutHelper {
 
     let trackEles = this.ctx.querySelectorAll(trackSelector);
     if (trackEles && trackEles.length > 0) {
-      trackEles.forEach((trackEle, trackIndex) => {
+      trackEles.forEach((trackEle, _) => {
+        const trackBoundData = trackEle?.data;
+        const trackUuid = trackBoundData?.[0].uuid.split("_item_")?.[0];
+        let trackIndex = this.ctx.viewerData.tracks
+          .map((tr) => tr.uuid)
+          .indexOf(trackUuid);
+
         let trackModel = this.ctx.viewerData.tracks[trackIndex];
         let labelSelector = ".pvTrackLabel_" + trackIndex;
+
         if (type == "subtrack") {
           labelSelector =
             ".pvSubtrackLabel_" + mainTrackIndex + "_" + trackIndex;
@@ -253,44 +260,66 @@ class LayoutHelper {
                 <i class="icon icon-generic" data-icon="x"></i>
               </a>`;
         }
+
         if (labelDetails === "Simulated RSA classes (MDposit)") {
           const uniProtId = this.ctx.viewerData.tracks[trackIndex]?.uniProtId;
           if (uniProtId) {
             labelDetails += `<a href='https://mdposit.mddbr.eu/#/pointer?ref=proteins&id=${uniProtId}' target='_blank' ${inlineLinkStyle}>
               ${uniProtId}
-              <i class="icon icon-generic" data-icon="x">
-            </i></a>`;
+              <i class="icon icon-generic" data-icon="x"></i></a>`;
           }
         }
-        labelEle.innerHTML = labelDetails;
+
+        if (labelEle) labelEle.innerHTML = labelDetails;
 
         let transform = "";
         let trackData = trackModel.data;
+
         if (type == "subtrack") {
           trackData = [trackModel];
           transform = "transform:translate(0px,-5px)";
         }
+
         trackEle.data = trackData;
 
         if (type == "subtrack") {
           if (this.ctx.viewerData.tracks[mainTrackIndex].data.length > 4) {
             trackEle.parentNode.style.paddingRight = "0px";
           } else {
-            trackEle.parentNode.style.paddingRight = scrollbarWidthVal + "px";
+            trackEle.parentNode.style.paddingRight =
+              scrollbarWidthVal + "px";
           }
         } else {
-          trackEle.parentNode.style.paddingRight = scrollbarWidthVal + "px";
+          trackEle.parentNode.style.paddingRight =
+            scrollbarWidthVal + "px";
         }
 
-        if (type == "track" && trackIndex == 0) {
-          this.ctx.querySelectorAll(".pvTracks_0")[0].classList.add("expanded");
-          this.ctx
-            .querySelectorAll(".pvTracks_0")[0]
-            .querySelectorAll(".pvTrack")[0].style.display = "none";
-          this.ctx.querySelectorAll(".pvSubtracks_0")[0].style.display =
-            "block";
-          this.initScrollboxes();
-          this.ctx.formattedSubTracks.push(trackIndex);
+        if (type == "track") {
+          const firstExpandableIndex = this.ctx.viewerData.tracks.findIndex(
+            (track) => !track.alwaysExpanded,
+          );
+
+          if (trackIndex === firstExpandableIndex) {
+            const firstTrack = this.ctx.querySelector(
+              `.pvTracks_${firstExpandableIndex}`,
+            );
+
+            if (firstTrack) {
+              firstTrack.classList.add("expanded");
+              firstTrack.querySelectorAll(".pvTrack")[0].style.display = "none";
+            }
+
+            const firstSubtracks = this.ctx.querySelector(
+              `.pvSubtracks_${firstExpandableIndex}`,
+            );
+
+            if (firstSubtracks) {
+              firstSubtracks.style.display = "block";
+            }
+
+            this.initScrollboxes();
+            this.ctx.formattedSubTracks.push(trackIndex);
+          }
         }
       });
     }
@@ -391,11 +420,16 @@ class LayoutHelper {
   hideSection(trackIndex) {
     let totalTracks = this.ctx.viewerData.tracks.length;
     let trackClasses = [];
+
     if (trackIndex < totalTracks) {
-      trackClasses.push(
-        `.pvTracks_${trackIndex}`,
-        `.pvSubtracks_${trackIndex}`,
-      );
+      if (this.ctx.viewerData.tracks[trackIndex]?.alwaysExpanded) {
+        trackClasses.push(`.pvSubtracks_${trackIndex}`);
+      } else {
+        trackClasses.push(
+          `.pvTracks_${trackIndex}`,
+          `.pvSubtracks_${trackIndex}`,
+        );
+      }
     } else {
       if (trackIndex == totalTracks) {
         trackClasses.push(`.pvConsHistoRow`, `.pvConservationPlotRow`);
@@ -408,6 +442,7 @@ class LayoutHelper {
       let trackEle = this.ctx.querySelector(trackClass);
       if (trackEle) trackEle.style.display = "none";
     }
+
     if (!this.ctx.hiddenSections.includes(trackIndex)) {
       this.ctx.hiddenSections.push(trackIndex);
     }
@@ -415,15 +450,13 @@ class LayoutHelper {
 
   showSection(trackIndex) {
     let totalTracks = this.ctx.viewerData.tracks.length;
+
     if (trackIndex < totalTracks) {
       const trackData = this.ctx.viewerData.tracks[trackIndex];
 
-      let pvTracksEle = this.ctx.querySelector(`.pvTracks_${trackIndex}`);
-      pvTracksEle.style.display = "table";
-
-      if (pvTracksEle.classList.contains("expanded")) {
-        let pvSbTrkEle = this.ctx.querySelector(`.pvSubtracks_${trackIndex}`);
-        pvSbTrkEle.style.display = "block";
+      if (trackData?.alwaysExpanded) {
+        const pvSbTrkEle = this.ctx.querySelector(`.pvSubtracks_${trackIndex}`);
+        if (pvSbTrkEle) pvSbTrkEle.style.display = "block";
 
         if (
           trackData?.uuid &&
@@ -431,6 +464,22 @@ class LayoutHelper {
             trackData.data.length
         ) {
           this.resetSection(trackIndex);
+        }
+      } else {
+        let pvTracksEle = this.ctx.querySelector(`.pvTracks_${trackIndex}`);
+        pvTracksEle.style.display = "table";
+
+        if (pvTracksEle.classList.contains("expanded")) {
+          let pvSbTrkEle = this.ctx.querySelector(`.pvSubtracks_${trackIndex}`);
+          pvSbTrkEle.style.display = "block";
+
+          if (
+            trackData?.uuid &&
+            this.ctx.hiddenSubtracks[trackData.uuid]?.length ===
+              trackData.data.length
+          ) {
+            this.resetSection(trackIndex);
+          }
         }
       }
     } else {
@@ -450,6 +499,7 @@ class LayoutHelper {
           this.ctx.querySelector(".pvVariantGraphRow");
         if (variantGraphSectionEle)
           variantGraphSectionEle.style.display = "table";
+
         if (variantGraphSectionEle.classList.contains("expanded")) {
           let pvVariantPlotSectionEle =
             this.ctx.querySelector(".pvVariantPlotRow");
@@ -487,8 +537,13 @@ class LayoutHelper {
       row.style.display = "none";
     }
 
-    this.ctx.querySelector(`.pvResetSection_${trackIndex}`).style.display =
-      "inline-block";
+    const resetButton = this.ctx.querySelector(
+      `.pvResetSection_${trackIndex}`,
+    );
+
+    if (resetButton) {
+      resetButton.style.display = "inline-block";
+    }
 
     if (
       this.ctx.hiddenSubtracks[trackData.uuid].length === trackData.data.length
@@ -616,40 +671,72 @@ class LayoutHelper {
       let expTrackEle = trackSection.querySelector(`.pvTrack`);
       if (expTrackEle) expTrackEle.style.display = "block";
     });
-    let firstTrackSection = this.ctx.querySelector(`.pvTracks_0`);
-    firstTrackSection.style.display = "table";
-    if (!firstTrackSection.classList.contains("expanded"))
-      firstTrackSection.classList.add("expanded");
-    firstTrackSection.querySelector(`.pvTrack`).style.display = "none";
+
+    const firstExpandableIndex = this.ctx.viewerData.tracks.findIndex(
+      (track) => !track.alwaysExpanded,
+    );
+
+    if (firstExpandableIndex >= 0) {
+      const firstTrackSection = this.ctx.querySelector(
+        `.pvTracks_${firstExpandableIndex}`,
+      );
+
+      firstTrackSection.style.display = "table";
+      if (!firstTrackSection.classList.contains("expanded")) {
+        firstTrackSection.classList.add("expanded");
+      }
+
+      firstTrackSection.querySelector(`.pvTrack`).style.display = "none";
+
+      this.ctx.querySelector(
+        `.pvSubtracks_${firstExpandableIndex}`,
+      ).style.display = "block";
+
+      this.ctx.querySelector(
+        `.pvResetSection_${firstExpandableIndex}`,
+      ).style.display = "none";
+    }
+
     this.ctx
       .querySelectorAll(`.protvistaRowGroup`)
       .forEach((trackSubSection, subSectionIndex) => {
-        trackSubSection.style.display = "none";
-
         const trackData = this.ctx.viewerData.tracks[subSectionIndex];
+
+        if (trackData?.alwaysExpanded) {
+          trackSubSection.style.display = "block";
+        } else {
+          trackSubSection.style.display = "none";
+        }
 
         if (trackData?.uuid && this.ctx.hiddenSubtracks[trackData.uuid]) {
           this.resetSection(subSectionIndex);
         }
       });
-    this.ctx.querySelector(`.pvSubtracks_0`).style.display = "block";
-    this.ctx.querySelector(`.pvResetSection_0`).style.display = "none";
 
     let variantTrackEle = this.ctx.querySelector(".pvVariantPlotRow");
     if (variantTrackEle) variantTrackEle.style.display = "none";
+
     let seqConTrackEle = this.ctx.querySelector(`.pvConservationPlotRow`);
     if (seqConTrackEle) seqConTrackEle.style.display = "none";
 
     //Display hidden sections
     if (this.ctx.hiddenSections.length > 0) {
       let totalTracks = this.ctx.viewerData.tracks.length;
+
       this.ctx.hiddenSections.forEach((trackIndex) => {
         if (trackIndex > 0 && trackIndex < totalTracks) {
-          let trackSection = this.ctx.querySelector(`.pvTracks_${trackIndex}`);
-          trackSection.style.display = "table";
-          if (trackSection.classList.contains("expanded"))
-            trackSection.classList.remove("expanded");
-          trackSection.querySelector(`.pvTrack`).style.display = "block";
+          const trackData = this.ctx.viewerData.tracks[trackIndex];
+
+          if (trackData?.alwaysExpanded) {
+            this.ctx.querySelector(`.pvSubtracks_${trackIndex}`).style.display =
+              "block";
+          } else {
+            let trackSection = this.ctx.querySelector(`.pvTracks_${trackIndex}`);
+            trackSection.style.display = "table";
+            if (trackSection.classList.contains("expanded"))
+              trackSection.classList.remove("expanded");
+            trackSection.querySelector(`.pvTrack`).style.display = "block";
+          }
         } else if (trackIndex >= totalTracks) {
           if (trackIndex == totalTracks) {
             let consHistoSectionEle = this.ctx.querySelector(".pvConsHistoRow");
@@ -658,6 +745,7 @@ class LayoutHelper {
 
             if (consHistoSectionEle.classList.contains("expanded"))
               consHistoSectionEle.classList.remove("expanded");
+
             let pvConservationPlotSectionEle = this.ctx.querySelector(
               ".pvConservationPlotRow",
             );
@@ -671,6 +759,7 @@ class LayoutHelper {
 
             if (variantGraphSectionEle.classList.contains("expanded"))
               variantGraphSectionEle.classList.remove("expanded");
+            
             let pvVariantPlotSectionEle =
               this.ctx.querySelector(".pvVariantPlotRow");
             if (pvVariantPlotSectionEle)

@@ -2,6 +2,10 @@ import { html } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import "@nightingale-elements/nightingale-scrollbox";
 
+function isAlwaysExpanded(trackData) {
+    return trackData.alwaysExpanded === true;
+}
+
 function isSubtrackHidden(ctx, trackData, subtrackData) {
     return ctx.hiddenSubtracks?.[trackData.uuid]?.includes(subtrackData.uuid);
 }
@@ -83,6 +87,7 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
                     ctx.layoutHelper.hideLabelTooltip();
                 }}
             >
+                ${!isAlwaysExpanded(trackData) ? html`
                 <span
                     class="icon icon-functional hideLabelIcon"
                     data-icon="x"
@@ -92,6 +97,7 @@ function subtrackRowTemplate(ctx, trackData, trackIndex, subtrackData, subtrackI
                     }}
                     title="Hide this section"
                 ></span>
+                ` : ``}
 
                 <div
                     class="pvSubtrackLabel_${trackIndex}_${subtrackIndex} subtrackLabel"
@@ -176,25 +182,29 @@ function PDBePvTracksSection(ctx) {
     return html`${ctx.viewerData.tracks.map((trackData, trackIndex) => html`
         <div class="protvistaRow pvTrackRow pvTracks_${trackIndex}">
             <div
-                class="protvistaCol1 category-label${addBorderClass(ctx, trackData.labelColor, false)}"
+                class="protvistaCol1 category-label${addBorderClass(ctx, trackData.labelColor, false)} ${isAlwaysExpanded(trackData) ? "no-icon" : ""}"
                 data-label-index="${trackIndex}"
-                @click=${e => ctx.layoutHelper.showSubtracks(trackIndex)}
+                @click=${e => {
+                    if (!isAlwaysExpanded(trackData)) ctx.layoutHelper.showSubtracks(trackIndex);
+                }}
                 style=${styleMap(ctx.useTrackStyles && trackData.labelColor ? {
                     backgroundColor: trackData.labelColor
                 } : {})}
             >
                 <span class="pvTrackLabel_${trackIndex}"></span>
                 ${in3DButtonTemplate(ctx, trackData)}
-                <span
-                    class="protvistaResetSectionIcon pvResetSection_${trackIndex}"
-                    @click=${e => {
-                        e.stopPropagation();
-                        ctx.layoutHelper.resetSection(trackIndex);
-                    }}
-                    title="Reset section"
-                >
-                    <i class="icon icon-functional" data-icon="R"></i>
-                </span>
+                ${!isAlwaysExpanded(trackData) ? html`
+                    <span
+                        class="protvistaResetSectionIcon pvResetSection_${trackIndex}"
+                        @click=${e => {
+                            e.stopPropagation();
+                            ctx.layoutHelper.resetSection(trackIndex);
+                        }}
+                        title="Reset section"
+                    >
+                        <i class="icon icon-functional" data-icon="R"></i>
+                    </span>
+                ` : ``}
             </div>
 
             <div
@@ -215,9 +225,14 @@ function PDBePvTracksSection(ctx) {
             </div>
         </div>
 
-        <div class="protvistaRowGroup pvSubtracks_${trackIndex}">
+        <div class="protvistaRowGroup pvSubtracks_${trackIndex} ${isAlwaysExpanded(trackData) ? 'noMaxHeight' : ''}"
+            style=${styleMap(isAlwaysExpanded(trackData)
+                    ? { display: "block" }
+                    : {}
+                )}
+        >
             <nightingale-scrollbox
-                class="pvSubtrackScrollbox pvSubtrackScrollbox_${trackIndex}"
+                class="pvSubtrackScrollbox pvSubtrackScrollbox_${trackIndex} ${isAlwaysExpanded(trackData) ? 'noMaxHeight' : ''}"
                 root-margin="300px"
                 disable-scroll-with-ctrl
             >

@@ -108,6 +108,10 @@
     transition: all .1s;
 }
 
+.protvista-pdb.default-styles .category-label.no-icon::before {
+    content: unset;
+}
+
 .protvista-pdb.default-styles .protvistaRow.expanded > .category-label {
     background-color: #80EEFF;
 }
@@ -215,6 +219,9 @@
     overflow-y: auto;
     clear: both;
     display: none;
+}
+.protvista-pdb.default-styles .protvistaRowGroup.noMaxHeight {
+    max-height: unset;
 }
 
 .protvista-pdb.default-styles .protvistaRowGroup.noPaddingRight > .protvistaRow > .protvistaCol2 {
@@ -751,6 +758,9 @@ opacity: 1;
     display: block;
     max-height: 500px;
     overflow-y: auto;
+}
+.protvista-pdb.default-styles .pvSubtrackScrollbox.noMaxHeight {
+    max-height: unset;
 }
 
 .protvista-pdb.default-styles .pvScrollboxItem {

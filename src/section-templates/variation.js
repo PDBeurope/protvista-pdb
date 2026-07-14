@@ -37,13 +37,21 @@ function normaliseVariantFilters(filters = []) {
   }));
 }
 
+function isAlwaysExpanded(ctx) {
+    return ctx.alwaysExpanded.includes('variation') === true;
+}
+
 function PDBePvVariationSection(ctx) {
   const variantFilters = normaliseVariantFilters(getRawVariantFilters(ctx));
   return html`
-    <div class="protvistaRow pvVariantGraphRow" style="display:none">
+    <div class="protvistaRow pvVariantGraphRow" style="display:${isAlwaysExpanded(ctx) ? "table" : "none"}">
       <div
-        class="protvistaCol1 category-label"
-        @click=${() => ctx.layoutHelper.showVariantPlot()}
+        class="protvistaCol1 category-label ${isAlwaysExpanded(ctx) ? "no-icon" : ""}"
+        @click=${() => {
+          if (!isAlwaysExpanded(ctx)) {
+            ctx.layoutHelper.showVariantPlot();
+          }
+        }}
       >
         Variants
       </div>
@@ -61,7 +69,7 @@ function PDBePvVariationSection(ctx) {
       </div>
     </div>
 
-    <div class="pvVariantPlotRow" style="display:none">
+    <div class="pvVariantPlotRow" style="display:${isAlwaysExpanded(ctx) ? "block" : "none"}">
       <div class="protvistaRow">
         <div class="protvistaCol1 track-label">
           <nightingale-filter

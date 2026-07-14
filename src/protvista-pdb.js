@@ -72,6 +72,14 @@ class ProtvistaPDB extends HTMLElement {
         return this.apiNames;
     }
 
+    set alwaysexpanded(value) {
+        this.alwaysExpanded = this.normaliseApiNames(value);
+    }
+
+    get alwaysexpanded() {
+        return this.alwaysExpanded;
+    }
+
     normaliseApiNames(value) {
         if (!value) return null;
 
@@ -107,6 +115,9 @@ class ProtvistaPDB extends HTMLElement {
         this.apiNames = this.normaliseApiNames(
             this.apiNames || this.getAttribute("api-names")
         );
+        this.alwaysExpanded = this.normaliseApiNames(
+            this.alwaysExpanded || this.getAttribute("always-expanded")
+        );
         this.enableIn3D = this.getAttribute("enable-in3d") !== null;
         this.triggerFirstIn3D = this.getAttribute("trigger-first-in3d") !== null;
         
@@ -123,7 +134,7 @@ class ProtvistaPDB extends HTMLElement {
         this.displayLoadingMessage();
 
         // Create data helper instance
-        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection, this.apiNames);
+        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection, this.apiNames, this.alwaysExpanded);
 
         if(typeof this.customData !== 'undefined' && this.customData !== null) return;
 

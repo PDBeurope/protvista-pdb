@@ -1,11 +1,19 @@
 import { html } from "lit";
 
+function isAlwaysExpanded(ctx) {
+    return ctx.alwaysExpanded.includes('rsa') === true;
+}
+
 function PDBePvBoxplotSection(ctx) {
   return html`
-    <div class="protvistaRow pvBoxplotGraphRow" style="display:none">
+    <div class="protvistaRow pvBoxplotGraphRow" style="display:${isAlwaysExpanded(ctx) ? "table" : "none"}">
       <div
-        class="protvistaCol1 category-label pvGreyCategoryLabel"
-        @click=${() => ctx.layoutHelper.showBoxplotSection()}
+        class="protvistaCol1 category-label pvGreyCategoryLabel ${isAlwaysExpanded(ctx) ? "no-icon" : ""}"
+        @click=${() => {
+          if (!isAlwaysExpanded(ctx)) {
+            ctx.layoutHelper.showBoxplotSection();
+          }
+        }}
       >
         Relative solvent accessibility (PDB and MDposit)
       </div>
@@ -23,7 +31,7 @@ function PDBePvBoxplotSection(ctx) {
       </div>
     </div>
 
-    <div class="pvBoxplotDetailRow" style="display:none">
+    <div class="pvBoxplotDetailRow" style="display:${isAlwaysExpanded(ctx) ? "block" : "none"}">
       <div class="protvistaRow">
         <div class="protvistaCol1 track-label pvBoxplotDetailLabel non-aggregate-track-border">
           PDB RSA and Simulated RSA distributions
