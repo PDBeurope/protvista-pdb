@@ -1,0 +1,522 @@
+
+/*
+ * The outer modal host/container can still cover the entire component.
+ */
+.protvista-pv-modal.default-styles .customTrackModalContainer {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/*
+ * The backdrop fills the component and receives pointer events.
+ * Keep the background transparent to match the supplied design.
+ */
+.protvista-pv-modal.default-styles .customTrackModalBackdrop {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.protvista-pv-modal.default-styles .addCustomTrack {
+  width: 490px;
+  max-width: calc(100% - 24px);
+
+  padding: 12px;
+  box-sizing: border-box;
+
+  background-color: #fff;
+  box-shadow: 1px 1px 4px rgb(0 0 0 / 25%);
+
+  color: #1a1c1a;
+  font-family: "IBM Plex Sans", Arial, sans-serif;
+  font-size: 16px;
+  text-align: left;
+}
+
+.protvista-pv-modal.default-styles .customTrackRowGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 100%;
+  gap: 4px;
+}
+
+/* Header */
+
+.protvista-pv-modal.default-styles .customTrackDialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+
+.protvista-pv-modal.default-styles .customTrackDialogTitle {
+  margin: 0;
+
+  color: #1a1c1a;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 26.6px;
+}
+
+.protvista-pv-modal.default-styles .customTrackCloseButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+
+  border: 0;
+  border-radius: 2px;
+
+  background: transparent;
+  color: #54585a;
+
+  cursor: pointer;
+}
+
+.protvista-pv-modal.default-styles .customTrackCloseButton:hover {
+  background: #f3f3f1;
+  color: #1a1c1a;
+}
+
+.protvista-pv-modal.default-styles .customTrackCloseButton:focus-visible {
+  outline: 2px solid #3b6fb6;
+  outline-offset: 2px;
+}
+
+.protvista-pv-modal.default-styles .customTrackCloseIcon {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+/* Body */
+
+.protvista-pv-modal.default-styles .customTrackDialogBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 100%;
+  padding: 4px 0;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.protvista-pv-modal.default-styles .customTrackFields {
+  display: flex;
+  align-items: flex-start;
+
+  width: 100%;
+  gap: 16px;
+}
+
+.protvista-pv-modal.default-styles .customTrackTextField {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: flex-start;
+
+  min-width: 0;
+  gap: 2px;
+
+  background-color: #fff;
+}
+
+.protvista-pv-modal.default-styles .customTrackFieldLabel {
+  color: #1a1c1a;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 27.2px;
+}
+
+.protvista-pv-modal.default-styles .customTrackDescription {
+  min-height: 22px;
+
+  color: #54585a;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22.4px;
+}
+
+.protvista-pv-modal.default-styles .customTrackInputWrapper {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+
+  padding: 4px 8px;
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  border: 1px solid #d0d0ce;
+  border-radius: 0;
+  outline: none;
+
+  background-color: #fff;
+  color: #1a1c1a;
+
+  font: inherit;
+  line-height: 27.2px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput::placeholder {
+  color: #707372;
+  opacity: 1;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput:hover {
+  border-color: #707372;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput:focus {
+  border-color: #3b6fb6;
+  box-shadow: 0 0 0 1px #3b6fb6;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput.customTrackInputError {
+  border-color: #b20c35;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput.customTrackInputError:hover,
+.protvista-pv-modal.default-styles .customTrackInput.customTrackInputError:focus {
+  border-color: #b20c35;
+  box-shadow: 0 0 0 1px #b20c35;
+}
+
+.protvista-pv-modal.default-styles .customTrackError {
+  margin: 4px 0 0;
+
+  color: #b20c35;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.protvista-pv-modal.default-styles .customTrackError[hidden] {
+  display: none;
+}
+
+.protvista-pv-modal.default-styles .customTrackPrivacyNotice {
+  width: 100%;
+  margin: 0;
+
+  color: #54585a;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22.4px;
+}
+
+/* Footer */
+
+.protvista-pv-modal.default-styles .customTrackDialogFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+
+.protvista-pv-modal.default-styles .customTrackAddButton {
+  cursor: pointer;
+}
+
+/*
+ * Fallback styles in case VF button styles are not present in the
+ * component's current style scope.
+ */
+.protvista-pv-modal.default-styles
+  .customTrackAddButton:not(.vf-button--primary) {
+  padding: 8px 16px;
+
+  border: 1px solid #3b6fb6;
+
+  background: #3b6fb6;
+  color: #fff;
+
+  font: inherit;
+  font-weight: 600;
+}
+
+.protvista-pv-modal.default-styles .customTrackPrimaryButton {
+  font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+
+  align-self: center;
+  appearance: none;
+  backface-visibility: hidden;
+
+  display: inline-block;
+  position: relative;
+
+  margin: 0;
+  padding: 8px;
+
+  border: 2px solid #056643;
+  outline: 0;
+
+  background-color: #056643;
+  box-shadow: 8px 8px 0 0 #0a5032;
+  color: #fff;
+
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+
+  transform: translate(0, 0);
+  transition:
+    box-shadow 125ms linear,
+    transform 125ms linear;
+}
+
+.protvista-pv-modal.default-styles .customTrackPrimaryButton:hover {
+  box-shadow: 4px 4px 0 0 #0a5032;
+  transform: translate(4px, 4px);
+}
+
+.protvista-pv-modal.default-styles .customTrackPrimaryButton:focus-visible {
+  box-shadow: 2px 2px 0 0 #0a5032;
+  outline: 2px solid #3b6fb6;
+  outline-offset: 3px;
+  transform: translate(4px, 4px);
+}
+
+.protvista-pv-modal.default-styles .customTrackPrimaryButton:active {
+  box-shadow:
+    0 0 0 #0a5032,
+    2px 2px 2px rgb(0 0 0 / 12.5%);
+  transform: translate(8px, 8px) translateZ(1px);
+}
+
+/* Responsive positioning */
+
+@media (max-width: 1000px) {
+  /* .protvista-pv-modal.default-styles .customTrackModalBackdrop {
+    padding-right: 10%;
+    padding-bottom: 45%;
+  } */
+}
+
+@media (max-width: 620px) {
+  /* .protvista-pv-modal.default-styles .customTrackModalBackdrop {
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  } */
+
+  .protvista-pv-modal.default-styles .addCustomTrack {
+    width: 100%;
+  }
+
+  .protvista-pv-modal.default-styles .customTrackFields {
+    flex-direction: column;
+  }
+
+  .protvista-pv-modal.default-styles .customTrackTextField {
+    width: 100%;
+  }
+}
+
+/*
+* Edit tracks
+*/
+.protvista-pv-modal.default-styles .editCustomTrack {
+  width: 490px;
+  max-width: calc(100vw - 24px);
+  max-height: min(600px, calc(100vh - 24px));
+
+  padding: 12px;
+  box-sizing: border-box;
+
+  overflow: auto;
+
+  background-color: #fff;
+  box-shadow: 1px 1px 4px rgb(0 0 0 / 25%);
+
+  color: #1a1c1a;
+  font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  text-align: left;
+}
+
+.protvista-pv-modal.default-styles .editCustomTracksList {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  gap: 8px;
+}
+
+.protvista-pv-modal.default-styles .editCustomTrackRow {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    auto;
+  align-items: start;
+
+  width: 100%;
+  gap: 16px;
+}
+
+.protvista-pv-modal.default-styles .customTrackTextField {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  gap: 2px;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+
+  padding: 4px 8px;
+  box-sizing: border-box;
+
+  border: 1px solid #d0d0ce;
+  border-radius: 0;
+  outline: none;
+
+  background-color: #fff;
+  color: #1a1c1a;
+
+  font: inherit;
+  line-height: 27.2px;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput:hover {
+  border-color: #707372;
+}
+
+.protvista-pv-modal.default-styles .customTrackInput:focus {
+  border-color: #3b6fb6;
+  box-shadow: 0 0 0 1px #3b6fb6;
+}
+
+.protvista-pv-modal.default-styles .customTrackInputError,
+.protvista-pv-modal.default-styles .customTrackInputError:hover,
+.protvista-pv-modal.default-styles .customTrackInputError:focus {
+  border-color: #b20c35;
+  box-shadow: 0 0 0 1px #b20c35;
+}
+
+.protvista-pv-modal.default-styles .customTrackError {
+  margin: 4px 0 0;
+
+  color: #b20c35;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.protvista-pv-modal.default-styles .customTrackError[hidden] {
+  display: none;
+}
+
+.protvista-pv-modal.default-styles .customTrackDeleteButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+
+  min-height: 38px;
+  padding: 4px 0;
+
+  border: 0;
+  background: transparent;
+  color: #3b6fb6;
+
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 27.2px;
+
+  cursor: pointer;
+}
+
+.protvista-pv-modal.default-styles .customTrackDeleteButton:hover {
+  text-decoration: underline;
+}
+
+.protvista-pv-modal.default-styles .customTrackDeleteButton:focus-visible {
+  outline: 2px solid #3b6fb6;
+  outline-offset: 2px;
+}
+
+.protvista-pv-modal.default-styles .customTrackDeleteButton svg {
+  flex: 0 0 auto;
+}
+
+.protvista-pv-modal.default-styles .customTracksEmptyMessage {
+  margin: 8px 0;
+
+  color: #54585a;
+  font-size: 14px;
+}
+
+.protvista-pv-modal.default-styles .customTrackFooterActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 16px;
+}
+
+.protvista-pv-modal.default-styles .customTrackCancelButton {
+  padding: 8px 0;
+
+  border: 0;
+  background: transparent;
+  color: #3b6fb6;
+
+  font: inherit;
+  font-size: 16px;
+
+  cursor: pointer;
+}
+
+.protvista-pv-modal.default-styles .customTrackCancelButton:hover {
+  text-decoration: underline;
+}
+
+.protvista-pv-modal.default-styles .customTrackCancelButton:focus-visible {
+  outline: 2px solid #3b6fb6;
+  outline-offset: 2px;
+}
+
+@media (max-width: 620px) {
+  .protvista-pv-modal.default-styles .editCustomTrackRow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e8e7df;
+  }
+
+  .protvista-pv-modal.default-styles .customTrackDeleteButton {
+    justify-self: start;
+  }
+}

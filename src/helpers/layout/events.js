@@ -51,6 +51,25 @@ export default {
     document.addEventListener("PDB.molstar.mouseover", (e) => {
       this.handleExtEvents(e);
     });
+
+    // document.addEventListener(
+    //   "protvista-pdb-open-custom-track-dialog",
+    //   () => {
+    //     const button = this.ctx.querySelector(".mapYourResiduesButton");
+    //     this.showCustomTracksDialog(button);
+    //   },
+    // );
+
+    // document.addEventListener(
+    //   "protvista-pdb-create-custom-track",
+    //   (e) => {
+    //     const track = this.createCustomTrack(
+    //       e.detail.name,
+    //       e.detail.ranges,
+    //     );
+    //     this.addCustomTrack(track);
+    //   },
+    // );
   },
 
   removeEventSubscription() {

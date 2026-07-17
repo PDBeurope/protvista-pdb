@@ -190,6 +190,7 @@ function subtrackPlaceholderTemplate(ctx, trackData, trackIndex, subtrackData, s
 }
 
 function PDBePvTracksSection(ctx, tracks = ctx.viewerData.tracks, prefix = "main") {
+    if (tracks.length === 0) return '';
     return html`${tracks.map((trackData, trackIndex) => html`
         <div
             class="protvistaRow pvTrackRow pvTracks_${prefix}_${trackIndex}"

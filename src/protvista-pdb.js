@@ -1,5 +1,6 @@
 import { html, render } from "lit";
 import "../styles/protvista-pdb.css"; // customised PDBe styling
+import "../styles/protvista-pdb-modal.css"; // customised PDBe styling
 import "../styles/protvista-variation.css"; // customised PDBe styling
 import filterData from "./custom-pv-components/filters"; // filter component data for PDBe implementation
 
@@ -11,6 +12,9 @@ import PDBePvScSection from "./section-templates/seq-conservation";
 import PDBePvVariationSection from "./section-templates/variation";
 import PDBePvLegendsSection from "./section-templates/legends";
 import PDBePvBoxplotSection from "./section-templates/boxplot";
+import PDBePvCustomTracksSection from "./section-templates/custom-tracks";
+import PDBePvAddCustomTrackModal from "./section-templates/custom-add-track-modal";
+import PDBePvEditCustomTrackModal from "./section-templates/custom-edit-track-modal";
 
 // Helper modules
 import DataHelper from "./helpers/data"
@@ -46,6 +50,10 @@ class ProtvistaPDB extends HTMLElement {
 
         this.uuidsToData = new Map();
         this.pinnedTracks = [];
+
+        this.customTracks = [];
+        this.customTracksEnabled = false;
+        this._editTracksToRemove = [];
     }
 
     set viewerdata(data) {
@@ -92,6 +100,7 @@ class ProtvistaPDB extends HTMLElement {
         this.registerUuids([
             ...this.viewerData.tracks,
             ...this.pinnedTracks,
+            ...this.customTracks,
         ]);
 
         this._render();
@@ -159,8 +168,6 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     getAllHideableSections() {
-        console.log("this.viewerData.displayBoxplot")
-        console.log(this.viewerData.displayBoxplot)
         return [
             ...this.getAllTrackCollections().map(({ prefix, trackIndex, trackData }) => ({
                 type: "track",
@@ -210,6 +217,7 @@ class ProtvistaPDB extends HTMLElement {
         this.maxHeight = this.getAttribute("max-height");
         this.enableIn3D = this.getAttribute("enable-in3d") !== null;
         this.triggerFirstIn3D = this.getAttribute("trigger-first-in3d") !== null;
+        this.customTracksEnabled = this.getAttribute("add-custom-track") !== null;
         
         // Default web-component state properties
         this.hiddenSubtracks = {};
@@ -230,7 +238,7 @@ class ProtvistaPDB extends HTMLElement {
 
         // Get data from PDBe PV APIs
         this.viewerData = await this.dataHelper.processMutlplePDBeApiData();
-        this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks]);
+        this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks, ...this.customTracks]);
         this.viewerData.displayConservation = (this.pageSection && this.pageSection == '2') ? false : true;
         this.viewerData.displayVariants = (this.pageSection && this.pageSection == '2') ? false : true;
         this.viewerData.displayBoxplot = false;
@@ -280,9 +288,10 @@ class ProtvistaPDB extends HTMLElement {
                         ? html`<div style="line-height: 0">
                             ${PDBePvTracksSection(this, this.pinnedTracks, "pinned")}
                         </div>` : ``}                        
-
-                        <div style="line-height: 0">
+                        
                         <!-- Custom annotations tracks section -->
+                        <div style="line-height: 0">
+                        ${this.customTracksEnabled ? html`${PDBePvCustomTracksSection(this)}` : ``}
                         </div>
                     </div>
 
@@ -312,12 +321,16 @@ class ProtvistaPDB extends HTMLElement {
 
             </nightingale-manager>
         </div>
-
         <!-- div to measure scrollbar width for padding -->
         <div class="divWithScroll">
             <div style="height: 60px;width:80%"></div>
         </div>
-        <div class="divWithoutScroll">&nbsp;</div>`;
+        <div class="divWithoutScroll">&nbsp;</div>
+        <div class=${this.useDefaultStyles ? "protvista-pv-modal default-styles" : "protvista-pv-modal"}>
+            <div class="customTrackModalContainer addTrack" style="display: none;">${PDBePvAddCustomTrackModal(this)}</div>
+            <div class="customTrackModalContainer editTrack" style="display: none;">${PDBePvEditCustomTrackModal(this)}</div>
+        </div>
+        `;
 
         render(mainHtml(), this);
 

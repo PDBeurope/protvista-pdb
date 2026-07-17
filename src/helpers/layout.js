@@ -7,6 +7,7 @@ import in3d from "./layout/in3d.js";
 import dynamicSections from "./layout/dynamic-sections.js";
 import labels from "./layout/labels.js";
 import events from "./layout/events.js";
+import customTracks from "./layout/custom-tracks.js";
 
 class LayoutHelper {
   constructor(ctx) {
@@ -17,6 +18,7 @@ class LayoutHelper {
 Object.assign(
   LayoutHelper.prototype,
   layout,
+  customTracks,
   tracks,
   zoom,
   navigation,
