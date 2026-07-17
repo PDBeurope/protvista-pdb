@@ -1,6 +1,7 @@
 import { html, render } from "lit";
 import "../styles/protvista-pdb.css"; // customised PDBe styling
 import "../styles/protvista-pdb-modal.css"; // customised PDBe styling
+import "../styles/protvista-pdb-toolbar.css"; // customised PDBe styling
 import "../styles/protvista-variation.css"; // customised PDBe styling
 import filterData from "./custom-pv-components/filters"; // filter component data for PDBe implementation
 
@@ -12,9 +13,10 @@ import PDBePvScSection from "./section-templates/seq-conservation";
 import PDBePvVariationSection from "./section-templates/variation";
 import PDBePvLegendsSection from "./section-templates/legends";
 import PDBePvBoxplotSection from "./section-templates/boxplot";
-import PDBePvCustomTracksSection from "./section-templates/custom-tracks";
-import PDBePvAddCustomTrackModal from "./section-templates/custom-add-track-modal";
-import PDBePvEditCustomTrackModal from "./section-templates/custom-edit-track-modal";
+import PDBePvCustomTracksSection from "./section-templates/custom-track/custom-tracks.js";
+import PDBePvAddCustomTrackModal from "./section-templates/custom-track/custom-add-track-modal.js";
+import PDBePvEditCustomTrackModal from "./section-templates/custom-track/custom-edit-track-modal.js";
+import PDBePvZoomHighlightModal from "./section-templates/toolbar/zoom-highlight-modal.js";
 
 // Helper modules
 import DataHelper from "./helpers/data"
@@ -218,6 +220,7 @@ class ProtvistaPDB extends HTMLElement {
         this.enableIn3D = this.getAttribute("enable-in3d") !== null;
         this.triggerFirstIn3D = this.getAttribute("trigger-first-in3d") !== null;
         this.customTracksEnabled = this.getAttribute("add-custom-track") !== null;
+        this.useNewToolbar = this.getAttribute("new-toolbar") !== null;
         
         // Default web-component state properties
         this.hiddenSubtracks = {};
@@ -329,6 +332,7 @@ class ProtvistaPDB extends HTMLElement {
         <div class=${this.useDefaultStyles ? "protvista-pv-modal default-styles" : "protvista-pv-modal"}>
             <div class="customTrackModalContainer addTrack" style="display: none;">${PDBePvAddCustomTrackModal(this)}</div>
             <div class="customTrackModalContainer editTrack" style="display: none;">${PDBePvEditCustomTrackModal(this)}</div>
+            <div class="customTrackModalContainer zoomHighlight" style="display: none;">${PDBePvZoomHighlightModal(this)}</div>
         </div>
         `;
 

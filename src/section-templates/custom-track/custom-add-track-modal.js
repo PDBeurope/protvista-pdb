@@ -1,5 +1,5 @@
 import { html } from "lit";
-import { validateRanges } from "../helpers/layout/custom-tracks-validation";
+import { validateRanges } from "../../helpers/layout/custom-tracks-validation";
 
 const closeIcon = html`
   <svg

@@ -29,7 +29,7 @@
   box-shadow: 1px 1px 4px rgb(0 0 0 / 25%);
 
   color: #1a1c1a;
-  font-family: "IBM Plex Sans", Arial, sans-serif;
+  font-family: "IBM Plex Sans";
   font-size: 16px;
   text-align: left;
 }
@@ -134,8 +134,8 @@
 
 .protvista-pv-modal.default-styles .customTrackFieldLabel {
   color: #1a1c1a;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 19px;
+  font-weight: normal;
   line-height: 27.2px;
 }
 
@@ -144,7 +144,7 @@
 
   color: #54585a;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: normal;
   line-height: 22.4px;
 }
 
@@ -259,6 +259,9 @@
   font-weight: 600;
 }
 
+/*
+ * Primary button PDBe
+*/
 .protvista-pv-modal.default-styles .customTrackPrimaryButton {
   font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -311,6 +314,62 @@
   transform: translate(8px, 8px) translateZ(1px);
 }
 
+/*
+* Secondary button PDBe
+*/
+
+.protvista-pv-modal.default-styles .customTrackSecondaryButton {
+  font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+
+  align-self: center;
+  appearance: none;
+  backface-visibility: hidden;
+
+  display: inline-block;
+  position: relative;
+
+  margin: 0;
+  padding: 8px;
+
+  border: 2px solid #0a5032;
+  outline: 0;
+
+  background-color: #fff;
+  box-shadow: 8px 8px 0 0 #0a5032;
+  color: #0a5032;
+
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+
+  transform: translate(0, 0);
+  transition:
+    box-shadow 125ms linear,
+    transform 125ms linear;
+}
+
+.protvista-pv-modal.default-styles .customTrackSecondaryButton:hover {
+  box-shadow: 4px 4px 0 0 #0a5032;
+  transform: translate(4px, 4px);
+}
+
+.protvista-pv-modal.default-styles .customTrackSecondaryButton:focus-visible {
+  box-shadow: 2px 2px 0 0 #0a5032;
+  outline: 2px solid #3b6fb6;
+  outline-offset: 3px;
+  transform: translate(4px, 4px);
+}
+
+.protvista-pv-modal.default-styles .customTrackSecondaryButton:active {
+  box-shadow:
+    0 0 0 #0a5032,
+    2px 2px 2px rgb(0 0 0 / 12.5%);
+  transform: translate(8px, 8px) translateZ(1px);
+}
+
 /* Responsive positioning */
 
 @media (max-width: 1000px) {
@@ -345,6 +404,12 @@
 */
 .protvista-pv-modal.default-styles .editCustomTrack {
   width: 490px;
+}
+.protvista-pv-modal.default-styles .zoomCustomTrack {
+  width: 289px;
+}
+.protvista-pv-modal.default-styles .editCustomTrack,
+.protvista-pv-modal.default-styles .zoomCustomTrack {
   max-width: calc(100vw - 24px);
   max-height: min(600px, calc(100vh - 24px));
 
@@ -360,6 +425,13 @@
   font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
   font-size: 16px;
   text-align: left;
+}
+
+.protvista-pv-modal.default-styles .zoomHighlightFields {
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .protvista-pv-modal.default-styles .editCustomTracksList {
@@ -395,18 +467,22 @@
   min-width: 0;
   height: 38px;
 
-  padding: 4px 8px;
+  padding: .5rem;
   box-sizing: border-box;
 
-  border: 1px solid #d0d0ce;
+  border: 2px solid #707372;
   border-radius: 0;
   outline: none;
 
   background-color: #fff;
   color: #1a1c1a;
 
-  font: inherit;
+  font-size: 19px;
+  font-weight: 400;
   line-height: 27.2px;
+  margin: 0 0 0 0;
+  appearance: none;
+  box-sizing: border-box;
 }
 
 .protvista-pv-modal.default-styles .customTrackInput:hover {

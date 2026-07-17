@@ -1,0 +1,146 @@
+.protvista-pdb.default-styles .protvistaResetSectionIcon{
+    position: absolute;
+    border: 1px solid #828181;
+    background-color: #828181;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    line-height: 19px;
+    right: 10px;
+    display: none;
+    top: 10px;
+}
+
+.protvista-pdb.default-styles .protvistaResetSectionIcon i{
+    color: #fff;
+    cursor: pointer;
+    font-size:80%;
+}
+
+.protvista-pdb.default-styles .protvistaToolbar{
+    position: relative;
+    text-align: right;
+}
+
+.protvista-pdb.default-styles .protvistaToolbarIcon{
+    display: inline-block;
+    border: 1px solid #828181;
+    background-color: #828181;
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+}
+
+.protvista-pdb.default-styles .protvistaToolbarNewIcon{
+    display: inline-block;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    margin-right: 1%;
+    cursor: pointer;
+    text-align: center;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+}
+
+
+.protvista-pdb.default-styles .protvistaToolbar i{
+    color: #fff;
+    cursor: pointer;
+    margin:2px;
+}
+
+.protvista-pdb.default-styles .protvistaRangeMenuTitle{
+    position: relative;
+    color: #1b1919;
+}
+
+.protvista-pdb.default-styles .protvistaRangeMenuTitle > div{
+    padding: 10px 10px 0 10px;
+}
+
+.protvista-pdb.default-styles .protvistaRangeMenuTitle > div:first-child{
+    font-weight: bold;
+    text-align: left;
+}
+
+.protvista-pdb.default-styles .protvistaMenuClose{
+    position: absolute;
+    right: 10px;
+    top: 14px;
+    color: #6d6d6d;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.protvista-pdb.default-styles .protvistaForm{
+    padding: 10px;
+    font-size: 12px;
+    max-height: 300px;
+    overflow: auto;
+    text-align: left;
+    font-weight: 600;
+    color: #444;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm {
+    width: 170px;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm > .left {
+    float: left;
+    width: 48%;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm > .right {
+    float: right;
+    width: 48%;
+}
+
+.protvista-pdb.default-styles .protvistaForm.rangeForm > .highlight {
+    margin: 0 0 10px 0;
+    clear: both;
+}
+
+.protvista-pdb.default-styles .protvistaForm.pvRangeMenu {
+    display: inline-block;
+    margin: 0;
+}
+
+.protvista-pdb.default-styles .protvistaForm.checkForm {
+    width: 215px;
+    max-height: 400px;
+}
+
+.protvista-pdb.default-styles .pvHideOptionsTable {
+    font-size: inherit;
+    margin-bottom: 0;
+}
+
+.protvista-pdb.default-styles .pvSectionChkBox {
+    margin: 0;
+}
+
+.protvista-pdb.default-styles .pvChkBoxTd {
+    width: 10%;
+    vertical-align: top;
+}
+
+.protvista-pdb.default-styles .pvChkBoxLabelTd {
+    padding-bottom: 5px;
+}
+
+.protvista-pdb.default-styles .pvSmallOptionsBtn {
+    margin: 0;
+    letter-spacing: 1px;
+}

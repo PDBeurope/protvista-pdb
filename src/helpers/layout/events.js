@@ -1,55 +1,81 @@
 /**
  * helpers/layout/events.js
- * 
+ *
  * In this file: event subscription
- * 
+ *
  * handleExtEvents
  * addEventSubscription
  * removeEventSubscription
- * */
+ */
 export default {
-
   handleExtEvents(e) {
     if (
       typeof e.eventData !== "undefined" &&
       typeof e.eventData.residueNumber !== "undefined"
     ) {
-      let protvistaParam = {
+      const protvistaParam = {
         start: e.eventData.residueNumber,
         end: e.eventData.residueNumber,
         highlight: true,
       };
+
       this.resetZoom(protvistaParam);
     }
   },
 
   addEventSubscription() {
-    document.addEventListener("PDB.topologyViewer.click", (e) => {
+    this.evtListeners ??= [];
+
+    const addListener = (target, eventName, handler) => {
+      target.addEventListener(eventName, handler);
+
+      this.evtListeners.push({
+        target,
+        eventName,
+        handler,
+      });
+    };
+
+    const externalEventHandler = (e) => {
       this.handleExtEvents(e);
+    };
+
+    [
+      "PDB.topologyViewer.click",
+      "PDB.topologyViewer.mouseover",
+      "PDB.topologyViewer.mouseout",
+      "PDB.litemol.click",
+      "PDB.litemol.mouseover",
+      "PDB.molstar.click",
+      "PDB.molstar.mouseover",
+    ].forEach((eventName) => {
+      addListener(document, eventName, externalEventHandler);
     });
 
-    document.addEventListener("PDB.topologyViewer.mouseover", (e) => {
-      this.handleExtEvents(e);
-    });
+    addListener(document, "change", (e) => {
+      const detail = e.detail;
+      if (!detail) return;
 
-    document.addEventListener("PDB.topologyViewer.mouseout", (e) => {
-      this.handleExtEvents(e);
-    });
+      const hasDisplayRange =
+        detail["display-start"] !== undefined &&
+        detail["display-end"] !== undefined;
 
-    document.addEventListener("PDB.litemol.click", (e) => {
-      this.handleExtEvents(e);
-    });
+      if (!hasDisplayRange) return;
 
-    document.addEventListener("PDB.litemol.mouseover", (e) => {
-      this.handleExtEvents(e);
-    });
+      const displayStart = Number(detail["display-start"]);
+      const displayEnd = Number(detail["display-end"]);
 
-    document.addEventListener("PDB.molstar.click", (e) => {
-      this.handleExtEvents(e);
-    });
+      const isZoomed =
+        displayStart !== 1 ||
+        displayEnd !== Number(this.ctx.viewerData.length);
 
-    document.addEventListener("PDB.molstar.mouseover", (e) => {
-      this.handleExtEvents(e);
+      const resetZoomButton = this.ctx.querySelector(
+        ".protvistaResetZoomBtn",
+      );
+
+      if (!resetZoomButton) return;
+
+      resetZoomButton.style.display = isZoomed ? "" : "none";
     });
 
     // document.addEventListener(
@@ -73,14 +99,12 @@ export default {
   },
 
   removeEventSubscription() {
-    if (this.ctx.subscribeEvents) {
-      document.removeEventListener("PDB.topologyViewer.click");
-      document.removeEventListener("PDB.topologyViewer.mouseover");
-      document.removeEventListener("PDB.topologyViewer.mouseout");
-      document.removeEventListener("PDB.litemol.click");
-      document.removeEventListener("PDB.litemol.mouseover");
-      document.removeEventListener("PDB.molstar.click");
-      document.removeEventListener("PDB.molstar.mouseover");
-    }
-  }
-}
+    if (!this.evtListeners?.length) return;
+
+    this.evtListeners.forEach(({ target, eventName, handler }) => {
+      target.removeEventListener(eventName, handler);
+    });
+
+    this.evtListeners = [];
+  },
+};

@@ -12,6 +12,7 @@ import customTracks from "./layout/custom-tracks.js";
 class LayoutHelper {
   constructor(ctx) {
     this.ctx = ctx;
+    this.evtListeners = [];
   }
 }
 

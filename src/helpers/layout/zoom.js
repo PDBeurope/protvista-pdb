@@ -61,7 +61,6 @@ export default {
       currentStartVal = param.start;
       currentEndVal = param.end;
     }
-
     if (param && param.start == null && param.end == null) {
     } else {
       if (currentStartVal == null) currentStartVal = "1";

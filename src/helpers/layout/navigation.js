@@ -271,5 +271,28 @@ export default {
 
     this.ctx.hiddenSections = [];
     this.ctx.hiddenSubtracks = {};
-  }
+  },
+
+  showZoomHighlightDialog(anchor) {
+    const modal = this.ctx.querySelector(
+      ".customTrackModalContainer.zoomHighlight",
+    );
+    if (!modal) return;
+
+    modal.style.display = "block";
+
+    const rect = anchor.getBoundingClientRect();
+
+    modal.style.left = `${rect.left}px`;
+    modal.style.top = `${rect.bottom + 8}px`;
+  },
+
+  hideZoomHighlightDialog() {
+    const modal = this.ctx.querySelector(
+      ".customTrackModalContainer.zoomHighlight",
+    );
+    if (!modal) return;
+
+    modal.style.display = "none";
+  },
 }

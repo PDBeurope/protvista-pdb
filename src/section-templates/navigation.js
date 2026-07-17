@@ -1,12 +1,13 @@
 import { html } from "lit";
-import { PDBePvToolbar } from "./top-toolbar-menu";
+import { PDBePvToolbar } from "./toolbar/top-toolbar-menu";
+import { PDBePvNewToolbar } from "./toolbar/top-new-toolbar-menu";
 
 function PDBePvNavSection(ctx) {
     return html`<div class="protvistaRow">
                     
         <!-- Top Menu Toolbar -->
         <div class="protvistaCol1 protvistaToolbar">
-            ${PDBePvToolbar(ctx)}
+            ${ctx.useNewToolbar ? html`${PDBePvNewToolbar(ctx)}` : html`${PDBePvToolbar(ctx)}`}
         </div>
 
         <!-- Navigation Component -->
