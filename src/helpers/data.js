@@ -5,6 +5,7 @@ import { p00918SimRsaClasses } from "../mock-data/P00918-uniprot-simulated-rsa-c
 import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.js";
 import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
+import { processLigandSequenceData } from "./data-processing/process-ligand-sequence-data.js";
 import { processMemProtMDData } from "./data-processing/process-memprotmd-data.js";
 import { addIn3DToUniPdbTracks } from "./data-processing/data-track-add-in3d.js";
 import { addAlwaysExpandedTracks } from "./data-processing/data-track-add-always-expanded.js";
@@ -18,6 +19,7 @@ class DataHelper {
     pageSection,
     apiNames = [],
     alwaysExpanded = [],
+    ligandId,
   ) {
     // Set Env property
     if (envAttrValue) {
@@ -34,6 +36,7 @@ class DataHelper {
     this.entryId = entryId;
     this.entityId = entityId;
     this.pageSection = pageSection;
+    this.ligandId = ligandId;
     this.apiNames = Array.isArray(apiNames) ? apiNames : null;
     this.alwaysExpanded = Array.isArray(alwaysExpanded) ? alwaysExpanded : null;
 
@@ -135,11 +138,26 @@ class DataHelper {
           url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/pdb/entry/protvista/annotations/${this.entryId}/${this.entityId}`,
         },
       ],
+
+      ligand: [
+        {
+          name: "ligand_sequence",
+          url: `https://ftp.ebi.ac.uk/pub/databases/msd/pdbechem_v2/ccd/${this.ligandId ? this.ligandId.charAt(0) : ''}/${this.ligandId}/${this.ligandId}.cif`,
+          processor: "ligand_sequence",
+          responseType: "text",
+        },
+        // {
+        //   name: "ligands_interactions",
+        //   url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/`,
+        //   processor: "ligands_interactions",
+        // }
+      ],
     };
 
     let configs = [];
-
-    if (this.accession) {
+    if (this.ligandId) {
+      configs = pdbePvApiUrls.ligand;
+    } else if (this.accession) {
       configs = pdbePvApiUrls.uniprot;
     } else if (this.entryId && this.entityId && !this.pageSection) {
       configs = pdbePvApiUrls.entry;
@@ -158,7 +176,6 @@ class DataHelper {
       const selectedNames = new Set(this.apiNames);
       configs = configs.filter((config) => selectedNames.has(config.name));
     }
-
     return configs;
   }
 
@@ -182,7 +199,9 @@ class DataHelper {
 
           return {
             config,
-            data: await response.json(),
+            data: config.responseType === "text"
+                ? await response.text()
+                : await response.json(),
           };
         } catch (err) {
           console.warn(`API unavailable: ${config.name}`, config.url, err);
@@ -204,6 +223,7 @@ class DataHelper {
       let result = resultWrapper.data;
 
       let resultKey = this.entryId ? this.entryId : this.accession;
+      if (resultKey === null && this.ligandId) resultKey = this.ligandId;
 
       if (config.name === "uniprot_mapping") {
         if (
@@ -219,6 +239,12 @@ class DataHelper {
       if (config.processor === "3dbeacons") {
         result = process3DBeaconsData(result, this.accession);
         if (!result) return;
+      }
+
+      if (config.processor === "ligand_sequence") {
+        result = processLigandSequenceData(result, this.ligandId);
+        if (!result) return;
+        this.viewerData.displayLigandsSequence = true;
       }
 
       // TODO: add memprotmd

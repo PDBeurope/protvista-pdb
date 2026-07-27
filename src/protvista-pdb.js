@@ -31,6 +31,7 @@ class ProtvistaPDB extends HTMLElement {
         this.viewerData = {
             displayNavigation: true,
             displaySequence: true,
+            displayLigandsSequence: true,
             displayConservation: false,
             displayVariants: false,
             sequence: undefined,
@@ -68,6 +69,7 @@ class ProtvistaPDB extends HTMLElement {
         this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks]);
         this.viewerData.displayNavigation = (typeof data.displayNavigation !== 'undefined') ? data.displayNavigation : true;
         this.viewerData.displaySequence = (typeof data.displaySequence !== 'undefined') ? data.displaySequence : true;
+        this.viewerData.displayLigandsSequence = (typeof data.displayLigandsSequence !== 'undefined') ? data.displayLigandsSequence : true;
 
         if(typeof this.viewerData.sequenceConservation !== 'undefined') this.viewerData.displayConservation = true;
         if(typeof this.viewerData.variants !== 'undefined') this.viewerData.displayVariants = true;
@@ -199,6 +201,7 @@ class ProtvistaPDB extends HTMLElement {
         this._accession = this.getAttribute("accession");
         this._entityId = this.getAttribute("entity-id");
         this._entryId = this.getAttribute("entry-id");
+        this._ligandId = this.getAttribute("ligand-id");
         this.customData = this.getAttribute("custom-data");
         this.pageSection = this.getAttribute("page-section");
         let envAttrValue = this.getAttribute("env");
@@ -235,13 +238,21 @@ class ProtvistaPDB extends HTMLElement {
         this.displayLoadingMessage();
 
         // Create data helper instance
-        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection, this.apiNames, this.alwaysExpanded);
+        this.dataHelper = new DataHelper(envAttrValue, this._accession, this._entryId, this._entityId, this.pageSection, this.apiNames, this.alwaysExpanded, this._ligandId);
 
         if(typeof this.customData !== 'undefined' && this.customData !== null) return;
 
         // Get data from PDBe PV APIs
         this.viewerData = await this.dataHelper.processMutlplePDBeApiData();
         this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks, ...this.customTracks]);
+
+        if (this.viewerData.displayLigandsSequence) {
+            this.viewerData.displayConservation = false;
+            this.viewerData.displayVariants = false;
+            this._render();
+            return;
+        }
+
         this.viewerData.displayConservation = (this.pageSection && this.pageSection == '2') ? false : true;
         this.viewerData.displayVariants = (this.pageSection && this.pageSection == '2') ? false : true;
         this.viewerData.displayBoxplot = false;
@@ -283,7 +294,7 @@ class ProtvistaPDB extends HTMLElement {
                         
                         <div style="line-height: 0">
                         <!-- Sequence section -->
-                        ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this)}` : ``}
+                        ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this, this.viewerData.displayLigandsSequence)}` : ``}
                         </div>
 
                         <!-- Pinned tracks section -->

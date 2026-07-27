@@ -10,6 +10,7 @@ import NightingaleBoxplotTrack from "./vendor/nightingale-boxplot-track/index.js
 
 // customised PV components
 import ProtvistaPdbNavigation from "./custom-pv-components/pdb-navigation";
+import ProtvistaPdbLigandsSequence from "./custom-pv-components/pdb-ligand-atoms-seq";
 import ProtvistaPdbTrack from './custom-pv-components/pdb-track'
 import ProtvistaPdbScHistogram from './custom-pv-components/pdb-sc-histogram'
 import ProtvistaPdbSeqConservation from './custom-pv-components/pdb-seq-conservation'
@@ -32,6 +33,7 @@ const registerWebComponents = function() {
     loadComponent("nightingale-filter", NightingaleFilter);
     loadComponent("nightingale-boxplot-track", NightingaleBoxplotTrack);
     loadComponent("protvista-pdb-navigation", ProtvistaPdbNavigation);
+    loadComponent("protvista-pdb-ligand-seq", ProtvistaPdbLigandsSequence);
     loadComponent("protvista-pdb-track", ProtvistaPdbTrack);
     loadComponent("protvista-pdb-sc-histogram", ProtvistaPdbScHistogram);
     loadComponent("protvista-pdb-seq-conservation", ProtvistaPdbSeqConservation);
