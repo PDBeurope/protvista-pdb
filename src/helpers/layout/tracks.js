@@ -59,6 +59,12 @@ export default {
           }
         }
 
+        if (labelDetails === "Predicted membrane binding sites") {
+          labelDetails += `<a href='https://memprotmd.bioch.ox.ac.uk/home/' target='_blank' ${inlineLinkStyle}>
+              MemProtMD
+              <i class="icon icon-generic" data-icon="x"></i></a>`;
+        }
+
         if (labelEle) labelEle.innerHTML = labelDetails;
 
         let trackData = trackModel.data;

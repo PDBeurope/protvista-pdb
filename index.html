@@ -19,22 +19,35 @@
   <body>
     <h1>Migrated PDB Protvista demo</h1>
 
-    <!-- <protvista-pdb
-      accession="G2FID1"
-      enable-in3d
-      trigger-first-in3d
-    ></protvista-pdb> -->
-    <!-- <protvista-pdb accession="P00918" enable-in3d trigger-first-in3d></protvista-pdb> -->
 
-    <!-- <protvista-pdb accession="P24666"></protvista-pdb> -->
+    <!-- Test for Proteins -->
+    <!-- <protvista-pdb accession="P24666" sticky-header="true"></protvista-pdb> -->
+
+    <!-- Test for Entries -->
+    <!-- <protvista-pdb entry-id="1trn" entity-id="1"></protvista-pdb>  -->
+     <!-- Test for Ligands -->
+    <!-- <protvista-pdb ligand-id="STI"></protvista-pdb>  -->
+
+    <!-- Test for given APIs, always expanded mode -->
     <!-- <protvista-pdb accession="P24666" api-names="unipdb,domains,secondary_structure_variation,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation"></protvista-pdb> -->
     <!-- <protvista-pdb accession="P24666" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation"></protvista-pdb> -->
-    <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" enable-in3d trigger-first-in3d></protvista-pdb> -->
-    <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" sticky-header="false" enable-in3d trigger-first-in3d></protvista-pdb> -->
-     <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" enable-in3d trigger-first-in3d add-custom-track new-toolbar></protvista-pdb> -->
 
-    <!-- <protvista-pdb entry-id="1trn" entity-id="1"></protvista-pdb>  -->
-    <protvista-pdb ligand-id="STI"></protvista-pdb> 
+    <!-- Always expanded with in 3D tag -->
+    <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" enable-in3d trigger-first-in3d></protvista-pdb> -->
+     
+    <!-- Always expanded with non-sticky header and in 3D tag -->
+    <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" sticky-header="false" enable-in3d trigger-first-in3d></protvista-pdb> -->
+
+    <!-- Always expanded with custom tracks, new toolbar and in 3D tag -->
+    <!-- Note: to add a initial placeholder custom uncomment last <script type="module"> -->
+    <!-- <protvista-pdb accession="P24666" max-height="600px" always-expanded="unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation" enable-in3d trigger-first-in3d add-custom-track new-toolbar></protvista-pdb> -->
+
+    <!-- SASA -->
+    <!-- <protvista-pdb accession="P00918"></protvista-pdb> -->
+    <!-- <protvista-pdb accession="P00918" enable-in3d trigger-first-in3d></protvista-pdb> -->
+    <!-- MemProtMD -->
+    <protvista-pdb accession="G2FID1"></protvista-pdb>
+    <!-- <protvista-pdb accession="G2FID1" enable-in3d trigger-first-in3d></protvista-pdb> -->
 
     <script type="module" src="/src/index.js"></script>
 

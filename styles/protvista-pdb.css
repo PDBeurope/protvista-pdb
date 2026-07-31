@@ -217,8 +217,8 @@
     font-size: 90%;
     text-align: left;
     color:#333;
-    margin-left: 2px;
     margin-left: 4px;
+    margin-right: 4px;
 }
 
 .protvista-pdb.default-styles .protvistaRowGroup {

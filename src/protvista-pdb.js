@@ -267,10 +267,10 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     _render() {
-        // if(!this.viewerData.length || this.viewerData.tracks.length == 0){
-        //     this.displayErrorMessage();
-        //     return;
-        // }
+        if(!this.viewerData.length || this.viewerData.tracks.length == 0){
+            this.displayErrorMessage();
+            return;
+        }
         if(!this.showLegends) delete this.viewerData.legends;
 
         const mainHtml = () => html`

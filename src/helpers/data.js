@@ -7,7 +7,7 @@ import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
 import { processLigandSequenceData } from "./data-processing/process-ligand-sequence-data.js";
 import { processLigandInteractions } from "./data-processing/process-ligand-interactions-data.js";
-import { processMemProtMDData } from "./data-processing/process-memprotmd-data.js";
+import { processMemProtMDData, createMemProtMDLegend } from "./data-processing/process-memprotmd-data.js";
 import { addIn3DToUniPdbTracks } from "./data-processing/data-track-add-in3d.js";
 import { addAlwaysExpandedTracks } from "./data-processing/data-track-add-always-expanded.js";
 
@@ -340,8 +340,8 @@ class DataHelper {
     if (!result) return;
     this.viewerData.tracks.push(result);
 
-    // const legend = createMemProtMDLegend(g2fid1Memprotmd);
-    // this.addLegendGroup(legend.label, legend.colourMap);
+    const legend = createMemProtMDLegend(g2fid1Memprotmd);
+    this.addLegendGroup(legend.label, legend.colourMap);
   }
 
   addMockBoxplotData() {
