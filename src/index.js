@@ -1,6 +1,7 @@
 // original Nightingale components
 import NightingaleManager from "@nightingale-elements/nightingale-manager";
 import NightingaleSequence from "@nightingale-elements/nightingale-sequence";
+import NightingaleSequenceHeatmap from "@nightingale-elements/nightingale-sequence-heatmap";
 import { NightingaleScrollbox, NightingaleScrollboxItem } from "@nightingale-elements/nightingale-scrollbox";
 import NightingaleLinegraphTrack from "@nightingale-elements/nightingale-linegraph-track";
 import NightingaleConservationTrack from "@nightingale-elements/nightingale-conservation-track";
@@ -25,6 +26,7 @@ import { loadComponent } from "./loadComponent";
 const registerWebComponents = function() {
     loadComponent("nightingale-manager", NightingaleManager);
     loadComponent("nightingale-sequence", NightingaleSequence);
+    loadComponent("nightingale-sequence-heatmap", NightingaleSequenceHeatmap);
     loadComponent("nightingale-scrollbox", NightingaleScrollbox);
     loadComponent("nightingale-scrollbox-item", NightingaleScrollboxItem);
     loadComponent("nightingale-conservation-track", NightingaleConservationTrack);

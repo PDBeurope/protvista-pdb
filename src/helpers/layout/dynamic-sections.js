@@ -1,9 +1,9 @@
 import filterData, { keywordMap } from "../../custom-pv-components/filters";
 /**
  * helpers/layout/dynamic-sections.js
- * 
+ *
  * In this file: variation/conservation/boxplot
- * 
+ *
  * addBoxplotSection
  * showBoxplotSection
  * showConservationPlot
@@ -13,7 +13,6 @@ import filterData, { keywordMap } from "../../custom-pv-components/filters";
  * getMSADownloadUrl
  * */
 export default {
-
   addBoxplotSection(resultData) {
     if (!resultData) return;
 
@@ -156,6 +155,150 @@ export default {
           }
         });
     });
-  }
+  },
 
-}
+  async bindLigIntHeatmapData(data) {
+    // 1 - Assign data to tracks
+    const atomsTrack = this.ctx.querySelector("#atoms-hm-heatmap-track");
+    const heatmapTrack = this.ctx.querySelector("#resids-hm-heatmap-track");
+    if (!atomsTrack) return;
+    if (!heatmapTrack) return;
+
+    // Assign data
+    const xDomain = data.viewerData.xDomain;
+    const yDomain = data.viewerData.yDomain;
+    const atomsData = data.viewerData.averages;
+    const heatmapData = data.viewerData.heatmap;
+    atomsTrack.setHeatmapData(xDomain, ["ATM"], atomsData);
+    heatmapTrack.setHeatmapData(xDomain, yDomain, heatmapData);
+
+    const atomsColorScale = data.atomColorScale;
+    const heatmapColorScale = data.residColorScale;
+
+    // Wait for Lit render
+    await atomsTrack.updateComplete;
+    await heatmapTrack.updateComplete;
+
+    // Apply heatmap color scale
+    atomsTrack.heatmapInstance.setColor((d) => atomsColorScale(d.score));
+    heatmapTrack.heatmapInstance.setColor((d) => heatmapColorScale(d.score));
+
+    const atomsTooltipContentFn = (d, x, y) => {
+      if (!d) return "";
+      let tooltipContent = `
+        <div class="tooltip-data" data-trackid="atoms-hm" style="display: none"></div>
+        Ligand atom: <b>${d["atomName"]}</b><br>
+        Atom-wise interactions: <b>${d["score"].toFixed(2)}%</b><br>
+      `;
+      return tooltipContent;
+    };
+    atomsTrack.heatmapInstance.setTooltip((d, x, y, xIndex, yIndex) => {
+      const tooltipContent = atomsTooltipContentFn(d, x, y, xIndex, yIndex);
+      return tooltipContent;
+    });
+
+    const residsTooltipContentFn = (d, x, y) => {
+      if (!d) return "";
+      // eslint-disable-next-line prefer-const
+      let tooltipContent = `
+        <div class="tooltip-data" data-trackid="resids-hm" style="display: none"></div>
+        Ligand atom: <b>${d["atomName"]}</b><br>
+        Amino acid: <b>${d["residue"]}</b><br>
+        Pairwise interactions: <b>${d["score"].toFixed(2)}%</b><br>
+      `;
+      return tooltipContent;
+    };
+    heatmapTrack.heatmapInstance.setTooltip((d, x, y, xIndex, yIndex) => {
+      const tooltipContent = residsTooltipContentFn(d, x, y, xIndex, yIndex);
+      return tooltipContent;
+    });
+
+    // Set our tooltips from hover events
+    atomsTrack.heatmapInstance.events.hover.subscribe((d) => {
+      // if (d.cell) {
+      this.adjustTooltipElements('heatmap-atoms');
+        // this.mouseEvents.triggerExternalMouseOverEvents(d.cell.x, d.cell.x);
+      // } else {
+      //   // this.mouseEvents.triggerExternalMouseOutEvents();
+      // }
+    });
+    heatmapTrack.heatmapInstance.events.hover.subscribe((d) => {
+      // if (d.cell) {
+      this.adjustTooltipElements('heatmap-resids');
+        // this.mouseEvents.triggerExternalMouseOverEvents(d.cell.x, d.cell.x);
+      // } else {
+      //   // this.mouseEvents.triggerExternalMouseOutEvents();
+      // }
+    });
+
+  },
+
+  adjustTooltipElements(elementId) {
+    const boundsElement = this.ctx.querySelector(`#${elementId}`);
+    if (!boundsElement) return;
+
+    const scrollBounds = boundsElement.getBoundingClientRect();
+    // const leftEdge = scrollBounds.left;
+    const rightEdge = scrollBounds.right - 30; // padding from the right edge
+    const topEdge = scrollBounds.top;
+    // const bottomEdge = scrollBounds.bottom - 10; // optional padding from bottom
+
+    const selectors = ['.heatmap-pinned-tooltip-box', '.heatmap-tooltip-box'];
+
+    for (const selector of selectors) {
+      const el1 = boundsElement.querySelector(selector);
+      if (el1 !== null) {
+        el1.style.translate = '0px 0px';
+        el1.classList.remove('flipped-x', 'flipped-y');
+        el1.style.zIndex = '5';
+
+        const bounds = el1.getBoundingClientRect();
+        const elX = bounds.x;
+        const elY = bounds.y;
+        const elWidth = bounds.width;
+        const elHeight = bounds.height;
+
+        const pin = el1.querySelector('.heatmap-pinned-tooltip-pin');
+        if (pin) {
+          pin.style.translate = '0px 0px';
+          pin.style.transform = 'none';
+        }
+        // Compute distances to container edges
+        // const distLeft = elX - leftEdge;
+        const distRight = rightEdge - (elX + elWidth);
+        const distTop = elY - topEdge;
+        // const distBottom = bottomEdge - (elY + elHeight);
+
+        // final translate offsets
+        let translateX = 0;
+        let translateY = 0;
+        let translatePinX = 0;
+        let translatePinY = 0;
+        let pinTransform = '';
+
+        // ---- X FLIP ----
+        if (distRight < 0) {
+          translateX = -elWidth;
+          el1.classList.add('flipped-x');
+          translatePinX = elWidth - 5;
+          pinTransform += ' rotateY(180deg)';
+        }
+
+        // ---- Y FLIP ----
+        if (distTop < 0) {
+          translateY = elHeight + 5;
+          el1.classList.add('flipped-y');
+          translatePinY = -(elHeight - 5); // move pin visually to bottom edge
+          pinTransform += ' rotateX(180deg)';
+        }
+
+        // apply combined translation
+        el1.style.translate = `${translateX}px ${translateY}px`;
+        if (pin) {
+          pin.style.translate = `${translatePinX}px ${translatePinY}px`;
+          pin.style.transform = pinTransform.trim();
+        }
+      }
+    }
+  }
+};

@@ -104,6 +104,11 @@ export default {
       this.addBoxplotSection(this.ctx.viewerData.boxplot);
     }
 
+    // Ligand Interactions Heatmap
+    if (this.ctx.viewerData.displayLigandsMode) {
+      this.bindLigIntHeatmapData(this.ctx.viewerData.ligIntHeatmap);
+    }
+
     // Subscribe to events
     if (this.ctx.subscribeEvents) {
       this.addEventSubscription();

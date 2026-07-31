@@ -6,6 +6,7 @@ import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.
 import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
 import { processLigandSequenceData } from "./data-processing/process-ligand-sequence-data.js";
+import { processLigandInteractions } from "./data-processing/process-ligand-interactions-data.js";
 import { processMemProtMDData } from "./data-processing/process-memprotmd-data.js";
 import { addIn3DToUniPdbTracks } from "./data-processing/data-track-add-in3d.js";
 import { addAlwaysExpandedTracks } from "./data-processing/data-track-add-always-expanded.js";
@@ -146,11 +147,11 @@ class DataHelper {
           processor: "ligand_sequence",
           responseType: "text",
         },
-        // {
-        //   name: "ligands_interactions",
-        //   url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/`,
-        //   processor: "ligands_interactions",
-        // }
+        {
+          name: "ligands_interactions",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/compound/interaction/${this.ligandId}`,
+          processor: "ligands_interactions",
+        }
       ],
     };
 
@@ -243,8 +244,13 @@ class DataHelper {
 
       if (config.processor === "ligand_sequence") {
         result = processLigandSequenceData(result, this.ligandId);
+        this.viewerData.displayLigandsMode = true;
         if (!result) return;
-        this.viewerData.displayLigandsSequence = true;
+      }
+      if (config.processor === "ligands_interactions") {
+        result = processLigandInteractions(result[this.ligandId], this.viewerData.sequence.split(','));
+        this.viewerData.ligIntHeatmap = result;
+        if (!result) return;
       }
 
       // TODO: add memprotmd

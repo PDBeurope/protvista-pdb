@@ -17,6 +17,7 @@ import PDBePvCustomTracksSection from "./section-templates/custom-track/custom-t
 import PDBePvAddCustomTrackModal from "./section-templates/custom-track/custom-add-track-modal.js";
 import PDBePvEditCustomTrackModal from "./section-templates/custom-track/custom-edit-track-modal.js";
 import PDBePvZoomHighlightModal from "./section-templates/toolbar/zoom-highlight-modal.js";
+import PDBePvLigandInteractionsHeatmapSection from "./section-templates/lig-interactions-heatmap.js";
 
 // Helper modules
 import DataHelper from "./helpers/data"
@@ -31,7 +32,7 @@ class ProtvistaPDB extends HTMLElement {
         this.viewerData = {
             displayNavigation: true,
             displaySequence: true,
-            displayLigandsSequence: true,
+            displayLigandsMode: true,
             displayConservation: false,
             displayVariants: false,
             sequence: undefined,
@@ -69,7 +70,7 @@ class ProtvistaPDB extends HTMLElement {
         this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks]);
         this.viewerData.displayNavigation = (typeof data.displayNavigation !== 'undefined') ? data.displayNavigation : true;
         this.viewerData.displaySequence = (typeof data.displaySequence !== 'undefined') ? data.displaySequence : true;
-        this.viewerData.displayLigandsSequence = (typeof data.displayLigandsSequence !== 'undefined') ? data.displayLigandsSequence : true;
+        this.viewerData.displayLigandsMode = (typeof data.displayLigandsMode !== 'undefined') ? data.displayLigandsMode : true;
 
         if(typeof this.viewerData.sequenceConservation !== 'undefined') this.viewerData.displayConservation = true;
         if(typeof this.viewerData.variants !== 'undefined') this.viewerData.displayVariants = true;
@@ -246,7 +247,7 @@ class ProtvistaPDB extends HTMLElement {
         this.viewerData = await this.dataHelper.processMutlplePDBeApiData();
         this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks, ...this.customTracks]);
 
-        if (this.viewerData.displayLigandsSequence) {
+        if (this.viewerData.displayLigandsMode) {
             this.viewerData.displayConservation = false;
             this.viewerData.displayVariants = false;
             this._render();
@@ -266,10 +267,10 @@ class ProtvistaPDB extends HTMLElement {
     }
 
     _render() {
-        if(!this.viewerData.length || this.viewerData.tracks.length == 0){
-            this.displayErrorMessage();
-            return;
-        }
+        // if(!this.viewerData.length || this.viewerData.tracks.length == 0){
+        //     this.displayErrorMessage();
+        //     return;
+        // }
         if(!this.showLegends) delete this.viewerData.legends;
 
         const mainHtml = () => html`
@@ -294,7 +295,7 @@ class ProtvistaPDB extends HTMLElement {
                         
                         <div style="line-height: 0">
                         <!-- Sequence section -->
-                        ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this, this.viewerData.displayLigandsSequence)}` : ``}
+                        ${this.viewerData.displaySequence ? html`${PDBePvSeqSection(this, this.viewerData.displayLigandsMode)}` : ``}
                         </div>
 
                         <!-- Pinned tracks section -->
@@ -331,6 +332,11 @@ class ProtvistaPDB extends HTMLElement {
 
                     <!-- Legends section -->
                     ${this.viewerData.legends ? html`${PDBePvLegendsSection(this)}` : ``}
+
+                    <!-- Interactions Heatmap section -->
+                    <div style="line-height: 0">
+                    ${this.viewerData.displayLigandsMode ? html`${PDBePvLigandInteractionsHeatmapSection(this)}` : ``}
+                    </div>
                 </div>
 
             </nightingale-manager>
