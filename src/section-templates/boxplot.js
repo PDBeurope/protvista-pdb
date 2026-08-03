@@ -15,7 +15,7 @@ function PDBePvBoxplotSection(ctx) {
           }
         }}
       >
-        Relative solvent accessibility (PDB and MDposit)
+        Average Relative Solvent Accessibility (PDB and MDposit)
       </div>
 
       <div class="protvistaCol2 aggregate-track-content non-aggregate-track-border pvBoxplotGraphSection">

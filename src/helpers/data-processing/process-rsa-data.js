@@ -1,6 +1,6 @@
 const RSA_CLASS_CONFIG = {
   Buried: {
-    color: "#2166ac", // blue
+    color: "#E69F00", // blue
     order: 0,
   },
   Switching: {
@@ -8,11 +8,11 @@ const RSA_CLASS_CONFIG = {
     order: 1,
   },
   Exposed: {
-    color: "#d6604d", // orange/red
+    color: "#2166ac", // orange/red
     order: 2,
   },
 };
-function makeRsaClassTooltip(className, residue) {
+function makeRsaClassTooltip(className, residue, classes = []) {
   const start = residue.startIndex;
   const end = residue.endIndex ?? residue.startIndex;
 
@@ -24,24 +24,25 @@ function makeRsaClassTooltip(className, residue) {
   const entries = residue.mddbEntries || [];
 
   const entryList = entries.length
-    ? `<br>MDposit entries:<br>
+    ? `MDposit (${entries.length} entries):<br>
       ${entries
-        .slice(0, 5)
-        .map((entry) => {
+        .map((entry, idx) => {
           const chains = entry.chainIds?.length
             ? ` chain ${entry.chainIds.join(",")}`
             : "";
 
-          return `<a href="https://mdposit.mddbr.eu/#/pointer?ref=pdbs&id=${entry.pdbId || ''}" target="_blank">${entry.pdbId || ""}</a> / ${entry.mddbId || ""}${chains}`;
+          return `${idx + 1}. <a href="https://mdposit.mddbr.eu/#/pointer?ref=pdbs&id=${entry.pdbId || ""}" target="_blank">${entry.pdbId || ""}</a> / ${chains}`;
         })
-        .join("<br>")}${entries.length > 5 ? `<br>+${entries.length - 5} more` : ""}`
+        .join("<br>")}`
     : "";
+  
+  const otherClasses = classes.filter(c => c !== className);
+  const otherClassesNote = otherClasses.length ? ` (Residues also classified as "${otherClasses.join(", ")}" in other MDposit entries)` : '';
 
   return [
     `Type: Simulated relative solvent accessibility`,
-    `Class: ${className}`,
+    `Class: ${className}${otherClassesNote}`,
     `Range: ${range}`,
-    `Count: ${entries.length}`,
     entryList,
   ]
     .filter(Boolean)
@@ -58,9 +59,9 @@ function makeRsaClassLabelTooltip(className, residues = []) {
 
   const descriptions = {
     Buried:
-      "Residues classified as buried based on the summary of relative solvent accessible surface area during the simulation.",
+      "Residues classified as buried based on the calculated relative solvent accessible surface area of the simulations.",
     Exposed:
-      "Residues classified as exposed based on the summary of relative solvent accessible surface area during the simulation.",
+      "Residues classified as exposed based on the calculated relative solvent accessible surface area of the simulations.",
     Switching:
       "Residues that switch between buried and exposed states during the simulation.",
   };
@@ -69,8 +70,8 @@ function makeRsaClassLabelTooltip(className, residues = []) {
     `<strong>${className}</strong>`,
     descriptions[className] ||
       "Residues annotated based on the summary of relative solvent accessible surface area during the simulation.",
-    `Residues: ${residueCount}`,
-    `MDposit observations: ${entryCount}`,
+    `Annotated residues: ${residueCount}`,
+    `N. of MDposit entries: ${entryCount}`,
   ].join("<br>");
 }
 
@@ -93,6 +94,18 @@ export function transformSimRsaClassesToTrack(proteinsId, mockEntry) {
     })
     .sort((a, b) => a.config.order - b.config.order);
 
+  const residueClasses = new Map();
+  for (const classData of mockEntry.data) {
+    for (const residue of classData.residues || []) {
+      const key = `${residue.startIndex}-${residue.endIndex ?? residue.startIndex}`;
+
+      if (!residueClasses.has(key)) {
+        residueClasses.set(key, new Set());
+      }
+
+      residueClasses.get(key).add(classData.name);
+    }
+  }
   return {
     labelType: "text",
     uniProtId: proteinsId,
@@ -110,18 +123,22 @@ export function transformSimRsaClassesToTrack(proteinsId, mockEntry) {
       color: "rgb(128,128,128)",
       start: 1,
       end: mockEntry.length,
-      locations: residues.map((residue) => ({
-        fragments: [
-          {
-            start: Number(residue.startIndex),
-            end: Number(residue.endIndex ?? residue.startIndex),
-            color: config.color,
-            tooltipContent: makeRsaClassTooltip(className, residue),
-            rsaClass: className,
-            mddbEntries: residue.mddbEntries || [],
-          },
-        ],
-      })),
-    }))
+      locations: residues.map((residue, idx) => {
+        const key = `${residue.startIndex}-${residue.endIndex ?? residue.startIndex}`;
+        const classes = [...(residueClasses.get(key) ?? [])];
+        return {
+          fragments: [
+            {
+              start: Number(residue.startIndex),
+              end: Number(residue.endIndex ?? residue.startIndex),
+              color: config.color,
+              tooltipContent: makeRsaClassTooltip(className, residue, classes),
+              rsaClass: className,
+              mddbEntries: residue.mddbEntries || [],
+            },
+          ],
+        };
+      }),
+    })),
   };
 }

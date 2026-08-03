@@ -2,7 +2,7 @@ import { g2fid1Memprotmd } from "../mock-data/G2FID1-uniprot-memprotmd"
 import { p00918RsaBoxplot } from "../mock-data/P00918-uniprot-rsa";
 import { p00918SimRsaBoxplot } from "../mock-data/P00918-uniprot-simulated-rsa";
 import { p00918SimRsaClasses } from "../mock-data/P00918-uniprot-simulated-rsa-classes.js";
-import { transformSimRsaClassesToTrack } from "../mock-data/transformRsaClasses.js";
+import { transformSimRsaClassesToTrack } from "./data-processing/process-rsa-data.js";
 import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
 import { processLigandSequenceData } from "./data-processing/process-ligand-sequence-data.js";
@@ -367,7 +367,7 @@ class DataHelper {
       if (!this.viewerData.length && sourceEntry.length) {
         this.viewerData.length = sourceEntry.length;
       }
-      this.addLegendGroup("Relative solvent accessibility", [
+      this.addLegendGroup("Average Relative Solvent Accessibility", [
         {
           color: "#4169e1",
           text: "PDB RSA",
