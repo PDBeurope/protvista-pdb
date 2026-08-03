@@ -97,17 +97,17 @@ function makeTooltip(segment, annotationLabel) {
   return [
     "Type: Simulated residue membrane interaction",
     `Residue${segment.startIndex === segment.endIndex ? "" : "s"}: ${residue}`,
-    `<b>Label:</b> ${annotation.label}`,
+    `Label: ${annotation.label}`,
     annotation.raw_score != null
-      ? `<b>Raw score:</b> ${annotation.raw_score}`
+      ? `Raw score: ${annotation.raw_score}`
       : null,
     annotation.observed_entries != null
-      ? `<b>Observed entries:</b> ${annotation.observed_entries}`
+      ? `Observed entries: ${annotation.observed_entries}`
       : null,
     annotation.example_pdb
-      ? `<b>Example PDB:</b> <a target="_blank" href="https://memprotmd.bioch.ox.ac.uk/_ref/PDB/${annotation.example_pdb}/">${annotation.example_pdb}</a>`
+      ? `Example PDB: <a target="_blank" href="https://memprotmd.bioch.ox.ac.uk/_ref/PDB/${annotation.example_pdb}/">${annotation.example_pdb}</a>`
       : null,
-    `<b>Source:</b> <a target="_blank" href="https://memprotmd.bioch.ox.ac.uk/">MemProtMD</a>`,
+    `Source: <a target="_blank" href="https://memprotmd.bioch.ox.ac.uk/">MemProtMD</a>`,
   ]
     .filter(Boolean)
     .join("<br>");
