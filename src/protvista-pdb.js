@@ -70,7 +70,7 @@ class ProtvistaPDB extends HTMLElement {
         this.registerUuids([...this.viewerData.tracks, ...this.pinnedTracks]);
         this.viewerData.displayNavigation = (typeof data.displayNavigation !== 'undefined') ? data.displayNavigation : true;
         this.viewerData.displaySequence = (typeof data.displaySequence !== 'undefined') ? data.displaySequence : true;
-        this.viewerData.displayLigandsMode = (typeof data.displayLigandsMode !== 'undefined') ? data.displayLigandsMode : true;
+        this.viewerData.displayLigandsMode = (typeof data.displayLigandsMode !== 'undefined') ? data.displayLigandsMode : false;
 
         if(typeof this.viewerData.sequenceConservation !== 'undefined') this.viewerData.displayConservation = true;
         if(typeof this.viewerData.variants !== 'undefined') this.viewerData.displayVariants = true;

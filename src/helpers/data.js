@@ -1,7 +1,3 @@
-import { g2fid1Memprotmd } from "../mock-data/G2FID1-uniprot-memprotmd"
-import { p00918RsaBoxplot } from "../mock-data/P00918-uniprot-rsa";
-import { p00918SimRsaBoxplot } from "../mock-data/P00918-uniprot-simulated-rsa";
-import { p00918SimRsaClasses } from "../mock-data/P00918-uniprot-simulated-rsa-classes.js";
 import { transformSimRsaClassesToTrack } from "./data-processing/process-rsa-data.js";
 import { addTrackUuids } from "./data-processing/data-track-uuids.js";
 import { process3DBeaconsData } from "./data-processing/process-3dbeacons-data.js";
@@ -91,18 +87,26 @@ class DataHelper {
           url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`,
           processor: "3dbeacons",
         },
-        // TODO: add memprotmd
-        // {
-        //   name: "memprotmd",
-        //   url: "...",
-        //   processor: "memprotmd",
-        // }
-        // TODO: add RSA APIs
-        // {
-        //   name: "mddb-rsa",
-        //   url: "...",
-        //   processor: "mddb-rsa",
-        // }
+        {
+          name: "memprot_md",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/annotations/simulated_membrane_interaction/${this.accession}`,
+          processor: "memprotmd",
+        },
+        {
+          name: "rsa_categories",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/annotations/simulated_rsa_classes/${this.accession}`,
+          processor: "rsa_classes",
+        },
+        {
+          name: "rsa_distribution",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/annotations/simulated_rsa/${this.accession}`,
+          processor: "simulated_rsa",
+        },
+        {
+          name: "rsa_distribution",
+          url: `https://www${this.appUrlEnv}.ebi.ac.uk/pdbe/api/v2/uniprot/annotations/rsa/${this.accession}`,
+          processor: "rsa",
+        },
       ],
 
       entry: [
@@ -253,13 +257,84 @@ class DataHelper {
         if (!result) return;
       }
 
-      // TODO: add memprotmd
-      // if (config.processor === "memprotmd") {
-      //   result = processMemProtMDData(result);
-      //   if (!result) return;
-      // }
+      if (config.processor === "memprotmd") {
+        const memProtTrack = processMemProtMDData(result);
+        if (!memProtTrack) return;
 
-      // TODO: add RSA processing
+        this.viewerData.tracks.push(memProtTrack);
+        apiNamesForTracks.push(config.name);
+
+        const entry = result[this.accession];
+        if (!this.viewerData.sequence && entry?.sequence) {
+          this.viewerData.sequence = entry.sequence;
+        }
+        if (!this.viewerData.length && entry?.length) {
+          this.viewerData.length = entry.length;
+        }
+
+        const legend = createMemProtMDLegend(result);
+        if (legend) {
+          this.addLegendGroup(legend.label, legend.colourMap);
+        }
+        return;
+      }
+
+      if (config.processor === "rsa_classes") {
+        const rsaClassesEntry = result[this.accession];
+        const rsaClassesTrack = transformSimRsaClassesToTrack(
+          this.accession,
+          rsaClassesEntry,
+        );
+        if (!rsaClassesTrack) return;
+
+        this.viewerData.tracks.push(rsaClassesTrack);
+        apiNamesForTracks.push(config.name);
+
+        if (!this.viewerData.sequence && rsaClassesEntry?.sequence) {
+          this.viewerData.sequence = rsaClassesEntry.sequence;
+        }
+        if (!this.viewerData.length && rsaClassesEntry?.length) {
+          this.viewerData.length = rsaClassesEntry.length;
+        }
+
+        this.addLegendGroup("Simulated RSA Classes", [
+          { color: "#E69F00", text: "Buried" },
+          { color: "#7b3294", text: "Switching" },
+          { color: "#2166ac", text: "Exposed" },
+        ]);
+        return;
+      }
+
+      if (config.processor === "rsa" || config.processor === "simulated_rsa") {
+        const rsaEntry = result[this.accession];
+        if (!rsaEntry) return;
+
+        this.viewerData.displayBoxplot = true;
+        this.viewerData.boxplot ||= {};
+
+        if (config.processor === "rsa") {
+          this.viewerData.boxplot.rsa = rsaEntry;
+        } else {
+          this.viewerData.boxplot.simulatedRsa = rsaEntry;
+        }
+
+        if (!this.viewerData.sequence && rsaEntry.sequence) {
+          this.viewerData.sequence = rsaEntry.sequence;
+        }
+        if (!this.viewerData.length && rsaEntry.length) {
+          this.viewerData.length = rsaEntry.length;
+        }
+
+        if (!apiNamesForTracks.includes(config.name)) {
+          apiNamesForTracks.push(config.name);
+        }
+
+        this.addLegendGroup("Average Relative Solvent Accessibility", [
+          { color: "#4169e1", text: "PDB RSA" },
+          { color: "#d95f02", text: "Simulated RSA" },
+        ]);
+        return;
+      }
 
       if (!result[resultKey]) return;
 
@@ -304,17 +379,12 @@ class DataHelper {
     });
 
     // Post-processing
-    // 1. Add mock memprotmd as track
-    this.addMockMemprotmdData();
-
-    // 1. Add mock RSA data
-    this.addMockBoxplotData();
-    // 2. Add in3D tag to tracks
+    // 1. Add in3D tag to tracks
     const apiNames = pdbeApiConfigs.map(config => config.name);
     this.viewerData.tracks = addIn3DToUniPdbTracks(this.viewerData.tracks, apiNamesForTracks);
-    // 3. Add uuid to tracks and subtracks
+    // 2. Add uuid to tracks and subtracks
     this.viewerData.tracks = addTrackUuids(this.viewerData.tracks);
-    // 4. Add alwaysExpanded to tracks
+    // 3. Add alwaysExpanded to tracks
     this.viewerData.tracks = addAlwaysExpandedTracks(this.viewerData.tracks, apiNamesForTracks, this.alwaysExpanded);
     
     return this.viewerData;
@@ -333,79 +403,6 @@ class DataHelper {
     }
   }
   
-  addMockMemprotmdData() {
-    if (this.accession !== "G2FID1") return;
-
-    const result = processMemProtMDData(g2fid1Memprotmd);
-    if (!result) return;
-    this.viewerData.tracks.push(result);
-
-    const legend = createMemProtMDLegend(g2fid1Memprotmd);
-    this.addLegendGroup(legend.label, legend.colourMap);
-  }
-
-  addMockBoxplotData() {
-    if (this.accession !== "P00918") return;
-
-    const rsaEntry = p00918RsaBoxplot[this.accession];
-    const simulatedRsaEntry = p00918SimRsaBoxplot?.[this.accession];
-    const simulatedRsaClassesEntry = p00918SimRsaClasses?.[this.accession];
-
-    if (rsaEntry || simulatedRsaEntry) {
-      this.viewerData.displayBoxplot = true;
-      this.viewerData.boxplot = {
-        rsa: rsaEntry,
-        simulatedRsa: simulatedRsaEntry,
-      };
-
-      const sourceEntry = rsaEntry || simulatedRsaEntry;
-
-      if (!this.viewerData.sequence && sourceEntry.sequence) {
-        this.viewerData.sequence = sourceEntry.sequence;
-      }
-
-      if (!this.viewerData.length && sourceEntry.length) {
-        this.viewerData.length = sourceEntry.length;
-      }
-      this.addLegendGroup("Average Relative Solvent Accessibility", [
-        {
-          color: "#4169e1",
-          text: "PDB RSA",
-        },
-        {
-          color: "#d95f02",
-          text: "Simulated RSA",
-        },
-      ]);
-    }
-
-    if (simulatedRsaClassesEntry) {
-      const simRsaTrack = transformSimRsaClassesToTrack(
-        this.accession,
-        simulatedRsaClassesEntry,
-      );
-
-      if (simRsaTrack) {
-        this.viewerData.tracks.push(simRsaTrack);
-
-        this.addLegendGroup("Simulated RSA Classes", [
-          {
-            color: "#2166ac",
-            text: "Buried",
-          },
-          {
-            color: "#7b3294",
-            text: "Switching",
-          },
-          {
-            color: "#d6604d",
-            text: "Exposed",
-          },
-        ]);
-      }
-    }
-  }
-
   addLegendGroup(groupName, items) {
     if (!this.viewerData.legends) {
       this.viewerData.legends = {

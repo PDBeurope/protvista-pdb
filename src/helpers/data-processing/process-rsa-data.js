@@ -75,10 +75,10 @@ function makeRsaClassLabelTooltip(className, residues = []) {
   ].join("<br>");
 }
 
-export function transformSimRsaClassesToTrack(proteinsId, mockEntry) {
-  if (!mockEntry?.data) return null;
+export function transformSimRsaClassesToTrack(proteinsId, entry) {
+  if (!entry?.data) return null;
 
-  const rows = mockEntry.data
+  const rows = entry.data
     .map((classData) => {
       const className = classData.name;
       const config = RSA_CLASS_CONFIG[className] || {
@@ -95,7 +95,7 @@ export function transformSimRsaClassesToTrack(proteinsId, mockEntry) {
     .sort((a, b) => a.config.order - b.config.order);
 
   const residueClasses = new Map();
-  for (const classData of mockEntry.data) {
+  for (const classData of entry.data) {
     for (const residue of classData.residues || []) {
       const key = `${residue.startIndex}-${residue.endIndex ?? residue.startIndex}`;
 
@@ -122,7 +122,7 @@ export function transformSimRsaClassesToTrack(proteinsId, mockEntry) {
       labelColor: "rgb(211,211,211)",
       color: "rgb(128,128,128)",
       start: 1,
-      end: mockEntry.length,
+      end: entry.length,
       locations: residues.map((residue, idx) => {
         const key = `${residue.startIndex}-${residue.endIndex ?? residue.startIndex}`;
         const classes = [...(residueClasses.get(key) ?? [])];

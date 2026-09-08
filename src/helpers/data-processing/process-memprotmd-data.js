@@ -105,7 +105,7 @@ function makeTooltip(segment, annotationLabel) {
       ? `Observed entries: ${annotation.observed_entries}`
       : null,
     annotation.example_pdb
-      ? `Example PDB: <a target="_blank" href="https://memprotmd.bioch.ox.ac.uk/_ref/PDB/${annotation.example_pdb}/">${annotation.example_pdb}</a>`
+      ? `Example PDB: <a target="_blank" href="${annotation.resource_url || `https://memprotmd.bioch.ox.ac.uk/_ref/PDB/${annotation.example_pdb}`}" >${annotation.example_pdb}</a>`
       : null,
     `Source: <a target="_blank" href="https://memprotmd.bioch.ox.ac.uk/">MemProtMD</a>`,
   ]
