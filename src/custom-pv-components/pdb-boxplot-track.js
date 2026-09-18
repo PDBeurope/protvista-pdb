@@ -1,4 +1,4 @@
-import NightingaleBoxplotTrack from "../vendor/nightingale-boxplot-track/index.js";
+import NightingaleBoxplotTrack from "@nightingale-elements/nightingale-boxplot-track";
 
 function normaliseBoxplotData(input) {
   const source = input?.data || input;

@@ -1,29 +1,30 @@
 {
   "name": "protvista-pdb",
-  "version": "4.0.0-mddb",
+  "version": "4.0.0",
   "description": "PDB ProtVista Viewer",
   "author": "Mandar Deshpande <mandar@ebi.ac.uk>",
   "contributors": [
     "Typhaine Paysan-Lafosse <typhaine@ebi.ac.uk>",
     "Sreenath Sasidharan Nair <sreenath@ebi.ac.uk>",
+    "Adam Midlik <midlik@ebi.ac.uk>",
     "Marcelo Querino Lima Afonso <marcelo@ebi.ac.uk>"
   ],
   "license": "Apache-2.0",
   "type": "module",
-  "main": "dist/protvista-pdb-4.0.0-mddb.min.js",
-  "module": "dist/protvista-pdb-4.0.0-mddb.min.mjs",
-  "style": "dist/protvista-pdb-4.0.0-mddb.min.css",
+  "main": "dist/protvista-pdb-4.0.0.min.js",
+  "module": "dist/protvista-pdb-4.0.0.min.mjs",
+  "style": "dist/protvista-pdb-4.0.0.min.css",
   "files": [
     "dist",
     "src"
   ],
   "exports": {
     ".": {
-      "import": "./dist/protvista-pdb-4.0.0-mddb.min.mjs",
-      "require": "./dist/protvista-pdb-4.0.0-mddb.min.js",
-      "default": "./dist/protvista-pdb-4.0.0-mddb.min.js"
+      "import": "./dist/protvista-pdb-4.0.0.min.mjs",
+      "require": "./dist/protvista-pdb-4.0.0.min.js",
+      "default": "./dist/protvista-pdb-4.0.0.min.js"
     },
-    "./style.css": "./dist/protvista-pdb-4.0.0-mddb.min.css",
+    "./style.css": "./dist/protvista-pdb-4.0.0.min.css",
     "./dist/*": "./dist/*"
   },
   "sideEffects": [
@@ -37,17 +38,18 @@
     "preview": "vite preview --host 0.0.0.0 --port 1339"
   },
   "dependencies": {
-    "@nightingale-elements/nightingale-conservation-track": "5.6.0",
-    "@nightingale-elements/nightingale-filter": "5.6.0",
-    "@nightingale-elements/nightingale-linegraph-track": "5.6.0",
-    "@nightingale-elements/nightingale-manager": "5.6.0",
-    "@nightingale-elements/nightingale-navigation": "5.6.0",
-    "@nightingale-elements/nightingale-scrollbox": "5.6.0",
-    "@nightingale-elements/nightingale-sequence": "5.6.0",
-    "@nightingale-elements/nightingale-sequence-heatmap": "^5.6.2",
-    "@nightingale-elements/nightingale-track": "5.6.0",
-    "@nightingale-elements/nightingale-track-canvas": "5.6.0",
-    "@nightingale-elements/nightingale-variation": "5.6.0",
+    "@nightingale-elements/nightingale-boxplot-track": "5.11.0",
+    "@nightingale-elements/nightingale-conservation-track": "5.11.0",
+    "@nightingale-elements/nightingale-filter": "5.11.0",
+    "@nightingale-elements/nightingale-linegraph-track": "5.11.0",
+    "@nightingale-elements/nightingale-manager": "5.11.0",
+    "@nightingale-elements/nightingale-navigation": "5.11.0",
+    "@nightingale-elements/nightingale-scrollbox": "5.11.0",
+    "@nightingale-elements/nightingale-sequence": "5.11.0",
+    "@nightingale-elements/nightingale-sequence-heatmap": "5.11.0",
+    "@nightingale-elements/nightingale-track": "5.11.0",
+    "@nightingale-elements/nightingale-track-canvas": "5.11.0",
+    "@nightingale-elements/nightingale-variation": "5.11.0",
     "d3": "^7.0.0",
     "lit": "^3.0.0",
     "lodash-es": "^4.17.21"

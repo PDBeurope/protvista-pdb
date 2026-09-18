@@ -7,7 +7,7 @@ import NightingaleLinegraphTrack from "@nightingale-elements/nightingale-linegra
 import NightingaleConservationTrack from "@nightingale-elements/nightingale-conservation-track";
 import NightingaleVariation from "@nightingale-elements/nightingale-variation";
 import NightingaleFilter from "@nightingale-elements/nightingale-filter";
-import NightingaleBoxplotTrack from "./vendor/nightingale-boxplot-track/index.js";
+import NightingaleBoxplotTrack from "@nightingale-elements/nightingale-boxplot-track";
 
 // customised PV components
 import ProtvistaPdbNavigation from "./custom-pv-components/pdb-navigation";
