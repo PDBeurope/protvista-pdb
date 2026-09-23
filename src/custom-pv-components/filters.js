@@ -172,7 +172,7 @@ const filterData = [
   }
 ];
 
-const keywordMap = {
+export const keywordMap = {
   disease: 'likely_disease',
   predicted: 'predicted',
   nonDisease: 'likely_benign',

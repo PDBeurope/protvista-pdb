@@ -1,29 +1,37 @@
-.protvista-pdb {
+.protvista-pdb.default-styles {
     font-family: Helvetica,Arial,FreeSans,"Liberation Sans",sans-serif !important;
     position: relative;
     /* width: 100%; */
     border: 1px solid lightgray;
     margin-bottom: 20px;
-    padding: 20px 10px;
+    /* padding: 20px 10px; */
     overflow-x: hidden;
     overflow-y: auto;
 }
 
+.protvista-pdb.default-styles .protvistaStickyHeader {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+}
 
-.protvistaRow {
+
+.protvista-pdb.default-styles .protvistaRow {
     display: table;
     width: 100%;
     clear: both;
 }
 
-.protvistaCol1 {
+.protvista-pdb.default-styles .protvistaCol1 {
     display: table-cell;
     vertical-align: middle;
     width: 15%;
     font-size:90%;
+    line-height: normal;
 }
 
-.protvistaCol2 {
+.protvista-pdb.default-styles .protvistaCol2 {
     display: table-cell;
     width: 85%;
     overflow: hidden;
@@ -31,56 +39,56 @@
 }
 
 @media (max-width: 1800px) {
-    .protvistaCol1 {
+    .protvista-pdb.default-styles .protvistaCol1 {
         width: 20%;
         font-size:90%;
     }
-    .protvistaCol2 {
+    .protvista-pdb.default-styles .protvistaCol2 {
         width: 80%;
     }
 }
 
 @media (max-width: 1400px) {
-    .protvistaCol1 {
+    .protvista-pdb.default-styles .protvistaCol1 {
         width: 22%;
         font-size:90%;
     }
-    .protvistaCol2 {
+    .protvista-pdb.default-styles .protvistaCol2 {
         width: 78%;
     }
 }
 
 @media (max-width: 1100px) {
-    .protvistaCol1 {
+    .protvista-pdb.default-styles .protvistaCol1 {
         width: 25%;
         font-size:75%;
     }
-    .protvistaCol2 {
+    .protvista-pdb.default-styles .protvistaCol2 {
         width: 75%;
     }
 }
 
 @media (max-width: 1000px) {
-    .protvistaCol1 {
+    .protvista-pdb.default-styles .protvistaCol1 {
         width: 27%;
         font-size:70%;
     }
-    .protvistaCol2 {
+    .protvista-pdb.default-styles .protvistaCol2 {
         width: 73%;
     }
 }
 
 @media (max-width: 767px) {
-    .protvistaCol1 {
+    .protvista-pdb.default-styles .protvistaCol1 {
         width: 30%;
         font-size:70%;
     }
-    .protvistaCol2 {
+    .protvista-pdb.default-styles .protvistaCol2 {
         width: 70%;
     }
 }
 
-.category-label {
+.protvista-pdb.default-styles .category-label {
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;
     background-color: #b2f5ff;
@@ -89,11 +97,11 @@
     position: relative;
 }
 
-.category-label:hover {
+.protvista-pdb.default-styles .category-label:hover {
     background-color: #80EEFF;
 }
 
-.category-label::before {
+.protvista-pdb.default-styles .category-label::before {
     content: ' ';
     display: inline-block;
     width: 0;
@@ -107,11 +115,15 @@
     transition: all .1s;
 }
 
-.protvistaRow.expanded > .category-label {
+.protvista-pdb.default-styles .category-label.no-icon::before {
+    content: unset;
+}
+
+.protvista-pdb.default-styles .protvistaRow.expanded > .category-label {
     background-color: #80EEFF;
 }
 
-.protvistaRow.expanded > .category-label::before {
+.protvista-pdb.default-styles .protvistaRow.expanded > .category-label::before {
     content: ' ';
     display: inline-block;
     width: 0;
@@ -122,54 +134,63 @@
     margin-right: 5px;
 }
 
-.track-label {
+.protvista-pdb.default-styles .track-label {
     background-color: #d9faff;
     padding: 0.5em 1.2em 0.5em 1.8em;
     cursor:pointer;
     position: relative;
 }
 
-.category-label.pdbIconsLabel, .track-label.pdbIconsLabel {
+.protvista-pdb.default-styles .category-label.pdbIconsLabel,
+.protvista-pdb.default-styles .track-label.pdbIconsLabel {
     border-left: 1px solid #b2f5ff;
     border-right: 1px solid #b2f5ff;
     background-color: #fff;
 }
 
-.aggregate-track-content, .track-content-single {
+.protvista-pdb.default-styles .aggregate-track-content,
+.protvista-pdb.default-styles .track-content-single {
     opacity: 1;
     -webkit-transition: opacity .1s;
     /* Safari */
     transition: opacity .1s;
+}
+
+.protvista-pdb.default-styles .aggregate-track-border {
     border-bottom: 1px solid #b2f5ff;
 }
 
-.aggregate-track-content{
+.protvista-pdb.default-styles .non-aggregate-track-border {
+    border-bottom: 1px solid lightgrey;
+}
+
+.protvista-pdb.default-styles .aggregate-track-content{
     padding-bottom: 5px;
 }
 
-.track-label, .track-content {
+.protvista-pdb.default-styles .track-label, .protvista-pdb.default-styles .track-content {
     border-bottom: 1px solid #b2f5ff;
 }
 
-.top-border {
+.protvista-pdb.default-styles .top-border {
     border-top: 1px solid #b2f5ff;
 }
 
-.is-hidden{
+.protvista-pdb.default-styles .is-hidden{
     display: none!important;
 }
 
-.pdbIcon {
+.protvista-pdb.default-styles .pdbIcon {
     display: inline-block;
     padding: 5px 4px;
 }
 
-.pdbIcon i {
+.protvista-pdb.default-styles .pdbIcon i {
     color: #fff;
     font-size: 21px;
 }
 
-.pdbIcon.rotate i {
+.protvista-pdb.default-styles .pdbIcon.rotate i {
     filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=1);
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
@@ -179,38 +200,42 @@
     display: inline-block;
 }
 
-.legendRow{
+.protvista-pdb.default-styles .legendRow{
     min-height: 30px;
     line-height: 30px;
 }
 
-.legendColor {
+.protvista-pdb.default-styles .legendColor {
     display: inline-block;
     height:10px;
     width:26px;
 }
 
-.legendText{
+.protvista-pdb.default-styles .legendText{
     /* min-width: 135px; */
     display: inline-block;
     font-size: 90%;
     text-align: left;
     color:#333;
-    margin-left: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
-.protvistaRowGroup{
+.protvista-pdb.default-styles .protvistaRowGroup {
     max-height: 210px;
     overflow-y: auto;
     clear: both;
     display: none;
 }
+.protvista-pdb.default-styles .protvistaRowGroup.noMaxHeight {
+    max-height: unset;
+}
 
-.protvistaRowGroup.noPaddingRight > .protvistaRow > .protvistaCol2 {
+.protvista-pdb.default-styles .protvistaRowGroup.noPaddingRight > .protvistaRow > .protvistaCol2 {
     padding-right: 0 !important;
 }
 
-.labelZoomIcon{
+.protvista-pdb.default-styles .labelZoomIcon{
     position: absolute;
     left: 5px;
     cursor: zoom-in;
@@ -220,12 +245,12 @@
     font-size: 12px;
 }
 
-.labelZoomIcon.active{
+.protvista-pdb.default-styles .labelZoomIcon.active{
     cursor: zoom-out!important;
     color: #009e38!important;
 }
 
-.hideLabelIcon{
+.protvista-pdb.default-styles .hideLabelIcon{
     position: absolute;
     right: 5px;
     cursor: pointer;
@@ -235,92 +260,18 @@
     font-size: 10px;
 }
 
-.protvistaResetSectionIcon{
-    position: absolute;
-    border: 1px solid #828181;
-    background-color: #828181;
-    border-radius: 50%;
-    cursor: pointer;
-    text-align: center;
-    text-align: center;
-    width: 20px;
-    height: 20px;
-    line-height: 19px;
-    right: 10px;
-    display: none;
+.protvista-pdb.default-styles .subtrackLabel{
+    word-break: break-all;
 }
 
-.protvistaResetSectionIcon i{
-    color: #fff;
-    cursor: pointer;
-    font-size:80%;
-}
-
-.protvistaToolbar{
-    text-align: right;
-}
-
-.protvistaToolbarIcon{
-    display: inline-block;
-    border: 1px solid #828181;
-    background-color: #828181;
-    border-radius: 50%;
-    margin-right: 10px;
-    cursor: pointer;
-    text-align: center;
-    text-align: center;
-    width: 30px;
-    height: 30px;
-    line-height: 28px;
-}
-
-.protvistaToolbar i{
-    color: #fff;
-    cursor: pointer;
-    margin:2px;
-}
-
-.protvistaRangeMenuTitle{
-    position: relative;
-    color: #1b1919;
-}
-
-.protvistaRangeMenuTitle > div{
-    padding: 10px 10px 0 10px;
-}
-
-.protvistaRangeMenuTitle > div:first-child{
-    font-weight: bold;
-    text-align: left;
-}
-
-.protvistaMenuClose{
-    position: absolute;
-    right: 10px;
-    top: 14px;
-    color: #6d6d6d;
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.protvistaForm{
-    padding: 10px;
-    font-size: 12px;
-    max-height: 300px;
-    overflow: auto;
-    text-align: left;
-    font-weight: 600;
-    color: #444;
-}
-
-.divWithScroll {
+.protvista-pdb.default-styles .divWithScroll {
     position: relative;
     clear: both;
     overflow-y: scroll;
     height:40px;
 }
 
-.label-tooltip .label-tooltip-text {
+.protvista-pdb.default-styles .label-tooltip .label-tooltip-text {
     visibility: hidden;
     /*white-space: nowrap;*/
     width: 400px;
@@ -335,7 +286,7 @@
     left: 100%;
 }
   
-.label-tooltip .label-tooltip-text::after {
+.protvista-pdb.default-styles .label-tooltip .label-tooltip-text::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -346,18 +297,18 @@
     border-color: transparent black transparent transparent;
 }
   
-.label-tooltip:hover .label-tooltip-text {
+.protvista-pdb.default-styles .label-tooltip:hover .label-tooltip-text {
     visibility: visible;
 }
 
-.protvista-pdb protvista-pdb-navigation .handle, 
-.protvista-pdb protvista-navigation .handle {
+.protvista-pdb.default-styles protvista-pdb-navigation .handle, 
+.protvista-pdb.default-styles protvista-navigation .handle {
     fill: darkgray;
     height: 19px !important;
     stroke: black;
 }
 
-protvista-tooltip {
+protvista-tooltip.default-styles {
     z-index: 50000;
     position: absolute;
     min-width: 220px;
@@ -370,34 +321,34 @@ protvista-tooltip {
     /*opacity: .9;*/
 }
 
-protvista-tooltip[mirror="H"] {
+protvista-tooltip.default-styles[mirror="H"] {
     margin-left: 0;
     margin-right: 20px;
 }
 
-protvista-tooltip .tooltip-header .tooltip-header-title{
+protvista-tooltip.default-styles .tooltip-header .tooltip-header-title{
     color: #ffffff;
 }
 
-/* protvista-tooltip a,
-protvista-tooltip a:link,
-protvista-tooltip a:hover,
-protvista-tooltip a:active,
-protvista-tooltip a:visited {
+/* protvista-tooltip.default-styles a,
+protvista-tooltip.default-styles a:link,
+protvista-tooltip.default-styles a:hover,
+protvista-tooltip.default-styles a:active,
+protvista-tooltip.default-styles a:visited {
     color: #ffffff;
 } */
 
-protvista-tooltip .tooltip-body {
+protvista-tooltip.default-styles .tooltip-body {
     /* color: #ffffff; */
     color: #555;
 }
 
-protvista-tooltip .tooltip-header {
+protvista-tooltip.default-styles .tooltip-header {
     background-color: #595959;
     line-height: 3em;
 }
 
-/* protvista-tooltip .tooltip-header::before {
+/* protvista-tooltip.default-styles .tooltip-header::before {
     content: " ";
     position: absolute;
     bottom: 100%;
@@ -408,12 +359,12 @@ protvista-tooltip .tooltip-header {
     border-color: transparent transparent black transparent;
 } */
 
-protvista-tooltip[mirror="H"] .tooltip-header::before {
+protvista-tooltip.default-styles[mirror="H"] .tooltip-header::before {
     left: initial;
     right: 20px;
 }
 
-protvista-tooltip .tooltip-header .tooltip-header-title {
+protvista-tooltip.default-styles .tooltip-header .tooltip-header-title {
     /* background-color: #000000;
     font-weight: 700;
     line-height: 1em;
@@ -430,7 +381,7 @@ protvista-tooltip .tooltip-header .tooltip-header-title {
     color: #FFF;
 }
 
-protvista-tooltip .tooltip-body {
+protvista-tooltip.default-styles .tooltip-body {
     padding: 1em;
     background: #FFF;
     font-weight: normal;
@@ -439,7 +390,7 @@ protvista-tooltip .tooltip-body {
     overflow-y: auto;
 }
 
-protvista-tooltip .tooltip-close {
+protvista-tooltip.default-styles .tooltip-close {
     height: 3em;
     width: 3em;
     display: inline-block;
@@ -450,52 +401,54 @@ protvista-tooltip .tooltip-close {
     vertical-align: middle;
 }
 
-protvista-tooltip .tooltip-close:hover {
+protvista-tooltip.default-styles .tooltip-close:hover {
     background-color: #1a1a1a;
 }
 
-protvista-tooltip table td {
+protvista-tooltip.default-styles table td {
     padding: .5em .5em;
     vertical-align: top;
 }
 
-protvista-tooltip table td:first-child {
+protvista-tooltip.default-styles table td:first-child {
     font-weight: 600;
     text-align: right
 }
 
-protvista-tooltip table td p {
+protvista-tooltip.default-styles table td p {
     margin-top: 0;
 }
 
-protvista-tooltip table thead, table tbody, table tfoot {
+protvista-tooltip.default-styles table thead,
+protvista-tooltip.default-styles table tbody,
+protvista-tooltip.default-styles table tfoot {
     /* border: 0px solid #f1f1f1;
     background-color: #616161; */
     background-color: #FFF;
 }
 
-protvista-tooltip .tooltip-body table tbody{
+protvista-tooltip.default-styles .tooltip-body table tbody{
     font-size: 12px;
 }
 
-protvista-tooltip table tbody tr:nth-child(even) {
+protvista-tooltip.default-styles table tbody tr:nth-child(even) {
     border-bottom: 0;
     /* background-color: #616161; */
     background-color: #FFF;
 }
 
-protvista-tooltip .tooltip-body table tbody h4, protvista-tooltip .tooltip-body table tbody h5{
+protvista-tooltip.default-styles .tooltip-body table tbody h4, protvista-tooltip.default-styles .tooltip-body table tbody h5{
     text-align: left;
     font-size: 14px;
     font-weight: bold;
     color: #333;
 }
 
-protvista-tooltip h4, protvista-tooltip h5 {
+protvista-tooltip.default-styles h4, protvista-tooltip.default-styles h5 {
     margin: 0;
 }
 
-protvista-tooltip table {
+protvista-tooltip.default-styles table {
     border-spacing: 0;
     border-collapse: collapse;
     background-color: #FFF;
@@ -507,31 +460,31 @@ protvista-tooltip table {
     font-size: 93%;
 }
 
-protvista-tooltip  table td {
+protvista-tooltip.default-styles  table td {
     /* border: 1px solid #CCC; */
     color: #555;
 }
 
-protvista-tooltip  table tr td:first-child {
+protvista-tooltip.default-styles  table tr td:first-child {
     font-weight: 700;
 }
 
 /* filter */
-ul.filter-list {
+.protvista-pdb.default-styles ul.filter-list {
     list-style:none;
     margin:0;
     padding:0;
 }
-ul.filter-list a {
+.protvista-pdb.default-styles ul.filter-list a {
     cursor:pointer;
 }
-.filter-list li {
+.protvista-pdb.default-styles .filter-list li {
     margin: .4em 0;
 }
-.filter-select-trigger {
+.protvista-pdb.default-styles .filter-select-trigger {
     text-decoration:none;
 }
-.filter-select-wrapper {
+.protvista-pdb.default-styles .filter-select-wrapper {
     box-sizing: border-box;
     display:inline-block;
     border-radius:.2em;
@@ -541,7 +494,7 @@ ul.filter-list a {
     padding: .2em;
     border: .1em solid rgba(255, 0, 0, 0);
 }
-.filter-select {
+.protvista-pdb.default-styles .filter-select {
     margin:0;
     box-sizing:border-box;
     border-radius:.2em;
@@ -550,45 +503,46 @@ ul.filter-list a {
     display:inline-block;
     background-color: #333333;
 }
-.filter-select-trigger:hover .filter-select-wrapper {
+.protvista-pdb.default-styles .filter-select-trigger:hover .filter-select-wrapper {
     border: .1em solid rgba(255, 0, 0, .5);
 }
-.filter-select-trigger.active .filter-select-wrapper {
+.protvista-pdb.default-styles .filter-select-trigger.active .filter-select-wrapper {
     border: .1em solid rgba(255, 0, 0, .9);
 }
 
-.pdbIconsId {
+.protvista-pdb.default-styles .pdbIconsId {
     color: #0000EE !important;
     /* border-bottom: none !important;
     min-width: 43px; */
     display: inline-block;
 }
 
-.pdbIconsId:visited {
+.protvista-pdb.default-styles .pdbIconsId:visited {
     color: #551A8B !important;
     border-bottom: none !important;
 }
 
-.pdbIconslogoA {
+.protvista-pdb.default-styles .pdbIconslogoA {
     border-bottom: none !important;
 }
 
-.pdbIconslogo {
+.protvista-pdb.default-styles .pdbIconslogo {
     display: inline-block;
     padding: 0px 4px;
     height: 18px;
     line-height: 18px;
 }
 @media (max-width: 1000px) {
-    .pdbIconsId{
+    .protvista-pdb.default-styles .pdbIconsId{
         min-width: 25px;
     }
-    .pdbIconsWrapper{
+    .protvista-pdb.default-styles .pdbIconsWrapper{
         display: block;
     }
 }
 
-.protvista-pdb a, .protvista-pdb a:visited {
+.protvista-pdb.default-styles a,
+.protvista-pdb.default-styles a:visited {
     border-bottom-width: 1px;
     border-bottom-style: dotted;
     border-bottom-color: inherit;
@@ -596,11 +550,13 @@ ul.filter-list a {
     color: #222;
 }
 
-.protvista-pdb a:hover, .protvista-pdb a:focus, .protvista-pdb a:active {
+.protvista-pdb.default-styles a:hover,
+.protvista-pdb.default-styles a:focus,
+.protvista-pdb.default-styles a:active {
     color: rgb(116,179,96);
 }
 
-.labelTooltipBox {
+.protvista-pdb.default-styles .labelTooltipBox {
     max-width: 400px;
     background-color: #e4e2e2;
     color: #222;
@@ -611,7 +567,7 @@ ul.filter-list a {
     font-size: 80%;
 }
   
-.labelTooltipBox::after {
+.protvista-pdb.default-styles .labelTooltipBox::after {
     content: "";
     position: absolute;
     top: 10px;
@@ -621,7 +577,7 @@ ul.filter-list a {
     border-color: transparent #e4e2e2 transparent transparent;
 }
 
-.viewMenuBox {
+.protvista-pdb.default-styles .viewMenuBox {
     display: block;
     position: absolute;
     z-index: 1;
@@ -638,38 +594,182 @@ ul.filter-list a {
     box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
 }
 
-#filter-disease .protvista_checkbox_input + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-disease .protvista_checkbox_input + .protvista_checkbox_label::before {
 background: #990000;
 opacity: 0.4;
 }
 
-#filter-disease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-disease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
 opacity: 1;
 }
 
-#filter-predicted .protvista_checkbox_input + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-predicted .protvista_checkbox_input + .protvista_checkbox_label::before {
 background: linear-gradient(#002594, #8FE3FF);
 opacity: 0.4;
 }
 
-#filter-predicted .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-predicted .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
 opacity: 1;
 }
 
-#filter-nonDisease .protvista_checkbox_input + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-nonDisease .protvista_checkbox_input + .protvista_checkbox_label::before {
 background: #99cc00;
 opacity: 0.4;
 }
 
-#filter-nonDisease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-nonDisease .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
 opacity: 1;
 }
 
-#filter-uncertain .protvista_checkbox_input + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-uncertain .protvista_checkbox_input + .protvista_checkbox_label::before {
 background: #FFCC00;
 opacity: 0.4;
 }
 
-#filter-uncertain .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
+.protvista-pdb.default-styles #filter-uncertain .protvista_checkbox_input:checked + .protvista_checkbox_label::before {
 opacity: 1;
+}
+
+.protvista-pdb.default-styles .pvSubtrackScrollbox {
+    display: block;
+    max-height: 500px;
+    overflow-y: auto;
+}
+.protvista-pdb.default-styles .pvSubtrackScrollbox.noMaxHeight {
+    max-height: unset;
+}
+
+.protvista-pdb.default-styles .pvScrollboxItem {
+    display: block;
+}
+
+.protvista-pdb.default-styles nightingale-scrollbox {
+    width: 100%;
+}
+
+.protvista-pdb.default-styles .pvGreyCategoryLabel,
+.protvista-pdb.default-styles .pvGreyCategoryLabel.category-label:hover,
+.protvista-pdb.default-styles .protvistaRow.expanded > .pvGreyCategoryLabel.category-label {
+    background-color: rgb(128, 128, 128);
+}
+
+.protvista-pdb.default-styles .pvBoxplotDetailLabel {
+    background-color: #d3d3d3;
+}
+
+.protvista-pdb.default-styles .pvConsDetailLabel {
+    background-color: rgb(211,211,211);
+}
+
+.protvista-pdb.default-styles .pvConsDetailTitle {
+    height:30px;
+}
+
+.protvista-pdb.default-styles .pvConsDetailTitle > span {
+    float: right;
+}
+
+.protvista-pdb.default-styles .pvConsDetailTitle > span > a {
+    border-bottom: none;
+}
+
+.protvista-pdb.default-styles .pvConsDetailControl {
+    height:90px;
+}
+
+.protvista-pdb.default-styles .pvConsDetailMSABtn {
+    padding: 2px 4px 2px 4px;
+    background-color: #ececec;
+    border: solid 1px dimgrey;
+    border-radius: 3px;
+    margin-top: 10px;
+    color: #222;
+}
+
+.protvista-pdb.default-styles .pvConsDetailLegend {
+    height:200px;
+}
+
+.protvista-pdb.default-styles nightingale-filter label.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* .protvista-pdb.default-styles .in3DTag {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 1px 4px;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    font-size: 10px;
+    line-height: 1.2;
+    cursor: pointer;
+    opacity: 0.75;
+}
+
+.protvista-pdb.default-styles .in3DTag:hover,
+.protvista-pdb.default-styles .in3DTag.active {
+    opacity: 1;
+    font-weight: bold;
+} */
+
+
+.protvista-pdb.default-styles .in3DTag {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    padding: 0 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: #f3f3f3;
+    color: #3b6fb6;
+    cursor: pointer;
+    margin-top: 4px;
+
+    /* font-family: 'IBM Plex Sans';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22.4px; */
+}
+
+.protvista-pdb.default-styles .in3DTag.active {
+    color: #193f90;
+    font-weight: 500;
+    background: #b9d4f1;
+}
+
+.protvista-pdb.default-styles .mapYourResiduesButton {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #f3f3f3;
+  color: #3b6fb6;
+  text-align: center;
+  cursor: pointer;
+  font-family: IBM Plex Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22.4px;
+  padding: 0.6%;
+  margin-top: 4px;
+}
+
+
+.protvista-pdb.default-styles .customTrackEditButton {
+  background: transparent;
+  color: #3b6fb6;
+  border: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 6px;
+  position: absolute;
+  top: 10%;
+  right: 1%;
+}
+
+.protvista-pdb.default-styles .customTrackEditButton:hover {
+  background: #d1e3f6;
 }

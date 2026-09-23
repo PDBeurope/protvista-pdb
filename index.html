@@ -1,32 +1,101 @@
 <!doctype html>
-<html class="no-js" lang="">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Migrated PDB Protvista demo</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Icon fonts stylesheet -->
-    <link rel="stylesheet" href="https://ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css" type="text/css" media="all"/>
-</head>
+    <link
+      rel="stylesheet"
+      href="https://ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css"
+      type="text/css"
+      media="all"
+    />
+    <!-- <link rel="stylesheet" href="/styles/protvista-pdb.css">
+    <link rel="stylesheet" href="/styles/protvista-variation.css"> -->
+    <!-- <link rel="stylesheet" href="/dist/protvista-pdb-4.0.0-mddb.min.css"> -->
+  </head>
+  <body>
+    <h1>Migrated PDB Protvista demo</h1>
 
-<body>
-    <div style="width:99%;margin: 50px auto">
-         <protvista-pdb accession="Q04771"></protvista-pdb>
-        <!-- <protvista-pdb entry-id="1cbs" entity-id="1"></protvista-pdb>  -->
-    </div>
+    <div id="protvista-demo"></div>
 
-    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8" defer></script>
+    <script type="module">
+      const demos = {
+        protein: {
+          accession: "P24666",
+          "sticky-header": "true",
+        },
 
-    <!-- Required for IE11 -->
+        entry: {
+          "entry-id": "1trn",
+          "entity-id": "1",
+        },
+
+        ligand: {
+          "ligand-id": "STI",
+        },
+
+        sasa: {
+          accession: "P01178",
+          "api-names":
+            "unipdb,secondary_structure_variation,ligand_sites,interface_residues,annotations,rsa_distribution",
+          "always-expanded": "rsa_distribution",
+        },
+
+        memprot: {
+          accession: "G2FID1",
+        },
+
+        expanded: {
+          accession: "P24666",
+          "max-height": "600px",
+          "always-expanded":
+            "unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation",
+          "enable-in3d": true,
+          "trigger-first-in3d": true,
+        },
+
+        customTracks: {
+          accession: "P24666",
+          "max-height": "600px",
+          "always-expanded":
+            "unipdb,ligand_sites,interface_residues,annotations,3dbeacons,sequence_conservation,variation",
+          "enable-in3d": true,
+          "trigger-first-in3d": true,
+          "add-custom-track": true,
+          "new-toolbar": true,
+        },
+      };
+
+      // 👇 Only change this to switch demo
+      const activeDemo = new URLSearchParams(window.location.search).get("demo") ?? "sasa";
+
+      const protvista = document.createElement("protvista-pdb");
+
+      Object.entries(demos[activeDemo]).forEach(([name, value]) => {
+        if (value === true) {
+          protvista.setAttribute(name, "");
+        } else if (value !== false && value != null) {
+          protvista.setAttribute(name, value);
+        }
+      });
+
+      document.querySelector("#protvista-demo").append(protvista);
+    </script>
+
+    <script type="module" src="/src/index.js"></script>
+
+    <!-- Legacy/polyfill dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js"></script>
-    <!-- Web component polyfill (only loads what it needs) -->
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-lite.js" charset="utf-8"></script>
-    <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js" charset="utf-8"></script>
-    <!-- ProtVista PDB Web-Component script -->
-    <script src="dist/protvista-pdb-3.3.1.js" charset="utf-8" defer></script>
-</body>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-lite.js"
+      charset="utf-8"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"
+      charset="utf-8"
+    ></script>
+  </body>
 </html>

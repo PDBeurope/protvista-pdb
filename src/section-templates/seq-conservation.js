@@ -1,28 +1,47 @@
-const {html} = require("lit-html");
+import { html } from "lit";
+
+function isAlwaysExpanded(ctx) {
+    return ctx.alwaysExpanded?.includes('sequence_conservation') === true;
+}
 
 function PDBePvScSection(ctx) {
-    return html`<div class="protvistaRow pvConsHistoRow" style="display:none">
+    return html`<div class="protvistaRow pvConsHistoRow" style="display:${isAlwaysExpanded(ctx) ? "table" : "none"}">
                     
-                    <div class="protvistaCol1 category-label" @click=${e => ctx.layoutHelper.showConservationPlot()} style="background-color:rgb(128,128,128); borderBottom:1px solid lightgrey">Sequence conservation</div>
+                    <div
+                        class="protvistaCol1 category-label pvGreyCategoryLabel ${isAlwaysExpanded(ctx) ? "no-icon" : ""}"
+                        @click=${e => {
+                            if (!isAlwaysExpanded(ctx)) {
+                                ctx.layoutHelper.showConservationPlot();
+                            }
+                        }}
+                    >Sequence conservation</div>
 
-                    <div class="protvistaCol2 aggregate-track-content pvConservationHistoSection">
-                        <protvista-pdb-sc-histogram accession="${ctx._entryId ? ctx._entryId : ctx._accession}" length="${ctx.viewerData.length}"></protvista-pdb-sc-histogram>
+                    <div class="protvistaCol2 aggregate-track-content non-aggregate-track-border pvConservationHistoSection">
+                        <protvista-pdb-sc-histogram
+                            .useDefaultStyles=${ctx.useDefaultStyles}
+                            accession=${ctx._entryId ? ctx._entryId : ctx._accession}
+                            length=${ctx.viewerData.length}
+                            height=${44}
+                            .margin-left=${ctx.pvTrackMargins.left}
+                            .margin-right=${ctx.pvTrackMargins.right}
+                            .display-start=${ctx.viewerData.displayStart || 1}
+                            .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+                        ></protvista-pdb-sc-histogram>
                     </div>
                 </div>
-                <div class="pvConservationPlotRow" style="display:none">
+                <div class="pvConservationPlotRow" style="display:${isAlwaysExpanded(ctx) ? "block" : "none"}">
                     <div class="protvistaRow">
-                        <div class="protvistaCol1 track-label" style="background-color:rgb(211,211,211); borderBottom:1px solid lightgrey">
-                            <div style="height:30px;">
+                        <div class="protvistaCol1 track-label pvConsDetailLabel non-aggregate-track-border">
+                            <div class="pvConsDetailTitle">
                                 <b>Amino acid probabilities</b>
-                                <span style="float: right" @mouseover=${e => {
+                                <span @mouseover=${e => {
                                     e.stopPropagation();
                                     ctx.layoutHelper.showLabelTooltip(e)
                                     }} @mouseout=${e => {
                                     e.stopPropagation();
                                     ctx.layoutHelper.hideLabelTooltip()
                                 }}>
-                                    <a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Sequence-conservation-scores" target="_blank"
-                                    style="border-bottom: none">
+                                    <a href="https://github.com/PDBe-KB/pdbe-kb-manual/wiki/Sequence-conservation-scores" target="_blank">
                                         <i class="icon icon-generic" data-icon="?"></i>
                                     </a>
                                     <span class="labelTooltipContent" style="display:none;">
@@ -30,7 +49,7 @@ function PDBePvScSection(ctx) {
                                     </span>
                                 </span>
                             </div>
-                            <div class="control" style="height:90px;">
+                            <div class="pvConsDetailControl control">
                                 <p>Data displayed by</p>
                                 <div>
                                     <label class="legendText">
@@ -54,7 +73,7 @@ function PDBePvScSection(ctx) {
                             }}
                             style = "${ctx._entryId ? "display: none" : ""}"
                             >
-                                <a class="button" style="padding: 2px 4px 2px 4px; background-color: #ececec; border: solid 1px dimgrey; border-radius: 3px; margin-top: 10px;"
+                                <a class="pvConsDetailMSABtn button"
                                     href="${ctx.layoutHelper.getMSADownloadUrl()}">
                                     Download MSA <i class="icon icon-functional" data-icon="="></i>
                                 </a>
@@ -63,7 +82,7 @@ function PDBePvScSection(ctx) {
                                 </span>
                             </div>
 
-                            <div class="legend" style="height:200px;">
+                            <div class="pvConsDetailLegend legend">
                                 <p>Amino acid properties</p>
                                 <div class="protvista-sc-legend">
                                     <div class="protvista-sc-legend">
@@ -106,7 +125,17 @@ function PDBePvScSection(ctx) {
                         </div>
 
                         <div class="protvistaCol2 track-content pvConservationPlotSection">
-                            <protvista-pdb-seq-consevation sc-display-order="property" accession="${ctx._entryId ? ctx._entryId : ctx._accession}" length="${ctx.viewerData.length}"></protvista-pdb-seq-consevation>
+                            <protvista-pdb-seq-conservation
+                            sc-display-order="property"
+                            accession=${ctx._entryId ? ctx._entryId : ctx._accession}
+                            length=${ctx.viewerData.length}
+                            height=${430}
+                            .useDefaultStyles=${ctx.useDefaultStyles}
+                            .display-start=${ctx.viewerData.displayStart || 1}
+                            .display-end=${ctx.viewerData.displayEnd || ctx.viewerData.length}
+                            .margin-left=${ctx.pvTrackMargins.left}
+                            .margin-right=${ctx.pvTrackMargins.right}
+                            ></protvista-pdb-seq-conservation>
                         </div>
                     </div>
                 </div>`

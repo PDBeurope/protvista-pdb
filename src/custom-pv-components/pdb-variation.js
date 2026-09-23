@@ -1,199 +1,337 @@
-import ProtvistaPdbTrack from "./pdb-track";
-import {
-  scaleLinear,
-  scalePoint,
-  axisLeft,
-  axisRight,
-  select,
-  event as d3Event
-} from "d3";
+import NightingaleVariation from "@nightingale-elements/nightingale-variation";
+import filterData, { _getFilteredDataSet } from "./filters";
 
-import processVariants from "./processVariants";
-import VariationPlot from "./variationPlot";
-import "../../styles/protvista-variation.css";
-import { _union, _getFilteredDataSet } from "./filters";
+function normaliseVariantFilters(filters = []) {
+  if (!Array.isArray(filters)) return [];
 
-const aaList = [
-  "G",
-  "A",
-  "V",
-  "L",
-  "I",
-  "S",
-  "T",
-  "C",
-  "M",
-  "D",
-  "N",
-  "E",
-  "Q",
-  "R",
-  "K",
-  "H",
-  "F",
-  "Y",
-  "W",
-  "P",
-  "d",
-  "*"
-];
+  return filters.map((filter) => ({
+    ...filter,
+    options: {
+      ...filter.options,
+      label:
+        filter.options?.label ||
+        filter.options?.labels?.join(" / ") ||
+        filter.name,
+      color: filter.options?.color || filter.options?.colors?.[0] || "#999",
+    },
+  }));
+}
 
+class ProtvistaPdbVariation extends NightingaleVariation {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
 
-
-class ProtvistaPdbVariation extends ProtvistaPdbTrack {
   connectedCallback() {
     super.connectedCallback();
-    this._accession = this.getAttribute("accession");
-    this._height = parseInt(this.getAttribute("height"))
-      ? parseInt(this.getAttribute("height"))
-      : 430;
-    this._width = this._width ? this._width : 0;
-    this._yScale = scaleLinear();
-    // scale for Amino Acids
-    this._yScale = scalePoint()
-      .domain(aaList)
-      .range([0, this._height - this.margin.top - this.margin.bottom]);
+
+    this.addEventListener("change", this._onNightingaleChange);
+
+    const root = this.closest("protvista-pdb") || document;
+    root.addEventListener("change", this._onFilterChange);
   }
 
-  static get observedAttributes() {
-    return super.observedAttributes.concat("activefilters");
+  disconnectedCallback() {
+    this.removeEventListener("change", this._onNightingaleChange);
+
+    const root = this.closest("protvista-pdb") || document;
+    root.removeEventListener("change", this._onFilterChange);
+
+    super.disconnectedCallback?.();
   }
 
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    
-    if (oldVal !== newVal && attrName == "activefilters") {
-      //copied this from variation-adaptor  
-      this.data = _getFilteredDataSet(attrName, oldVal, newVal, this._completeDataSet);
-    }else{
-      super.attributeChangedCallback(attrName, oldVal, newVal);
-      if (!super.svg) {
-        return;
-      }
-    }
-    
-  }
-
-  _fireEvent(name, detail) {
-    this.dispatchEvent(
-      new CustomEvent(name, {
-        detail: detail,
-        bubbles: true,
-        cancelable: true
-      })
+  set filters(filters) {
+    this._filterConfig = normaliseVariantFilters(
+      Array.isArray(filters) && filters.length ? filters : filterData,
     );
   }
 
+  get filters() {
+    if (!this._filterConfig || this._filterConfig.length === 0) {
+      this._filterConfig = normaliseVariantFilters(filterData);
+    }
+
+    return this._filterConfig;
+  }
+
+  _onFilterChange = (event) => {
+    const detail = event.detail || {};
+
+    if (detail.type !== "filters") return;
+    if (detail.for !== this.id) return;
+
+    this.applyActiveFilterNames(detail.value || []);
+  };
+
+  applyActiveFilterNames(activeFilterNames) {
+    if (!this._completeDataSet) return;
+
+    const activeNameSet = new Set(activeFilterNames || []);
+
+    const activeFilterKeys = filterData
+      .filter((filter) => activeNameSet.has(filter.name))
+      .map((filter) => `${filter.type.name}:${filter.name}`);
+
+    const activeFiltersAttr = activeFilterKeys.join(",");
+
+    const filteredData = _getFilteredDataSet(
+      "activefilters",
+      "",
+      activeFiltersAttr,
+      this._completeDataSet,
+    );
+
+    this._rawData = filteredData;
+    super.data = filteredData;
+
+    requestAnimationFrame(() => {
+      this.createFeatures?.();
+      this.zoomRefreshed?.();
+    });
+  }
+
+  static get observedAttributes() {
+    return [...(super.observedAttributes || []), "activefilters"];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "activefilters" && oldValue !== newValue) {
+      if (this._completeDataSet) {
+        this.data = _getFilteredDataSet(
+          name,
+          oldValue,
+          newValue,
+          this._completeDataSet,
+        );
+      }
+      return;
+    }
+
+    super.attributeChangedCallback?.(name, oldValue, newValue);
+  }
+
   set data(data) {
-    if(typeof this._completeDataSet == 'undefined') this._completeDataSet = data;
-    this._data = processVariants(data);
-    this._createTrack();
-  }
-
-  _createTrack() {
-    this._layoutObj.init(this._data);
-
-    d3.select(this)
-    .selectAll("svg")
-      .remove();
-    
-    this.svg = d3.select(this)
-      .append("div")
-      .style("line-height", 0)
-      .append("svg")
-      .style('width', '100%')
-      .attr("height", this._height + 40);
-
-    this.highlighted = this.svg
-      .append("rect")
-      .attr("class", "highlighted")
-      .attr("fill", "rgba(255, 235, 59, 0.8)")
-      .attr('stroke', 'black')
-      .attr("height", this._height + 40).attr("transform", "translate(1.5,0)");
-
-    // this.trackHighlighter.appendHighlightTo(this.svg);
-
-    this.seq_g = this.svg.append("g").attr("class", "sequence-features").attr("transform", "translate(1.5,30)");
-
-    this._createFeatures();
-    this.refresh();
-  }
-
-  _createFeatures() {
-    this._variationPlot = new VariationPlot();
-    // Group for the main chart
-    const mainChart = super.svg.select("g.sequence-features");
-
-    this._axisLeft = mainChart.append("g");
-
-    this._axisRight = mainChart.append("g");
-
-    // clip path prevents drawing outside of it
-    const chartArea = mainChart
-      .append("g")
-      .attr("clip-path", "url(#plotAreaClip)");
-
-    let clipWidth = this.getWidthWithMargins();
-    
-    if(clipWidth == 0){
-      try{
-        clipWidth = this.parentElement.parentElement.parentElement.previousElementSibling.lastElementChild.clientWidth;
-      }catch(e){}
+    if (!this._completeDataSet) {
+      this._completeDataSet = data;
     }
 
-    this._clipPath = mainChart
-      .append("clipPath")
-      .attr("id", "plotAreaClip")
-      .append("rect")
-      .attr("width", '100%')
-      .attr("height", this._height)
-      .attr("transform", `translate(0, -${this.margin.top})`);
-
-    // This is calling the data series render code for each of the items in the data
-    this._series = chartArea.datum(this._data);
-
-    this.updateScale();
+    this._rawData = data;
+    super.data = data;
   }
 
-  // Calling render again
-  refresh() {
-    if (this._series) {
-      // this._clipPath.attr("width", this.getWidthWithMargins());
-      this._clipPath.style("width", '100%');
-      this.updateScale();
-      this._series.call(this._variationPlot.drawVariationPlot, this);
-      this._updateHighlight();
+  get data() {
+    return this._rawData;
+  }
+
+  _onNightingaleChange = (event) => {
+    const detail = event.detail || {};
+
+    const type = detail.eventType || detail.eventtype || detail.type;
+
+    const value = detail.value || detail;
+    const feature = value?.feature || value?.data || value;
+
+    if (type === "mouseover") {
+      this._handleMouseover(value, feature);
+    }
+
+    if (type === "mouseout") {
+      this._handleMouseout();
+    }
+
+    if (type === "click") {
+      this._handleClick(value, feature);
+    }
+  };
+
+  _getMouseEvent(value) {
+    return (
+      value?.parentEvent ||
+      value?.event ||
+      value?.originalEvent ||
+      value?.sourceEvent ||
+      null
+    );
+  }
+
+  _makeTooltipData(feature) {
+    if (!feature) return null;
+
+    const start = Number(feature.start);
+    const end = Number(feature.end ?? feature.start);
+
+    if (!start) return null;
+
+    return {
+      start,
+      end,
+      feature: {
+        ...feature,
+        type: "Variant",
+      },
+    };
+  }
+
+  _handleMouseover(value, feature) {
+    const tooltipData = this._makeTooltipData(feature);
+    if (!tooltipData) return;
+
+    const oldTooltip = document.querySelector("protvista-tooltip");
+
+    if (!oldTooltip?.classList.contains("click-open")) {
+      window.setTimeout(() => {
+        this.createTooltipFromTooltipData(
+          this._getMouseEvent(value),
+          tooltipData,
+          false,
+        );
+      }, 50);
+    }
+
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: {
+          highlight: `${tooltipData.start}:${tooltipData.end}`,
+          highlightstart: tooltipData.start,
+          highlightend: tooltipData.end,
+          "highlight-start": tooltipData.start,
+          "highlight-end": tooltipData.end,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-mouseover", {
+        detail: tooltipData.feature,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  _handleMouseout() {
+    const oldTooltip = document.querySelector("protvista-tooltip");
+
+    if (!oldTooltip?.classList.contains("click-open")) {
+      window.setTimeout(() => {
+        this.removeAllTooltips();
+      }, 50);
+    }
+
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: {
+          highlight: null,
+          highlightstart: null,
+          highlightend: null,
+          "highlight-start": null,
+          "highlight-end": null,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-mouseout", {
+        detail: null,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  _handleClick(value, feature) {
+    const tooltipData = this._makeTooltipData(feature);
+    if (!tooltipData) return;
+
+    window.setTimeout(() => {
+      this.createTooltipFromTooltipData(
+        this._getMouseEvent(value),
+        tooltipData,
+        true,
+      );
+    }, 0);
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-click", {
+        detail: tooltipData,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  removeAllTooltips() {
+    document.querySelectorAll("protvista-tooltip").forEach((tooltip) => {
+      tooltip.remove();
+    });
+  }
+
+  createTooltipFromTooltipData(mouseEvent, tooltipData, closeable = false) {
+    if (!mouseEvent || typeof mouseEvent.pageX === "undefined") return;
+
+    this.removeAllTooltips();
+
+    const tooltip = document.createElement("protvista-tooltip");
+
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
+
+    tooltip.left = mouseEvent.pageX + 15;
+    tooltip.top = mouseEvent.pageY + 5;
+    tooltip.style.marginLeft = 0;
+    tooltip.style.marginTop = 0;
+
+    tooltip.title =
+      tooltipData.start === tooltipData.end
+        ? `Variant residue ${tooltipData.start}`
+        : `Variant ${tooltipData.start}-${tooltipData.end}`;
+
+    tooltip.closeable = closeable;
+
+    tooltip.content =
+      tooltipData.feature.tooltipContent ||
+      tooltipData.feature.tooltip ||
+      tooltipData.feature.description ||
+      this._fallbackTooltipContent(tooltipData.feature);
+
+    if (closeable) {
+      tooltip.classList.add("click-open");
+    }
+
+    document.body.appendChild(tooltip);
+
+    const tooltipDom = tooltip.getBoundingClientRect();
+    const bottomSpace = window.innerHeight - mouseEvent.clientY;
+    const rightSpace = window.innerWidth - mouseEvent.clientX;
+
+    if (bottomSpace < 130) {
+      tooltip.style.top = mouseEvent.pageY - (tooltipDom.height + 20) + "px";
+    }
+
+    if (rightSpace < 300) {
+      tooltip.style.left = "";
+      tooltip.style.right = rightSpace - 10 + "px";
     }
   }
 
-  updateScale() {
-    this._yAxisLScale = axisLeft()
-      .scale(this._yScale)
-      .tickSize(-this.getWidthWithMargins());
+  _fallbackTooltipContent(feature) {
+    const mutation = feature.variant || feature.alternativeSequence || "";
 
-    this._yAxisRScale = axisRight().scale(this._yScale);
+    const consequence = feature.consequenceType
+      ? `<br/>Consequence: ${feature.consequenceType}`
+      : "";
 
-    this._axisLeft
-      .attr("class", "variation-y-left axis")
-      .attr("transform", `translate(${this.margin.left},0)`)
-      .call(this._yAxisLScale);
+    const xrefs = feature.xrefNames?.length
+      ? `<br/>Sources: ${feature.xrefNames.join(", ")}`
+      : "";
 
-    this._axisRight
-      .attr(
-        "transform",
-        `translate(${this.getWidthWithMargins() - this.margin.right + 10}, 0)`
-      )
-      .attr("class", "variation-y-right axis")
-      .call(this._yAxisRScale);
-  }
-
-  updateData(data) {
-    if (this._series) {
-      this._series.datum(data);
-    }
-  }
-
-  reset() {
-    // reset zoom, filter and any selections
+    return `Variant: ${mutation}${consequence}${xrefs}`;
   }
 }
 

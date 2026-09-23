@@ -1,130 +1,465 @@
-import ProtvistaPdbTrack from "./pdb-track";
-import {
-  scaleLinear,
-  select,
-  event as d3Event,
-  line,
-  extent,
-  curveBasis
-} from "d3";
+import NightingaleLinegraphTrack from "@nightingale-elements/nightingale-linegraph-track";
 
-class ProtvistaPdbVariationGraph extends ProtvistaPdbTrack {
+class ProtvistaPdbVariationGraph extends NightingaleLinegraphTrack {
   constructor() {
     super();
-    this._line = line()
-      .x(d => this.xScale(d.x))
-      .y(d => this._yScale(d.y));
-  }
-
-  init() {
-    this._totals_dataset = {};
-    this._totals_feature = undefined;
-
-    this._disease_dataset = {};
-    this._disease_feature = undefined;
+    this.useDefaultStyles = true;
   }
 
   connectedCallback() {
     super.connectedCallback();
 
-    this._data = undefined;
+    this.type = "Variants";
+    this["show-label-name"] = false;
 
-    this._height = parseInt(this.getAttribute("height")) || 40;
-    this._yScale = scaleLinear();
-    this._xExtent;
-    this._yExtent;
-    this.init();
+    this.addEventListener("change", this._onNightingaleChange, true);
+
+    requestAnimationFrame(() => {
+      this._installPdbeMouseOverlay();
+    });
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("change", this._onNightingaleChange, true);
+    this._removePdbeMouseOverlay();
+    super.disconnectedCallback?.();
   }
 
   set data(data) {
-    this._data = data;
-    this.init();
-    if (this._data.variants.length <= 0) {
-      return;
+    this._rawData = data;
+    this._normalisedData = this._normaliseData(data);
+    super.data = this._normalisedData;
+  }
+
+  get data() {
+    return this._rawData;
+  }
+
+  _normaliseData(data) {
+    const variants = data?.variants || [];
+    const length = Number(this.length || data?.length || this._rawData?.length);
+
+    if (!variants.length || !Number.isFinite(length)) {
+      return [];
     }
 
-    let totalMap = {};
-    let diseaseMap = {};
+    const totalMap = {};
+    const diseaseMap = {};
 
-    this._data.variants.forEach(v => {
-      if ("undefined" === typeof totalMap[v.start]) {
-        totalMap[v.start] = 0;
-      }
-      if ("undefined" === typeof diseaseMap[v.start]) {
-        diseaseMap[v.start] = 0;
-      }
-      totalMap[v.start]++;
-      if ("undefined" !== typeof v.association) {
-        v.association.forEach(a => {
-          if (true === a.disease) {
-            diseaseMap[v.start]++;
+    variants.forEach((variant) => {
+      const position = Number(variant.start);
+
+      if (!Number.isFinite(position)) return;
+
+      if (!totalMap[position]) totalMap[position] = 0;
+      if (!diseaseMap[position]) diseaseMap[position] = 0;
+
+      totalMap[position]++;
+
+      if (variant.association) {
+        variant.association.forEach((association) => {
+          if (association.disease === true) {
+            diseaseMap[position]++;
           }
         });
       }
     });
-    this._totals_dataset = Object.keys(totalMap).map(d => {
-      return { x: d, y: totalMap[d] };
+
+    const positions = Array.from({ length }, (_, index) => index + 1);
+
+    const totalValues = positions.map((position) => ({
+      position,
+      value: totalMap[position] || 0,
+    }));
+
+    const diseaseValues = positions.map((position) => ({
+      position,
+      value: diseaseMap[position] || 0,
+    }));
+
+    const maxValue = Math.max(
+      1,
+      ...totalValues.map((item) => item.value),
+      ...diseaseValues.map((item) => item.value),
+    );
+
+    return [
+      {
+        name: "Disease-associated variants",
+        range: [0, maxValue + 2],
+        color: "red",
+        fill: "none",
+        lineCurve: "curveLinear",
+        values: diseaseValues,
+      },
+      {
+        name: "Total variants",
+        range: [0, maxValue + 2],
+        color: "darkgrey",
+        fill: "none",
+        lineCurve: "curveLinear",
+        values: totalValues,
+      },
+    ];
+  }
+
+  _onNightingaleChange = (event) => {
+    const detail = event.detail || {};
+    const type = detail.eventtype || detail.eventType || detail.type;
+
+    if (detail._pdbeCompatHighlightEvent) {
+      return;
+    }
+
+    // Native Nightingale linegraph hover can miss residues near the left edge.
+    // The overlay handles hover/click directly, so suppress native mouse events.
+    if (type === "mouseover" || type === "mouseout" || type === "click") {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
+  };
+
+  _installPdbeMouseOverlay() {
+    if (this._pdbeMouseOverlay) return;
+
+    const parent = this.parentElement || this;
+    const parentStyle = window.getComputedStyle(parent);
+
+    if (parentStyle.position === "static") {
+      parent.style.position = "relative";
+    }
+
+    const overlay = document.createElement("div");
+    overlay.className = "pdbe-linegraph-hover-overlay";
+
+    Object.assign(overlay.style, {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      zIndex: "20",
+      background: "transparent",
+      cursor: "crosshair",
     });
-    this._disease_dataset = Object.keys(diseaseMap).map(d => {
-      return { x: d, y: diseaseMap[d] };
+
+    overlay.addEventListener("mousemove", this._onPdbeOverlayMousemove);
+    overlay.addEventListener("mouseleave", this._onPdbeOverlayMouseleave);
+    overlay.addEventListener("click", this._onPdbeOverlayClick);
+
+    parent.appendChild(overlay);
+    this._pdbeMouseOverlay = overlay;
+  }
+
+  _removePdbeMouseOverlay() {
+    if (!this._pdbeMouseOverlay) return;
+
+    this._pdbeMouseOverlay.removeEventListener(
+      "mousemove",
+      this._onPdbeOverlayMousemove,
+    );
+    this._pdbeMouseOverlay.removeEventListener(
+      "mouseleave",
+      this._onPdbeOverlayMouseleave,
+    );
+    this._pdbeMouseOverlay.removeEventListener(
+      "click",
+      this._onPdbeOverlayClick,
+    );
+
+    this._pdbeMouseOverlay.remove();
+    this._pdbeMouseOverlay = null;
+  }
+
+  _onPdbeOverlayMousemove = (mouseEvent) => {
+    const position = this._getPositionFromNativeMouse(mouseEvent);
+
+    if (!Number.isFinite(position)) {
+      this._lastPdbeHoverPosition = null;
+      this._handleMouseout();
+      return;
+    }
+
+    const existingTooltip = document.querySelector("protvista-tooltip");
+
+    if (
+      position === this._lastPdbeHoverPosition &&
+      existingTooltip &&
+      existingTooltip.className !== "click-open"
+    ) {
+      return;
+    }
+
+    this._lastPdbeHoverPosition = position;
+
+    this._handleMouseover({
+      parentEvent: mouseEvent,
+      highlight: `${position}:${position}`,
     });
-    this._createTrack();
+  };
+
+  _onPdbeOverlayMouseleave = () => {
+    this._lastPdbeHoverPosition = null;
+    this._handleMouseout();
+  };
+
+  _onPdbeOverlayClick = (mouseEvent) => {
+    const position = this._getPositionFromNativeMouse(mouseEvent);
+
+    if (!Number.isFinite(position)) return;
+
+    this._handleClick({
+      parentEvent: mouseEvent,
+      highlight: `${position}:${position}`,
+    });
+  };
+
+  _getPositionFromNativeMouse(mouseEvent) {
+    const rect = this.getBoundingClientRect();
+    const mouseX = mouseEvent.clientX - rect.left;
+
+    const marginLeft = Number(this["margin-left"] || 0);
+    const marginRight = Number(this["margin-right"] || 0);
+
+    const displayStart = Number(this["display-start"] || 1);
+    const displayEnd = Number(
+      this["display-end"] || this.length || displayStart,
+    );
+
+    const plotLeft = marginLeft;
+    const plotRight = rect.width - marginRight;
+    const plotWidth = plotRight - plotLeft;
+    const tolerance = 8;
+
+    if (
+      plotWidth <= 0 ||
+      mouseX < plotLeft - tolerance ||
+      mouseX > plotRight + tolerance
+    ) {
+      return undefined;
+    }
+
+    const clampedMouseX = Math.min(Math.max(mouseX, plotLeft), plotRight);
+    const ratio = (clampedMouseX - plotLeft) / plotWidth;
+    const visibleLength = displayEnd - displayStart + 1;
+
+    const position = Math.round(displayStart + ratio * (visibleLength - 1));
+
+    return Math.min(Math.max(position, displayStart), displayEnd);
   }
 
-  _createTrack() {
-    select(this)
-      .selectAll("svg")
-      .remove();
-    this.svg = select(this)
-      .append("svg")
-      .style("width", '100%')
-      .attr("height", 50);
+  _getPositionFromDetail(detail) {
+    const highlight = detail.highlight;
 
-    this.highlighted = this.svg
-      .append("rect")
-      .attr("class", "highlighted")
-      .attr("fill", "rgba(255, 235, 59, 0.8)")
-      .attr('stroke', 'black')
-      .attr("height", 50);
-    
-    //  this.trackHighlighter.appendHighlightTo(this.svg);
-    
-    // Create the visualisation here
-    this._createFeatures();
-    this.refresh();
+    if (typeof highlight === "string" && highlight.indexOf(":") > -1) {
+      return Number(highlight.split(":")[0]);
+    }
+
+    return undefined;
   }
 
-  _createFeatures() {
-    this._xExtent = extent(this._totals_dataset, d => parseInt(d.x));
-    this._yExtent = extent(this._totals_dataset, d => d.y);
+  _getValueAtPosition(lineName, position) {
+    const line = (this._normalisedData || []).find(
+      (dataset) => dataset.name === lineName,
+    );
 
-    // just a bit of padding on the top
-    this._yExtent[1] += 2;
+    const point = line?.values?.find(
+      (item) => Number(item.position) === Number(position),
+    );
 
-    this.xScale.domain(this._xExtent).range([0, this._width]);
-    this._yScale.domain(this._yExtent).range([this._height, 0]);
+    return point?.value || 0;
   }
 
-  refresh() {
-    if (!this.svg) return;
-    this.svg.selectAll("path").remove();
-    this._disease_feature = this.svg
-      .append("path")
-      .attr("d", this._line(this._disease_dataset))
-      .attr("fill", "none")
-      .attr("stroke", "red")
-      .attr("stroke-width", "1.5px")
-      .attr("stroke-dasharray", "0")
-      .attr("transform", "translate(0,0)");
-    this._totals_feature = this.svg
-      .append("path")
-      .attr("d", this._line(this._totals_dataset))
-      .attr("fill", "none")
-      .attr("stroke", "darkgrey")
-      .attr("stroke-width", "1px")
-      .attr("stroke-dasharray", ".5")
-      .attr("transform", "translate(0,0)");
-    this._updateHighlight();
+  _makeTooltipContent(position) {
+    if (!Number.isFinite(position)) return "";
+
+    const diseaseCount = this._getValueAtPosition(
+      "Disease-associated variants",
+      position,
+    );
+
+    const totalCount = this._getValueAtPosition("Total variants", position);
+
+    return `
+      <table>
+        <tbody>
+          <tr>
+            <td style="padding:3px;">Residue</td>
+            <td style="text-align:right; padding:3px;">${position}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px;">
+              <strong style="color:red">Disease-associated variants</strong>
+            </td>
+            <td style="text-align:right; padding:3px;">${diseaseCount}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px;">
+              <strong style="color:darkgrey">Total variants</strong>
+            </td>
+            <td style="text-align:right; padding:3px;">${totalCount}</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+  }
+
+  _handleMouseover(detail) {
+    const position = this._getPositionFromDetail(detail);
+    const tooltipContent = this._makeTooltipContent(position);
+
+    if (!tooltipContent) return;
+
+    this._pdbeMouseIsOut = false;
+
+    const oldTooltip = document.querySelector("protvista-tooltip");
+
+    if (!oldTooltip?.classList.contains("click-open")) {
+      this.createTooltipFromDetail(detail, tooltipContent);
+    }
+
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: {
+          highlight: `${position}:${position}`,
+          highlightstart: position,
+          highlightend: position,
+          "highlight-start": position,
+          "highlight-end": position,
+          _pdbeCompatHighlightEvent: true,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-mouseover", {
+        detail: {
+          ...detail,
+          start: position,
+          end: position,
+          tooltipContent,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  _handleMouseout() {
+    if (this._pdbeMouseIsOut) return;
+
+    this._pdbeMouseIsOut = true;
+
+    const oldTooltip = document.querySelector("protvista-tooltip");
+
+    if (!oldTooltip?.classList.contains("click-open")) {
+      window.setTimeout(() => {
+        this.removeAllTooltips();
+      }, 50);
+    }
+
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: {
+          highlight: null,
+          highlightstart: null,
+          highlightend: null,
+          "highlight-start": null,
+          "highlight-end": null,
+          _pdbeCompatHighlightEvent: true,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-mouseout", {
+        detail: null,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  _handleClick(detail) {
+    const position = this._getPositionFromDetail(detail);
+    const tooltipContent = this._makeTooltipContent(position);
+
+    if (!tooltipContent) return;
+
+    this._pdbeMouseIsOut = false;
+
+    window.setTimeout(() => {
+      this.createTooltipFromDetail(detail, tooltipContent, true);
+    }, 0);
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-click", {
+        detail: {
+          ...detail,
+          start: position,
+          end: position,
+          tooltipContent,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  removeAllTooltips() {
+    document.querySelectorAll("protvista-tooltip").forEach((tooltip) => {
+      tooltip.remove();
+    });
+  }
+
+  createTooltipFromDetail(detail, tooltipContent, closeable = false) {
+    const mouseEvent = detail.parentEvent;
+
+    if (!mouseEvent || typeof mouseEvent.pageX === "undefined") return;
+
+    this.removeAllTooltips();
+
+    const position = this._getPositionFromDetail(detail);
+    const tooltip = document.createElement("protvista-tooltip");
+
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
+
+    tooltip.title = `Variants residue ${position}`;
+    tooltip.closeable = closeable;
+    tooltip.content = tooltipContent;
+
+    tooltip.left = mouseEvent.pageX + 15;
+    tooltip.top = mouseEvent.pageY + 5;
+
+    tooltip.style.position = "absolute";
+    tooltip.style.left = mouseEvent.pageX + 15 + "px";
+    tooltip.style.top = mouseEvent.pageY + 5 + "px";
+    tooltip.style.marginLeft = "0";
+    tooltip.style.marginTop = "0";
+
+    if (closeable) {
+      tooltip.classList.add("click-open");
+    }
+
+    document.body.appendChild(tooltip);
+
+    const tooltipBox = tooltip.getBoundingClientRect();
+    const bottomSpace = window.innerHeight - mouseEvent.clientY;
+    const rightSpace = window.innerWidth - mouseEvent.clientX;
+
+    if (bottomSpace < tooltipBox.height + 20) {
+      tooltip.style.top = mouseEvent.pageY - tooltipBox.height - 20 + "px";
+    }
+
+    if (rightSpace < tooltipBox.width + 20) {
+      tooltip.style.left = mouseEvent.pageX - tooltipBox.width - 20 + "px";
+    }
   }
 }
 

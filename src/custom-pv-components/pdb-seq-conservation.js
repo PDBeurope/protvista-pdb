@@ -1,361 +1,340 @@
-import ProtvistaPdbTrack from "./pdb-track";
-import { scaleLinear } from "d3";
+import NightingaleConservationTrack from "@nightingale-elements/nightingale-conservation-track";
 
-class ProtvistaPdbSeqConservation extends ProtvistaPdbTrack {
+const AA_LIST = [
+  "A",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "K",
+  "L",
+  "M",
+  "N",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "V",
+  "W",
+  "Y",
+];
 
-    constructor() {
-        super();
-    }
+const AA_DETAILS = {
+  G: { name: "Glycine", code: "GLY" },
+  C: { name: "Cysteine", code: "CYS" },
+  R: { name: "Arginine", code: "ARG" },
+  K: { name: "Lysine", code: "LYS" },
+  P: { name: "Proline", code: "PRO" },
+  E: { name: "Glutamic acid", code: "GLU" },
+  D: { name: "Aspartic acid", code: "ASP" },
+  W: { name: "Tryptophan", code: "TRP" },
+  M: { name: "Methionine", code: "MET" },
+  F: { name: "Phenylalanine", code: "PHE" },
+  I: { name: "Isoleucine", code: "ILE" },
+  V: { name: "Valine", code: "VAL" },
+  L: { name: "Leucine", code: "LEU" },
+  A: { name: "Alanine", code: "ALA" },
+  T: { name: "Threonine", code: "THR" },
+  Q: { name: "Glutamine", code: "GLN" },
+  S: { name: "Serine", code: "SER" },
+  N: { name: "Asparagine", code: "ASN" },
+  Y: { name: "Tyrosine", code: "TYR" },
+  H: { name: "Histidine", code: "HIS" },
+};
 
-    connectedCallback() {
-        super.connectedCallback();
+// function normaliseConservationData(input) {
+//   const source = input?.data || input;
 
-        this._accession = this.getAttribute("accession");
-        this._displayOrder = this.getAttribute('sc-display-order');
-        this._data = undefined;
-        this._height = parseInt(this.getAttribute("height")) || 430;
-        this.aaYvalue = 20;
-        this.displayOrder = this._displayOrder || 'property';
-        this.aaList = ['H', 'Y', 'Q', 'S', 'T', 'N', 'M', 'L', 'I', 'V', 'A', 'F', 'W', 'D', 'E', 'P', 'K', 'R', 'C', 'G'];
-        this.aaDetails = {
-            'G': { name: 'Glycine', code: 'GLY', color: '#f09048' }, 
-            'C': { name: 'Cysteine', code: 'CYS', color: '#f08080' }, 
-            'R': { name: 'Arginine', code: 'ARG', color: '#f01505' }, 
-            'K': { name: 'Lysine', code: 'LYS', color: '#f01505' }, 
-            'P': { name: 'Proline', code: 'PRO', color: '#c0c000' }, 
-            'E': { name: 'Glutamic acid', code: 'GLU', color: '#c048c0' }, 
-            'D': { name: 'Aspartic acid', code: 'ASP', color: '#c048c0' }, 
-            'W': { name: 'Tryptophan', code: 'TRP', color: '#80a0f0' }, 
-            'M': { name: 'Methionine', code: 'MET', color: '#80a0f0' }, 
-            'F': { name: 'Phenylalanine', code: 'PHE', color: '#80a0f0' }, 
-            'I': { name: 'Isoleucine', code: 'ILE', color: '#80a0f0' }, 
-            'V': { name: 'Valine', code: 'VAL', color: '#80a0f0' }, 
-            'L': { name: 'Leucine', code: 'LEU', color: '#80a0f0' }, 
-            'A': { name: 'Alanine', code: 'ALA', color: '#80a0f0' }, 
-            'T': { name: 'Threonine', code: 'THR', color: '#15c015' }, 
-            'Q': { name: 'Glutamine', code: 'GLN', color: '#15c015' }, 
-            'S': { name: 'Serine', code: 'SER', color: '#15c015' }, 
-            'N': { name: 'Asparagine', code: 'ASN', color: '#15c015' }, 
-            'Y': { name: 'Tyrosine', code: 'TYR', color: '#15a4a4' }, 
-            'H': { name: 'Histidine', code: 'HIS', color: '#15a4a4' }
-        }
-        this.propertySortedData = [];
-        this.probabilitySortedData = [];
-    }
+//   if (!source?.index) {
+//     return undefined;
+//   }
 
-    static get observedAttributes() {
-        return super.observedAttributes.concat("sc-display-order");
-    }
+//   const probabilities = {};
 
-    attributeChangedCallback(attrName, oldVal, newVal) {
-        if (oldVal !== newVal && attrName == 'sc-display-order') {
-            if(oldVal !== null) this.resetDisplayData(newVal);
-        }else{
-          super.attributeChangedCallback(attrName, oldVal, newVal);
-          if (!super.svg) {
-            return;
-          }
-        }
-    }
+//   AA_LIST.forEach((aa) => {
+//     probabilities[aa] = source[`probability_${aa}`] || [];
+//   });
 
-    set data(data) {
-        this._data = data;
-        this._createTrack();
-    }
+//   return {
+//     index: source.index,
+//     probabilities,
+//   };
+// }
 
-    _createTrack() {
-        this._layoutObj.init(this._data);
+function normaliseConservationData(input) {
+  const source = input?.data || input;
 
-        d3.select(this)
-            .selectAll("svg")
-            .remove();
+  if (!source?.index) {
+    return undefined;
+  }
 
-        this.svg = d3.select(this)
-            .append("div")
-            .append("svg")
-            .style('width', '100%')
-            .attr("height", this._height);
+  // Already Nightingale format.
+  // This happens when Nightingale internally does: this.data = this.data
+  // after letter-order changes.
+  if (source.probabilities) {
+    return {
+      index: source.index,
+      probabilities: source.probabilities,
+    };
+  }
 
-        this.highlighted = this.svg
-            .append("rect")
-            .attr("class", "highlighted")
-            .attr("fill", "rgba(255, 235, 59, 0.8)")
-            .attr("height", this._height);
+  const probabilities = {};
 
-        this.seq_g = this.svg.append("g").attr("class", "sequence-features").attr("transform", "translate(0,-5)");
+  AA_LIST.forEach((aa) => {
+    probabilities[aa] = source[`probability_${aa}`] || [];
+  });
 
-        this._createFeatures();
-        this.refresh();
-    }
-
-    _createFeatures() {
-        this._yScale = scaleLinear().domain([0, 1]).range([0, 400]);
-    }
-
-    _aaYPosition(aaIndex, aaProbability) {
-        if(aaIndex === 0) this.aaYvalue = 20;
-        let yPos = this.aaYvalue;
-        this.aaYvalue += this._yScale(aaProbability);
-        return yPos;
-    }
-
-    refresh() {
-        if (this.xScale && this.seq_g) {
-
-            this.svg.selectAll("foreignObject").remove();
-            this.seq_g.selectAll("g.location-group").remove();
-
-            const singleBaseWidth = this.getSingleBaseWidth();
-
-            if (singleBaseWidth < 9.40) {
-
-                this.foreign = this.svg.append("foreignObject").attr("width", '100%').attr("height", this._height);
-
-                this.commentdiv = this.foreign.append("xhtml:div").attr("class", "zoomout").attr("style", "text-align: center; height: " + this._height + "px");
-
-                this.span = this.commentdiv.append("span").attr("style", "line-height:" + this._height + "px");
-
-                this.span.append("i").attr("class", "icon icon-functional").attr("data-icon", "3");
-                this.span.append("text").text("Please zoom in (until 150 or fewer residues are shown) to see the probabilities");
-
-            } else {
-                this.featuresG = this.seq_g.selectAll("g.location-group").data(this._data.data.index);
-                this.svg.attr("height", this._height);
-
-                // create residue group
-                this.locations = this.featuresG
-                    .enter()
-                    .filter(d => (d - 1) > this._displaystart - 3 && (d - 1) < this._displayend + 3)
-                    .append("g")
-                    .attr("class", "location-group")
-                    .attr("height", this._height);
-
-                // create aa group and rectangle shape depending on probability score
-                this.aminorect = this.locations.selectAll(".aminogroup")
-                    .data(d => this.getAaList(d))
-                    .enter()
-                    .filter((d, i, ele) => {
-                        const residueNumber = ele[i]._parent.__data__;
-                        const dataIndex = this._data.data.index.indexOf(residueNumber);
-                        return this._data.data[`probability_${d}`][dataIndex] > 0;
-                    })
-                    .append("g")
-                        .attr("class", "aminogroup")
-                        .append("rect")
-                            .attr("class", "rectamino")
-                            .style("fill", d => this.aaDetails[d].color)
-                            .attr("y", (d, i, ele) => {
-                                const residueNumber = ele[i].parentElement.parentElement.__data__;
-                                const dataIndex = this._data.data.index.indexOf(residueNumber);
-                                return this._aaYPosition(i, this._data.data[`probability_${d}`][dataIndex]);
-                            })
-                            .attr("height", (d, i, ele) => {
-                                const residueNumber = ele[i].parentElement.parentElement.__data__;
-                                const dataIndex = this._data.data.index.indexOf(residueNumber);
-                                return this._yScale(this._data.data[`probability_${d}`][dataIndex]);
-                            })
-                            .attr("width", singleBaseWidth)
-                            .style("stroke-width", "0.5")
-                            .style("stroke", "rgb(211,211,211)")
-                            .attr("x", (d, i, ele) => {
-                                const residueNumber = ele[i].parentElement.parentElement.__data__;
-                                return this.getXFromSeqPosition(residueNumber);
-                            })
-                            .attr("data-res-details", (d, i, ele) => {
-                                const residueNumber = ele[i].parentElement.parentElement.__data__;
-                                const dataIndex = this._data.data.index.indexOf(residueNumber);
-                                return `${residueNumber}-${d}-${this._data.data[`probability_${d}`][dataIndex]}`;
-                            });
-
-                // add text with AA letter to rectangle
-                this.locations.selectAll(".aminogroup")
-                    .append("text")
-                        .attr("class", "textamino")
-                        .style("cursor", "default")
-                        .attr("y", (d, i, ele) => {
-                            const residueNumber = ele[i].parentElement.parentElement.__data__;
-                            const dataIndex = this._data.data.index.indexOf(residueNumber);
-                            const resProb = this._data.data[`probability_${d}`][dataIndex];
-                            const yPos = this._aaYPosition(i, resProb);
-                            return yPos + (this._yScale(resProb) / 2 + 5);
-                        })
-                        .attr("color", "black")
-                        .text(d => d)
-                        .attr("text-anchor", "middle")
-                        .attr("x", (d, i, ele) => {
-                            const residueNumber = ele[i].parentElement.parentElement.__data__;
-                            return this.getXFromSeqPosition(residueNumber) + singleBaseWidth / 2;
-                        })
-                        .attr("font-size", (d, i, ele) => {
-                            const residueNumber = ele[i].parentElement.parentElement.__data__;
-                            const dataIndex = this._data.data.index.indexOf(residueNumber);
-                            const resProb = this._data.data[`probability_${d}`][dataIndex];
-                            return this.adaptLabelFontSize(singleBaseWidth, this._yScale(resProb))
-                        });
-
-                
-                //highlight change
-                this.locations
-                .on("click", () => {
-                    const e = d3.event;
-                    const targetEle = e.target;
-                    const aaValue = targetEle.__data__;
-                    const residueNumber = targetEle.parentElement.parentElement.__data__;
-                    const dataIndex = this._data.data.index.indexOf(residueNumber);
-                    const resProb = this._data.data[`probability_${aaValue}`][dataIndex];
-
-                    const tooltipData = {
-                        start: residueNumber,
-                        end: residueNumber,
-                        feature: {
-                            tooltipContent: `Amino acid: ${this.aaDetails[aaValue].name} (${this.aaDetails[aaValue].code})<br/>Probability: ${(resProb * 100).toFixed(2)}%`,
-                            type: "Sequence conservation"
-                        }
-                    };
-                    
-                    window.setTimeout(() => { this.createTooltip(e, tooltipData, true); }, 50);
-
-                    this.dispatchEvent(
-                        new CustomEvent("protvista-click", {
-                            detail: tooltipData,
-                            bubbles: false,
-                            cancelable: true
-                        })
-                    );
-
-                })
-                .on("mouseover", () => {
-                    const e = d3.event;
-                    const targetEle = e.target;
-                    const aaValue = targetEle.__data__;
-                    const residueNumber = targetEle.parentElement.parentElement.__data__;
-                    const dataIndex = this._data.data.index.indexOf(residueNumber);
-                    const resProb = this._data.data[`probability_${aaValue}`][dataIndex];
-
-                    const tooltipData = {
-                        start: residueNumber,
-                        end: residueNumber,
-                        feature: {
-                            tooltipContent: `Amino acid: ${this.aaDetails[aaValue].name} (${this.aaDetails[aaValue].code})<br/>Probability: ${(resProb * 100).toFixed(2)}%`,
-                            type: "Sequence conservation"
-                        }
-                    };
-                    
-                    const oldToolip = document.querySelectorAll("protvista-tooltip");
-                    if (oldToolip && oldToolip[0] && oldToolip[0].className == 'click-open') {
-                        //do nothing
-                    } else {
-                        window.setTimeout(() => { this.createTooltip(e, tooltipData); }, 50);
-                    }
-
-                    this.dispatchEvent(
-                        new CustomEvent("change", {
-                            detail: {
-                                highlightend: residueNumber,
-                                highlightstart: residueNumber
-                            },
-                            bubbles: true,
-                            cancelable: true
-                        })
-                    );
-
-                    this.dispatchEvent(
-                        new CustomEvent("protvista-mouseover", {
-                            detail: tooltipData,
-                            bubbles: false,
-                            cancelable: true
-                        })
-                    );
-
-                })
-                .on("mouseout", () => {
-                    this.dispatchEvent(
-                        new CustomEvent("change", {
-                            detail: {
-                                highlightend: null,
-                                highlightstart: null
-                            },
-                            bubbles: true,
-                            cancelable: true
-                        })
-                    );
-
-                    const oldToolip = document.querySelectorAll("protvista-tooltip");
-                    if (oldToolip && oldToolip[0] && oldToolip[0].className == 'click-open') {
-                        //do nothing
-                    } else {
-                        window.setTimeout(() => { this.removeAllTooltips(); }, 50);
-                    }
-
-                    this.dispatchEvent(
-                        new CustomEvent("protvista-mouseout", {
-                            detail: null,
-                            bubbles: true,
-                            cancelable: true
-                        })
-                    );
-
-                });
-            }
-
-            this._updateHighlight();
-        }
-    }
-
-    adaptLabelFontSize(rectwidth, rectheight) {
-        const letterWidth = 9.40;
-
-        // There is not enough space for the label so don't show it
-        if (letterWidth > rectwidth || letterWidth > rectheight) {
-            return 0 + 'em';
-        }
-
-        return 10 + 'px';
-    }
-
-    getAaList(residueNumber) {
-
-        // check in cache
-        const dataIndex = this._data.data.index.indexOf(residueNumber);
-        const residueSequenceNumber = this._data.data.index[dataIndex];
-        if(this[`${this.displayOrder}SortedData`][residueSequenceNumber]) {
-            return this[`${this.displayOrder}SortedData`][residueSequenceNumber].split(',');
-        }
-
-        // generate sorted array
-        let aaValuesList = [];
-        this.aaList.forEach(aa => {
-            aaValuesList.push({ aa: aa, value: this._data.data[`probability_${aa}`][dataIndex], color: this.aaDetails[aa].color })
-        });
-
-        let sortedAAList = [];
-        aaValuesList.sort((a, b) => {
-            if(this.displayOrder === 'property') {
-                if (a.color === b.color) return b.value - a.value;
-                return a.color < b.color ? -1 : 1;
-            } else {
-                return b.value - a.value;
-            }
-        });
-        sortedAAList = aaValuesList.map(aaVal => aaVal.aa);
-
-        // add to cache
-        this[`${this.displayOrder}SortedData`][residueSequenceNumber] = sortedAAList.join(',');
-        
-        return sortedAAList;
-
-    }
-
-    resetDisplayData(orderType) {
-        this.displayOrder = orderType;
-        this.refresh();
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        if (this.manager) {
-            this.manager.unregister(this);
-        }
-    }
+  return {
+    index: source.index,
+    probabilities,
+  };
 }
+
+class ProtvistaPdbSeqConservation extends NightingaleConservationTrack {
+  constructor() {
+    super();
+    this.useDefaultStyles = true;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.addEventListener("change", this._onNightingaleChange);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("change", this._onNightingaleChange);
+    super.disconnectedCallback?.();
+  }
+
+  static get observedAttributes() {
+    return [...(super.observedAttributes || []), "sc-display-order"];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "sc-display-order" && oldValue !== newValue) {
+      const letterOrder =
+        newValue === "probability" ? "probability" : "default";
+
+      if (this.getAttribute("letter-order") !== letterOrder) {
+        this.setAttribute("letter-order", letterOrder);
+      }
+
+      return;
+    }
+
+    super.attributeChangedCallback?.(name, oldValue, newValue);
+  }
+
+  set data(data) {
+    this._rawData = data;
+    this._normalisedData = normaliseConservationData(data);
+    super.data = this._normalisedData;
+  }
+
+  get data() {
+    return super.data;
+  }
+
+  _onNightingaleChange = (event) => {
+    const detail = event.detail || {};
+    const type = detail.eventType || detail.type;
+    const value = detail.value || detail;
+    const pointed = value?.feature || value?.data || value;
+
+    if (!type) return;
+
+    if (type === "mouseover") {
+      this._handleMouseover(value, pointed);
+    }
+
+    if (type === "mouseout") {
+      this._handleMouseout();
+    }
+
+    if (type === "click") {
+      this._handleClick(value, pointed);
+    }
+  };
+
+  _getMouseEvent(value) {
+    return (
+      value?.parentEvent ||
+      value?.event ||
+      value?.originalEvent ||
+      value?.sourceEvent ||
+      null
+    );
+  }
+
+  _makeTooltipData(pointed) {
+    if (!pointed) return null;
+
+    const aa = pointed.aa;
+    const position = pointed.position;
+    const probability = Number(pointed.probability || 0);
+    const aaDetails = AA_DETAILS[aa] || { name: aa, code: aa };
+
+    return {
+      start: position,
+      end: position,
+      feature: {
+        tooltipContent:
+          `Amino acid: ${aaDetails.name} (${aaDetails.code})<br/>` +
+          `Probability: ${(probability * 100).toFixed(2)}%`,
+        type: "Sequence conservation",
+      },
+      probability,
+      aa,
+      position,
+    };
+  }
+
+  _handleMouseover(value, pointed) {
+    const tooltipData = this._makeTooltipData(pointed);
+    if (!tooltipData) return;
+
+    const oldTooltip = document.querySelector("protvista-tooltip");
+
+    if (!oldTooltip?.classList.contains("click-open")) {
+      window.setTimeout(() => {
+        this.createTooltipFromTooltipData(
+          this._getMouseEvent(value),
+          tooltipData,
+          false,
+        );
+      }, 50);
+    }
+
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: {
+          highlight: `${tooltipData.start}:${tooltipData.end}`,
+          highlightstart: tooltipData.start,
+          highlightend: tooltipData.end,
+          "highlight-start": tooltipData.start,
+          "highlight-end": tooltipData.end,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-mouseover", {
+        detail: tooltipData,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  _handleMouseout() {
+    const oldTooltip = document.querySelector("protvista-tooltip");
+
+    if (!oldTooltip?.classList.contains("click-open")) {
+      window.setTimeout(() => {
+        this.removeAllTooltips();
+      }, 50);
+    }
+
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: {
+          highlight: null,
+          highlightstart: null,
+          highlightend: null,
+          "highlight-start": null,
+          "highlight-end": null,
+        },
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-mouseout", {
+        detail: null,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  _handleClick(value, pointed) {
+    const tooltipData = this._makeTooltipData(pointed);
+    if (!tooltipData) return;
+
+    window.setTimeout(() => {
+      this.createTooltipFromTooltipData(
+        this._getMouseEvent(value),
+        tooltipData,
+        true,
+      );
+    }, 0);
+
+    this.dispatchEvent(
+      new CustomEvent("protvista-click", {
+        detail: tooltipData,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  removeAllTooltips() {
+    document.querySelectorAll("protvista-tooltip").forEach((tooltip) => {
+      tooltip.remove();
+    });
+  }
+
+  createTooltipFromTooltipData(mouseEvent, tooltipData, closeable = false) {
+    if (!mouseEvent || typeof mouseEvent.pageX === "undefined") return;
+
+    this.removeAllTooltips();
+
+    const tooltip = document.createElement("protvista-tooltip");
+    
+    if (this.useDefaultStyles) {
+      tooltip.classList.add("default-styles");
+    }
+
+    tooltip.left = mouseEvent.pageX + 15;
+    tooltip.top = mouseEvent.pageY + 5;
+    tooltip.style.marginLeft = 0;
+    tooltip.style.marginTop = 0;
+
+    tooltip.title =
+      tooltipData.start === tooltipData.end
+        ? `${tooltipData.feature.type} residue ${tooltipData.start}`
+        : `${tooltipData.feature.type} ${tooltipData.start}-${tooltipData.end}`;
+
+    tooltip.closeable = closeable;
+    tooltip.content = tooltipData.feature.tooltipContent;
+
+    if (closeable) {
+      tooltip.classList.add("click-open");
+    }
+
+    document.body.appendChild(tooltip);
+
+    const tooltipDom = tooltip.getBoundingClientRect();
+    const bottomSpace = window.innerHeight - mouseEvent.clientY;
+    const rightSpace = window.innerWidth - mouseEvent.clientX;
+
+    if (bottomSpace < 130) {
+      tooltip.style.top = mouseEvent.pageY - (tooltipDom.height + 20) + "px";
+    }
+
+    if (rightSpace < 300) {
+      tooltip.style.left = "";
+      tooltip.style.right = rightSpace - 10 + "px";
+    }
+  }
+}
+
 export default ProtvistaPdbSeqConservation;
